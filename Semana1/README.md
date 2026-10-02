@@ -9,8 +9,7 @@ html con un elemento de lista ordenada lo,
 donde cada elemento de lista li contine un elemento a con atributo href de hiperenlace llamando a otro fichero html y como contenido del elemento a se encuentra un string.
 
 ``` html
-<!DOCTYPE html>****
-<html>
+<!DOCTYPE html>
 
 <head>
 	
