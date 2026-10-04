@@ -48,7 +48,7 @@ class persona extends General_Entity_Class {
                 rules: {
                     ADD: { min_size: 10, max_size: 200 },
                     EDIT: { max_size: 200 },
-                    SEARCH: { max_size: 200 }
+                    SEARCH: { min_size: 10, max_size: 200 }
                 }
             },
             {
