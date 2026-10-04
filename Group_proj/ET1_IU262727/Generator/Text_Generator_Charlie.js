@@ -23,7 +23,7 @@ const esquemasET1 = {
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_persona_format_ko", desc: "cumple formato nombre con ñ y acentos", msgError: "Formato de nombre invalido", valorInvalido: { "nombre_persona": "Juan123" } },
           
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto nombre_persona", msgExito: "Nombre correcto", valorValido: { "nombre_persona": "Angela M.ª" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto nombre_persona", msgExito: "Nombre correcto", valorValido: { "nombre_persona": "Sr. Señóra. eats-alot" } }
       },
       {
         campo: "apellidos_persona",
@@ -51,7 +51,7 @@ const esquemasET1 = {
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "direccion_persona_max_size_ko", desc: "cumple tamaño maximo direccion_persona", msgError: "Direccion muy larga (max 200)", valorInvalido: { "direccion_persona": "D".repeat(201) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "direccion_persona_format_ko", desc: "cumple formato direccion", msgError: "Formato direccion invalido", valorInvalido: { "direccion_persona": "C/ Mayor @ #" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto direccion_persona", msgExito: "Direccion correcta", valorValido: { "direccion_persona": "Rua das Aflitas, 12; 4A / Vigo" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto direccion_persona", msgExito: "Direccion correcta", valorValido: { "direccion_persona": "Rua das Aflitas, 12; 4ºA / Vigo" } }
       },
       {
         campo: "telefono_persona",
@@ -316,7 +316,7 @@ function generarCodigoEntidad(esquema) {
           elementoActual = "input";
         }
 
-        const isSearchSizeRule = accion === "SEARCH" && (regla.tipo === "min_size" || regla.tipo === "max_size");
+        const isSearchSizeRule = accion === "SEARCH" && (regla.tipo === "min_size");
         const codigoResultado = isSearchSizeRule ? true : regla.codigoKO;
 
         defTests.push([
