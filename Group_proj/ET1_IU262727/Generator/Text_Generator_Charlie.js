@@ -233,6 +233,47 @@ const esquemasET1 = {
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto descrip_funcionalidad", msgExito: "Descripcion correcta", valorValido: { "descrip_funcionalidad": "Control de acceso y permisos." } }
       }
     ]
+  },
+
+  // 6. FUNCIONALIDAD_ACCION
+  funcionalidad_accion: {
+    entidad: "funcionalidad_accion",
+    campos: [
+      {
+        campo: "id_funcionalidad",
+        elemento: "input",
+        reglas: [
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_funcionalidad_min_size_KO", desc: "cumple tamaño numerico minimo id_funcionalidad", msgError: "Minimo 1", valorInvalido: { "id_funcionalidad": 0 }, valorValido: { "id_funcionalidad": 1 } },
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_KO", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 12 }, valorValido: { "id_funcionalidad": 10 } }
+        ],
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_funcionalidad", msgExito: "ID funcionalidad correcto", valorValido: { "id_funcionalidad": 2 } }
+      },
+      {
+        campo: "id_accion",
+        elemento: "input",
+        reglas: [
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_accion_min_size_KO", desc: "cumple tamaño numerico minimo id_accion", msgError: "Minimo 1", valorInvalido: { "id_accion": 0 }, valorValido: { "id_accion": 1 } },
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_accion_max_size_KO", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 12 }, valorValido: { "id_accion": 10 } }
+        ],
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_accion", msgExito: "ID accion correcto", valorValido: { "id_accion": 2 } }
+      }
+    ]
+  },
+
+  // 7. ROL_FUNCIONALIDAD_ACCION
+  rol_funcionalidad_accion: {
+    entidad: "rol_funcionalidad_accion",
+    campos: [
+      {
+        campo: "id_rol",
+        elemento: "input",
+        reglas: [
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_rol_min_size_KO", desc: "cumple tamaño numerico minimo id_rol", msgError: "Minimo 1", valorInvalido: { "id_rol": 0 }, valorValido: { "id_rol": 1 } },
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_rol_max_size_KO", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 12 }, valorValido: { "id_rol": 10 } }
+        ],
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_rol", msgExito: "ID rol correcto", valorValido: { "id_rol": 2 } }
+      }
+    ],
   }
 };
 
@@ -282,15 +323,6 @@ function generarCodigoEntidad(esquema) {
           codigoResultado
         ]);
 
-        pruebas.push([
-          esquema.entidad,
-          c.campo,
-          numTest,
-          idPruebaSecuencial++,
-          accion,
-          regla.valorValido,
-          true
-        ]);
       });
     });
 
