@@ -87,7 +87,7 @@ const esquemasET1 = {
     ]
   },
 
-  // 2. USUARIO
+ // 2. USUARIO
   usuario: {
     entidad: "usuario",
     campos: [
@@ -95,9 +95,9 @@ const esquemasET1 = {
         campo: "dni",
         elemento: "input",
         reglas: [
-          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "dni_min_size_ko", desc: "cumple tamaño minimo dni", msgError: "DNI demasiado corto (min 9)", valorInvalido: { "dni": "1234" } },
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "dni_min_size_ko", desc: "cumple tamaño minimo dni", msgError: "DNI demasiado corto (min 9)", valorInvalido: { "dni": "123" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_max_size_ko", desc: "cumple tamaño maximo dni", msgError: "DNI demasiado largo (max 9)", valorInvalido: { "dni": "1234567890" } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "123456789" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "A12345678A" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto dni", msgExito: "DNI correcto", valorValido: { "dni": "80423097D" } }
       },
@@ -107,7 +107,7 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "usuario_min_size_ko", desc: "cumple tamaño minimo usuario", msgError: "Usuario muy corto (min 5)", valorInvalido: { "usuario": "user" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_max_size_ko", desc: "cumple tamaño maximo usuario", msgError: "Usuario muy largo (max 45)", valorInvalido: { "usuario": "u".repeat(46) } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "niño_user" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "ni-ño_úser" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto usuario", msgExito: "Usuario correcto", valorValido: { "usuario": "johndoe" } }
       },
@@ -117,7 +117,7 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_min_size_ko", desc: "cumple tamaño minimo contrasena", msgError: "Contraseña muy corta (min 8)", valorInvalido: { "contrasena": "pass" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_max_size_ko", desc: "cumple tamaño maximo contrasena", msgError: "Contraseña muy larga (max 45)", valorInvalido: { "contrasena": "p".repeat(46) } },
-          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos)", valorInvalido: { "contrasena": "contraseña123" } }
+          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos)", valorInvalido: { "contrasena": "co-ntra_seña123" } }
         ],
         testExito: { acciones: ["ADD", "EDIT"], desc: "es correcto contrasena", msgExito: "Contraseña correcta", valorValido: { "contrasena": "securePass" } }
       },
