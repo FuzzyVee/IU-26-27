@@ -21,6 +21,7 @@ const esquemasET1 = {
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "nombre_persona_min_size_ko", desc: "cumple tamaño minimo nombre_persona", msgError: "Nombre muy corto (min 2)", valorInvalido: { "nombre_persona": "A" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_persona_max_size_ko", desc: "cumple tamaño maximo nombre_persona", msgError: "Nombre muy largo (max 45)", valorInvalido: { "nombre_persona": "A".repeat(46) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_persona_format_ko", desc: "cumple formato nombre con ñ y acentos", msgError: "Formato de nombre invalido", valorInvalido: { "nombre_persona": "Juan123" } },
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_persona_format_ko", desc: "cumple formato nombre con ñ y acentos", msgError: "Formato de nombre invalido", valorInvalido: { "nombre_persona": "Jrº" } },
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto nombre_persona", msgExito: "Nombre correcto", valorValido: { "nombre_persona": "Sr. Señóra. eats-alot" } }
       },
@@ -30,9 +31,10 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "apellidos_persona_min_size_ko", desc: "cumple tamaño minimo apellidos_persona", msgError: "Apellidos muy cortos (min 3)", valorInvalido: { "apellidos_persona": "Oz" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "apellidos_persona_max_size_ko", desc: "cumple tamaño maximo apellidos_persona", msgError: "Apellidos muy largos (max 100)", valorInvalido: { "apellidos_persona": "A".repeat(101) } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "apellidos_persona_format_ko", desc: "cumple formato apellidos", msgError: "Formato de apellidos invalido", valorInvalido: { "apellidos_persona": "Perez_123" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "apellidos_persona_format_ko", desc: "cumple formato apellidos", msgError: "Formato de apellidos invalido", valorInvalido: { "apellidos_persona": "Perez123" } },
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "apellidos_persona_format_ko", desc: "cumple formato apellidos", msgError: "Formato de apellidos invalido", valorInvalido: { "apellidos_persona": "Juan_XXX" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto apellidos_persona", msgExito: "Apellidos correctos", valorValido: { "apellidos_persona": "Nuñez Rodriguez" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto apellidos_persona", msgExito: "Apellidos correctos", valorValido: { "apellidos_persona": "Mr. Nuñez-Rodríguez" } }
       },
       {
         campo: "fechaNacimiento_persona",
@@ -65,9 +67,10 @@ const esquemasET1 = {
         campo: "email_persona",
         elemento: "input",
         reglas: [
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_format_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "correo.invalido.com" } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_format_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "correo_invalido.com" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto email_persona", msgExito: "Email correcto", valorValido: { "email_persona": "alumno.proyectos@esei.uvigo.gal" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto email_persona", msgExito: "Email correcto", valorValido: { "email_persona": "normal(wtf␣is␣this?+tag@[::1]" } }
       },
       {
         campo: "foto_persona",
@@ -76,7 +79,10 @@ const esquemasET1 = {
           { tipo: "exist_file", acciones: ["ADD"], codigoKO: "foto_persona_exist_file_ko", desc: "existe fichero foto_persona", msgError: "Debe seleccionar un fichero jpg o jpeg", valorInvalido: {} },
           { tipo: "format_name_file", acciones: ["ADD", "EDIT"], codigoKO: "foto_persona_format_name_file_ko", desc: "cumple formato nombre foto_persona", msgError: "Nombre de archivo de foto invalido", valorInvalido: { "foto_persona": "foto*.jpg" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT"], desc: "es correcto foto_persona", msgExito: "Foto correcta", valorValido: { "foto_persona": "perfil.jpg" } }
+        testExito: [
+          { acciones: ["ADD", "EDIT"], desc: "es correcto foto_persona", msgExito: "Foto correcta", valorValido: { "foto_persona": "foto.jpg" } },
+          { acciones: ["ADD", "EDIT"], desc: "es correcto foto_persona", msgExito: "Foto correcta", valorValido: { "foto_persona": "Archivo.jpeg" } }
+        ]
       }
     ]
   },
@@ -342,40 +348,44 @@ function generarCodigoEntidad(esquema) {
       });
     });
 
-    // 2. OK Tests (From testExito, reading valorValido if it exists, falling back to {})
+    // 2. OK Tests (Handles both an object or an array of objects in testExito)
     if (c.testExito) {
-      c.testExito.acciones.forEach(accion => {
-        const numTest = idTestSecuencial++;
-        let elementoActual = c.elemento;
+      // Normalize to an array regardless of whether testExito is a single object or an array
+      const exitos = Array.isArray(c.testExito) ? c.testExito : [c.testExito];
 
-        if (c.elemento === "file" && accion === "SEARCH") {
-          elementoActual = "input";
-        }
+      exitos.forEach(exito => {
+        exito.acciones.forEach(accion => {
+          const numTest = idTestSecuencial++;
+          let elementoActual = c.elemento;
 
-        defTests.push([
-          esquema.entidad,
-          c.campo,
-          elementoActual,
-          numTest,
-          `${c.testExito.desc} en ${accion}`,
-          "valid",
-          accion,
-          true,
-          c.testExito.msgExito
-        ]);
+          if (c.elemento === "file" && accion === "SEARCH") {
+            elementoActual = "input";
+          }
 
-        // Dynamically checks for testExito.valorValido without requiring it to exist
-        const valorExito = c.testExito.valorValido !== undefined ? c.testExito.valorValido : {};
+          defTests.push([
+            esquema.entidad,
+            c.campo,
+            elementoActual,
+            numTest,
+            `${exito.desc} en ${accion}`,
+            "valid",
+            accion,
+            true,
+            exito.msgExito
+          ]);
 
-        pruebas.push([
-          esquema.entidad,
-          c.campo,
-          numTest,
-          idPruebaSecuencial++,
-          accion,
-          valorExito,
-          true
-        ]);
+          const valorExito = exito.valorValido !== undefined ? exito.valorValido : {};
+
+          pruebas.push([
+            esquema.entidad,
+            c.campo,
+            numTest,
+            idPruebaSecuencial++,
+            accion,
+            valorExito,
+            true
+          ]);
+        });
       });
     }
   });
