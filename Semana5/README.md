@@ -99,17 +99,17 @@ Se ha modificado el método manual_form_creation(), para que sea una representac
 		fila.fechaNacimiento_persona = this.cambiarformatoFecha(fila.fechaNacimiento_persona);
 
 		// rellenar valores
-		this.rellenarvaloresform(fila);
+		this.dom.rellenarvaloresform(fila);
 		
 		// poner las validaciones
-		this.colocarvalidaciones('EDIT');
+		this.dom.colocarvalidaciones('form_iu','EDIT');
 
 		// poner inactivos los campos correspondientes
 		this.dom.assign_property_value('dni','readonly','true');
 		this.dom.assign_property_value('foto_persona','readonly','true');
 
 		// colocar boton de submit
-		this.colocarboton('EDIT');
+		this.dom.colocarboton('EDIT');
 
 	}
 
@@ -264,7 +264,7 @@ Se ha creado un método para poder recorrer todos los elementos del formulario y
 
 ```
 
-Como puede verse, se han indicado en el código de la clase, qué métodos son susceptibles de ser llevados a la clase Dom, y cuáles son susceptibles de estar en una superclase de la de la clase de la entidad particular. Esto se hace así porque en el futuro veremos que es interesante que los métodos generales que están en la superclase y son usados por todas las entidades, pueden ser refactorizados en la clase de la entidad para personalizar su funcionamiento.
+Se habia indicado en la Semana 4 en el código de la clase, qué métodos son susceptibles de ser llevados a la clase Dom, y cuáles son susceptibles de estar en una superclase de la de la clase de la entidad particular. Es interesante que los métodos generales que están en la superclase y son usados por todas las entidades, pueden ser refactorizados en la clase de la entidad para personalizar su funcionamiento.
 
 En el código de la semana anterior, creamos el método de la acción Search, que nos permitía llamar a la clase external Access a su método peticiónBackGeneral en donde se realizaba la acción. Si venían tuplas en la petición de Search, se mostraban en una tabla y si no venían tuplas se colocaba un texto de no existen tuplas en lugar de la tabla. Se han desarrollado los métodos correspondientes a la acción ADD, EDIT y DELETE, las cuales son acciones atómicas y que no devuelven nada. Por ello los tres métodos funcionan de forma similar, si la acción se ejecuta sin problema se elimina el formulario y se llaman Search() y si dan un error en el Back se muestra ese error mediante un modal. En la semana cinco como no está todavía incorporado el código de traducción de textos no se ve el texto del código de error, sino que se sitúa simplemente en el class de la ventana modal, que incorpora un boton de cerrar el modal.
 
