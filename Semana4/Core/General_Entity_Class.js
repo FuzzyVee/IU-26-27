@@ -6,6 +6,7 @@ class General_Entity_Class {
    * @param {Array<string>} mostrarespecial - Special formatted columns
    * @param {string} esTest - 'test' for headless testing mode
    */
+  
   constructor(
     nombreentidad,
     fields = [],
@@ -46,7 +47,7 @@ class General_Entity_Class {
 
         // Dynamically assign function to this instance
         this[methodName] = () => {
-          if (!rules) return true; // No rules defined = valid
+          if (!rules) return true;
 
           // SEARCH rule: Empty fields are valid search inputs
           if (action === 'SEARCH') {
