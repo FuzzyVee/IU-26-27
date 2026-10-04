@@ -111,7 +111,7 @@ class persona extends Validations {
 	}
 
 	ADD_fechaNacimiento_persona_validation() {
-		const regexPattern = '^((0?[1-9]|[12][0-9]|3[01])[/\\-](0?[1-9]|1[0-2])[/\\-](19|20)\\d{2}|(19|20)\\d{2}[/\\-](0?[1-9]|1[0-2])[/\\-](0?[1-9]|[12][0-9]|3[01]))$';
+		const regexPattern = '^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)[0-9]{2}$';
 		if (!this.format('fechaNacimiento_persona', regexPattern)) {
 			this.dom.mostrar_error_campo('fechaNacimiento_persona', 'fechaNacimiento_persona_format_ko');
 			return "fechaNacimiento_persona_format_ko";
@@ -219,7 +219,7 @@ class persona extends Validations {
 	EDIT_dni_validation() { return this.ADD_dni_validation(); }
 	EDIT_nombre_persona_validation() { return this.ADD_nombre_persona_validation(); }
 	EDIT_apellidos_persona_validation() { return this.ADD_apellidos_persona_validation(); }
-	EDIT_fechaNacimiento_persona_validation() { return this.ADD_nuevo_foto_persona(); }
+	EDIT_fechaNacimiento_persona_validation() { return this.ADD_fechaNacimiento_persona_validation(); }
 	EDIT_direccion_persona_validation() { return this.ADD_direccion_persona_validation(); }
 	EDIT_telefono_persona_validation() { return this.ADD_telefono_persona_validation(); }
 	EDIT_email_persona_validation() { return this.ADD_email_persona_validation(); }
@@ -309,7 +309,7 @@ class persona extends Validations {
 			return "dni_format_ko";
 		}
 	}
-	SEARCH_fechaNacimiento_persona_validation() { return this.ADD_nuevo_foto_persona(); }
+	SEARCH_fechaNacimiento_persona_validation() { return this.ADD_fechaNacimiento_persona_validation(); }
 	SEARCH_direccion_persona_validation() { return this.ADD_direccion_persona_validation(); }
 	SEARCH_telefono_persona_validation() { return this.ADD_telefono_persona_validation(); }
 	SEARCH_email_persona_validation() { return this.ADD_email_persona_validation(); }

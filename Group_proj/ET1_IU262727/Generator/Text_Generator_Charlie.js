@@ -10,7 +10,7 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "dni_min_size_ko", desc: "cumple tamaño minimo dni", msgError: "DNI demasiado corto (min 9)", valorInvalido: { "dni": "1234" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_max_size_ko", desc: "cumple tamaño maximo dni", msgError: "DNI demasiado largo (max 9)", valorInvalido: { "dni": "1234567890" } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "12345678A" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "123456789" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto dni", msgExito: "DNI correcto", valorValido: { "dni": "80423097D" } }
       },
@@ -21,7 +21,6 @@ const esquemasET1 = {
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "nombre_persona_min_size_ko", desc: "cumple tamaño minimo nombre_persona", msgError: "Nombre muy corto (min 2)", valorInvalido: { "nombre_persona": "A" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_persona_max_size_ko", desc: "cumple tamaño maximo nombre_persona", msgError: "Nombre muy largo (max 45)", valorInvalido: { "nombre_persona": "A".repeat(46) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_persona_format_ko", desc: "cumple formato nombre con ñ y acentos", msgError: "Formato de nombre invalido", valorInvalido: { "nombre_persona": "Juan123" } },
-          
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto nombre_persona", msgExito: "Nombre correcto", valorValido: { "nombre_persona": "Sr. Señóra. eats-alot" } }
       },
@@ -39,9 +38,9 @@ const esquemasET1 = {
         campo: "fechaNacimiento_persona",
         elemento: "input",
         reglas: [
-          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "fechaNacimiento_persona_format_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-09-23" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "fechaNacimiento_persona_format_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-09-23" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT"], desc: "es correcto fechaNacimiento_persona", msgExito: "Fecha correcta", valorValido: { "fechaNacimiento_persona": "20/11/1998" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto fechaNacimiento_persona", msgExito: "Fecha correcta", valorValido: { "fechaNacimiento_persona": "20/11/1998" } }
       },
       {
         campo: "direccion_persona",
@@ -92,7 +91,7 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "dni_min_size_ko", desc: "cumple tamaño minimo dni", msgError: "DNI demasiado corto (min 9)", valorInvalido: { "dni": "1234" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_max_size_ko", desc: "cumple tamaño maximo dni", msgError: "DNI demasiado largo (max 9)", valorInvalido: { "dni": "1234567890" } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "12345678A" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "123456789" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto dni", msgExito: "DNI correcto", valorValido: { "dni": "80423097D" } }
       },

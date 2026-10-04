@@ -36,9 +36,9 @@ class persona extends General_Entity_Class {
                 label: 'Fecha Nacimiento',
                 type: 'text',
                 rules: {
-                    ADD: { format: '^\\d{2}/\\d{2}/\\d{4}$' },
-                    EDIT: { format: '^(\\d{2}/\\d{2}/\\d{4})?$' },
-                    SEARCH: { format: '^(\\d{,2}/?\\d{,2}/?\\d{,4})?$' }
+                    ADD: { format: '^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)[0-9]{2}$' },
+                    EDIT: { format: '^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)[0-9]{2}$' },
+                    SEARCH: { format: '^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)[0-9]{2}$' }
                 }
             },
             {
