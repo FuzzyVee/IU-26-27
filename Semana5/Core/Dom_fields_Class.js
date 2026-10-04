@@ -1,62 +1,8 @@
-class dom extends dom_table {
+class dom_fields extends dom_form{
 
-	constructor(){
-		super()
-	}
-
-		/**
-	 * pone visible block el elemento con el id proporcionado
-	 * @name show_element
-	 * @param {string} id id de un elemento html
-	 */
-	show_element(id){
-		document.getElementById(id).style.display = 'block';
-	}
-
-	/**
-	 	Modifica el aspecto del campo en función de si tiene un error. Borde rojo y mensaje de error si tiene error
-		@name mostrar_error_campo
-		@param {string} id es el id del campo del formulario al cual se va mostrar el error 
-		@param {string} codigoerror es el código del error a mostrar para ese campo del formulario
-		
-	*/
-	mostrar_error_campo(id, codigoerror){
-		document.getElementById('span_error_'+id).style.display = 'inline';
-		document.getElementById('error_'+id).innerHTML = codigoerror;
-		document.getElementById(id).style.borderBlockColor = 'red';
-		document.getElementById('submit_button').focus();
-	}
-	/**
-	 	Modifica el aspecto del campo en función de si no tiene un error. Borde verde si correcto
-		
-		@param {string} id es el id del campo del formulario al cual se va mostrar el error 
-		@param {string} codigoerror es el código del error a mostrar para ese campo del formulario
-		
-	*/
-	mostrar_exito_campo(id){
-		document.getElementById('span_error_'+id).style.display = 'none';
-		document.getElementById('error_'+id).innerHTML = '';
-		document.getElementById(id).style.borderBlockColor = 'green';
-	}
-
-	/**
-		coloca el contenido html en un contenedor visible inline 
-		@param {string} contenido html
-		@param {string} id del contenedor donde colocar el contenido
-	*/
-	fillHtmlContent(contenido, idcontenedor){
-		document.getElementById(idcontenedor).innerHTML = contenido;
-		document.getElementById(idcontenedor).style.display = 'inline';
-	}
-	/**
-		coloca el contenido html en el div 
-		@param {string} contenido html
-		@param {string} id del div donde colocar el contenido
-	*/
-	fillform(formdata, idform){
-		document.getElementById(idform).innerHTML = formdata;
-		document.getElementById(idform).style.display = 'block';
-	}
+    constructor(){
+		super();
+    }
 
 /**
 	 * crea un elemento del DOM y lo devuelve
@@ -175,54 +121,7 @@ class dom extends dom_table {
 		}
 	
 	}
+
 	
-	/**
-	 * vacia el contenido de un div
-	 * @name vaciarDiv
-	 * @param {string} iddiv id del un contenedor div
-	 */
-	vaciarDiv(iddiv){
-		document.getElementById(iddiv).innerHTML = '';
-	}
 
-	/**
-	 * coloca el elemento en el contenedor con el div indicado
-	 * @name colocarelemento
-	 * @param {object} elemento elemento DOM a colocar 
-	 * @param {string} divdestino id del contenedor donde se va colocar el elemento
-	 */
-	colocarelemento(elemento, divdestino){
-		document.getElementById(divdestino).append(elemento);
-	}
-
-}
-
-	/**
- * if id and mode switch the state of display of html element(id) to 'none' or 'block'/'inline'
- * if 'on'/'off' force html element (id) to show or hide
- * 
- * 
- * @param {string} id  id of html element to show/hide
- * @param {string} mode 'block'/'inline'
- * @param {string} ponerestado 'on'/'off'
- */
-
-	function switch_display_mode(id,mode, ponerestado=null){
-
-	if (ponerestado == 'on'){
-		document.getElementById(id).style.display = mode;
-	}
-	else{
-		if (ponerestado == 'off'){
-		document.getElementById(id).style.display = 'none';
-		}
-		else{ 
-			if (document.getElementById(id).style.display == 'none'){
-				document.getElementById(id).style.display = mode;
-			}
-			else{
-				document.getElementById(id).style.display = 'none';
-			}
-		}
-	}
 }
