@@ -298,7 +298,7 @@ function generarCodigoEntidad(esquema) {
         }
 
         // Si es regla de tamaño en SEARCH, el resultado esperado de error debe ser true (sin fallo de tamaño)
-        const isSearchSizeRule = accion === "SEARCH" && (regla.tipo === "min_size" || regla.tipo === "max_size");
+        const isSearchSizeRule = accion === "SEARCH" && (regla.tipo === "min_size");
         const codigoResultado = isSearchSizeRule ? true : regla.codigoKO;
 
         defTests.push([
