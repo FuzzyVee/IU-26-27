@@ -46,9 +46,9 @@ class persona extends General_Entity_Class {
                 label: 'Dirección',
                 type: 'textarea',
                 rules: {
-                    ADD: { min_size: 10, max_size: 200 },
-                    EDIT: { max_size: 200 },
-                    SEARCH: { min_size: 10, max_size: 200 }
+                    ADD: { min_size: 10, max_size: 200, format: "^[A-Za-zÑñáéíóúÁÉÍÓÚ.,;/ -]+$" },
+                    EDIT: { max_size: 200, format: "^[A-Za-zÑñáéíóúÁÉÍÓÚ.,;/ -]*$" },
+                    SEARCH: { max_size: 200, format: "^[A-Za-zÑñáéíóúÁÉÍÓÚ.,;/ -]*$" }
                 }
             },
             {

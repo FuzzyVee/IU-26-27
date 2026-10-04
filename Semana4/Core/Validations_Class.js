@@ -9,6 +9,7 @@ class Validations{
 	//@param minsize tamaño minimo a validar
 	
 	min_size(id, minsize){
+		console.log("id = " + id + ", minsize = " + minsize);
 		let elemento = document.getElementById(id);
 		switch (elemento.tagName){
 			case 'INPUT':

@@ -62,6 +62,7 @@ class General_Entity_Class {
           // 1. min_size
           if (
             rules.min_size !== undefined &&
+            rules.min_size !== null &&
             !this.validations.min_size(f.name, rules.min_size)
           ) {
             const ko = `${f.name}_min_size_ko`;
@@ -72,6 +73,7 @@ class General_Entity_Class {
           // 2. max_size
           if (
             rules.max_size !== undefined &&
+            rules.max_size !== null &&
             !this.validations.max_size(f.name, rules.max_size)
           ) {
             const ko = `${f.name}_max_size_ko`;
@@ -82,6 +84,7 @@ class General_Entity_Class {
           // 3. format
           if (
             rules.format !== undefined &&
+            rules.format !== null &&
             !this.validations.format(f.name, rules.format)
           ) {
             const ko = `${f.name}_format_ko`;

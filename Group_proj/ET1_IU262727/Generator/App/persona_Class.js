@@ -18,7 +18,7 @@ class persona extends Validations {
 			<input type="text" id="dni" name="dni" onblur="return entidad.ADD_dni_validation();">
 			<span id="span_error_dni" class="error_span"><a id="error_dni"></a></span>
             <br>
-			
+
 			<label class="label_nombre_persona">Nombre de pila</label>
 			<input type="text" id="nombre_persona" name="nombre_persona" onblur="return entidad.ADD_nombre_persona_validation();">
 			<span id="span_error_nombre_persona" class="error_span"><a id="error_nombre_persona"></a></span>
@@ -28,7 +28,7 @@ class persona extends Validations {
 			<input type="text" id="apellidos_persona" name="apellidos_persona" onblur="return entidad.ADD_apellidos_persona_validation();">
 			<span id="span_error_apellidos_persona" class="error_span"><a id="error_apellidos_persona"></a></span>
 			<br>
-			
+
 			<label class="label_fechaNacimiento_persona">Fecha de Nacimiento</label>
 			<input type="date" id="fechaNacimiento_persona" name="fechaNacimiento_persona" placeholder="dd/mm/aaaa" onblur="return entidad.ADD_fechaNacimiento_persona_validation();">
 			<span id="span_error_fechaNacimiento_persona" class="error_span"><a id="error_fechaNacimiento_persona"></a></span>
@@ -58,7 +58,6 @@ class persona extends Validations {
 		</form>
 		`;
 	}
-
 
 	ADD_dni_validation() {
 		if (!this.min_size('dni', 9)) {
@@ -143,7 +142,7 @@ class persona extends Validations {
 			this.dom.mostrar_error_campo('direccion_persona', 'direccion_persona_max_size_ko');
 			return "direccion_persona_max_size_ko";
 		}
-		if (!this.format('direccion_persona', '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.,;\\/\\-]+$')) {
+		if (!this.format('direccion_persona', '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ.,;/ -]+$')) {
 			this.dom.mostrar_error_campo('direccion_persona', 'direccion_persona_format_ko');
 			return "direccion_persona_format_ko";
 		}
@@ -152,9 +151,13 @@ class persona extends Validations {
 	}
 
 	ADD_telefono_persona_validation() {
-		if (!this.min_size('telefono_persona', 9) || !this.max_size('telefono_persona', 9)) {
-			this.dom.mostrar_error_campo('telefono_persona', 'telefono_persona_size_ko');
-			return "telefono_persona_size_ko";
+		if (!this.min_size('telefono_persona', 9)) {
+			this.dom.mostrar_error_campo('telefono_persona', 'telefono_persona_min_size_ko');
+			return "telefono_persona_min_size_ko";
+		}
+		if (!this.max_size('telefono_persona', 9)) {
+			this.dom.mostrar_error_campo('telefono_persona', 'telefono_persona_max_size_ko');
+			return "telefono_persona_max_size_ko";
 		}
 		if (!this.format('telefono_persona', '^[0-9]{9}$')) {
 			this.dom.mostrar_error_campo('telefono_persona', 'telefono_persona_format_ko');
@@ -230,7 +233,7 @@ class persona extends Validations {
 	}
 
 	/**
-		@return {bool/object} true si todas las validaciones son correctas, 
+		@return {bool/object} true si todas las validaciones son correctas,
 							  o el objeto set_result con los códigos de error si alguna falla.
 	*/
 	EDIT_submit_persona() {
@@ -272,11 +275,12 @@ class persona extends Validations {
 	}
 
 	SEARCH_nombre_persona_validation() {
+		let valor = document.getElementById("nombre_persona").value;
 		if (valor === "" || valor === null) {
 			this.dom.mostrar_exito_campo('nombre_persona');
 			return false;
 		}
-		
+
 		if (!this.min_size('nombre_persona', 2)) {
 			this.dom.mostrar_error_campo('nombre_persona', 'nombre_persona_min_size_ko');
 			return "nombre_persona_min_size_ko";
@@ -295,7 +299,7 @@ class persona extends Validations {
 
 	SEARCH_apellidos_persona_validation() { return this.ADD_apellidos_persona_validation(); }
 
-	SEARCH_dni_validation() { 
+	SEARCH_dni_validation() {
 		if (!this.max_size('dni', 9)) {
 			this.dom.mostrar_error_campo('dni', 'dni_max_size_ko');
 			return "dni_max_size_ko";
@@ -311,7 +315,7 @@ class persona extends Validations {
 	SEARCH_email_persona_validation() { return this.ADD_email_persona_validation(); }
 	SEARCH_foto_persona_validation() { return true; }
 	SEARCH_apellidos_persona_validation() { return this.ADD_apellidos_persona_validation(); }
-	
+
 
 	SEARCH_submit_persona() {
 		var set_result = {};
@@ -326,12 +330,12 @@ class persona extends Validations {
 
 		// Combinación booleana de todos los campos
 		let result = (
-			(set_result.dni) & 
-		(set_result.nombre_persona) & 
-		(set_result.apellidos_persona) & 
-		(set_result.fechaNacimiento_persona) & 
-		(set_result.direccion_persona) & 
-		(set_result.telefono_persona) & 
+			(set_result.dni) &
+		(set_result.nombre_persona) &
+		(set_result.apellidos_persona) &
+		(set_result.fechaNacimiento_persona) &
+		(set_result.direccion_persona) &
+		(set_result.telefono_persona) &
 		(set_result.email_persona)
 		);
 
