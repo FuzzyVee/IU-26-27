@@ -257,6 +257,50 @@ class persona extends AbstractEntidad{
 
 	}
 
+	/**
+	 
+		@param
+		@return	{bool} true if all fields validations are ok or 
+		@return {object} object with the ids of elements and error code if field validation is not ok and true if field validation is ok
+	*/
+	EDIT_submit_persona(){
+
+		// object to store de fields validations
+		var set_result = {};
+
+		// store in key (id element) value (result of field validation method)
+		set_result.nombre_persona = this.EDIT_nombre_persona_validation();
+		set_result.nuevo_foto_persona = this.EDIT_nuevo_foto_persona_validation();
+
+		// calculate combination of all field validations
+		let result = (
+					(set_result.nombre_persona) &
+					(set_result.nuevo_foto_persona)
+					)
+		
+		// convert the result to boolean
+		result = Boolean(result);
+
+		// if boolean and true return true
+		if ((typeof result === 'boolean') && (result == true)){
+			return result;
+		}// if not boolean or false return the object with id element as key and code error as value
+		else{
+			return set_result;
+		}
+		
+
+	}
+
+	SEARCH_dni_validation(){
+		return {mierror:'dni_mierror_ko'};
+	}
+
+	SEARCH_submit_persona(){
+		alert('entro');
+		return this.SEARCH_dni_validation();
+	}
+
 	
 	createForm_EDIT(fila){
 
@@ -265,7 +309,7 @@ class persona extends AbstractEntidad{
 		this.dom.show_element('Div_IU_form','block');
 
 		// rellenar onsubmit y action
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.EDIT_submit_'+this.nombreentidad);
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.EDIT_submit_'+this.nombreentidad+'())');
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.EDIT();');
 
 		//activar el link al fichero
@@ -352,7 +396,7 @@ class persona extends AbstractEntidad{
 		this.dom.show_element('Div_IU_form','block');
 
 		// poner onsubmit
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.ADD_submit_'+this.nombreentidad+'()');
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.ADD_submit_'+this.nombreentidad+'())');
 
 		// poner action
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.ADD();');
@@ -382,7 +426,7 @@ class persona extends AbstractEntidad{
 		this.dom.show_element('Div_IU_form','block');
 
 		// poner onsubmit
-		this.dom.assign_property_value('form_iu','onsubmit','return entidad.SEARCH_submit_'+this.nombreentidad);
+		this.dom.assign_property_value('form_iu','onsubmit','return entidad.dom.validarsubmit(entidad.SEARCH_submit_'+this.nombreentidad+'())');
 
 		// poner action
 		this.dom.assign_property_value('form_iu', 'action', 'javascript:entidad.SEARCH();');
@@ -474,7 +518,7 @@ class persona extends AbstractEntidad{
 	//
 	//SEARCH
 	//
-	SEARCH_dni_validation(){return true;}
+
 	SEARCH_nombre_persona_validation(){return true;}
 	SEARCH_apellidos_persona_validation(){return true;}
 	SEARCH_fechaNacimiento_persona_validation(){return true;}
@@ -484,13 +528,7 @@ class persona extends AbstractEntidad{
 	SEARCH_foto_persona_validation(){return true;}
 	SEARCH_nuevo_foto_persona_validation(){return true;}
 
-	//
-	//submits
-	//
-	EDIT_submit_persona(){return true;}
-	SEARCH_submit_persona(){return true;}
-
-	
+		
 }
 
 

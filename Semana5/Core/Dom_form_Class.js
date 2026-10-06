@@ -90,4 +90,14 @@ class dom_form {
 		}
 	}
 
+	/**
+	 * 
+	 * @param {bool} return value of action_submit_validation if is correct OR
+	 * @param {object} retun value of action_submit_validation if is not correct
+	 * @returns {bool} return true if value is true and return false if value is object
+	 */
+	validarsubmit(value){
+		if (typeof value === 'object') {return false} else {return true};
+	}
+
 }
