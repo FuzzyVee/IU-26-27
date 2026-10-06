@@ -60,15 +60,25 @@ generateValidationMethods() {
                 }
 
                 // 1. min_size
-                if (
-                    rules.min_size !== undefined &&
-                    rules.min_size !== null &&
-                    !this.validations.min_size(f.name, rules.min_size)
-                ) {
-                    const ko = `${f.name}_min_size_ko`;
-                    this.dom.mostrar_error_campo(f.name, ko);
-                    return ko;
+                if (rules.min_size !== undefined && rules.min_size !== null) {
+                    let minSizeFailed = !this.validations.min_size(f.name, rules.min_size);
+
+                    // Evaluate numeric minimums (e.g. -1 or 0 for numeric ID fields with min_size = 1)
+                    const elem = document.getElementById(f.name);
+                    const val = elem ? elem.value : '';
+                    if (!minSizeFailed && !isNaN(val) && val !== '' && val !== null) {
+                        if (Number(val) < rules.min_size) {
+                            minSizeFailed = true;
+                        }
+                    }
+
+                    if (minSizeFailed) {
+                        const ko = `${f.name}_min_size_ko`;
+                        this.dom.mostrar_error_campo(f.name, ko);
+                        return ko;
+                    }
                 }
+
 
                 // 2. max_size
                 if (

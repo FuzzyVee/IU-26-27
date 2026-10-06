@@ -18,16 +18,16 @@ let funcionalidad_accion_def_tests = Array(
 );
 
 let funcionalidad_accion_pruebas = Array(
-   Array("funcionalidad_accion", "id_funcionalidad", 1, 1, "ADD", {"id_funcionalidad":0}, "id_funcionalidad_min_size_ko"),
-   Array("funcionalidad_accion", "id_funcionalidad", 2, 2, "EDIT", {"id_funcionalidad":0}, "id_funcionalidad_min_size_ko"),
+   Array("funcionalidad_accion", "id_funcionalidad", 1, 1, "ADD", {"id_funcionalidad":-1}, "id_funcionalidad_min_size_ko"),
+   Array("funcionalidad_accion", "id_funcionalidad", 2, 2, "EDIT", {"id_funcionalidad":-1}, "id_funcionalidad_min_size_ko"),
    Array("funcionalidad_accion", "id_funcionalidad", 3, 3, "ADD", {"id_funcionalidad":999999999999}, "id_funcionalidad_max_size_ko"),
    Array("funcionalidad_accion", "id_funcionalidad", 4, 4, "EDIT", {"id_funcionalidad":999999999999}, "id_funcionalidad_max_size_ko"),
    Array("funcionalidad_accion", "id_funcionalidad", 5, 5, "SEARCH", {"id_funcionalidad":999999999999}, "id_funcionalidad_max_size_ko"),
    Array("funcionalidad_accion", "id_funcionalidad", 6, 6, "ADD", {"id_funcionalidad":2}, true),
    Array("funcionalidad_accion", "id_funcionalidad", 7, 7, "EDIT", {"id_funcionalidad":2}, true),
    Array("funcionalidad_accion", "id_funcionalidad", 8, 8, "SEARCH", {"id_funcionalidad":2}, true),
-   Array("funcionalidad_accion", "id_accion", 9, 9, "ADD", {"id_accion":0}, "id_accion_min_size_ko"),
-   Array("funcionalidad_accion", "id_accion", 10, 10, "EDIT", {"id_accion":0}, "id_accion_min_size_ko"),
+   Array("funcionalidad_accion", "id_accion", 9, 9, "ADD", {"id_accion":-1}, "id_accion_min_size_ko"),
+   Array("funcionalidad_accion", "id_accion", 10, 10, "EDIT", {"id_accion":-1}, "id_accion_min_size_ko"),
    Array("funcionalidad_accion", "id_accion", 11, 11, "ADD", {"id_accion":999999999999}, "id_accion_max_size_ko"),
    Array("funcionalidad_accion", "id_accion", 12, 12, "EDIT", {"id_accion":999999999999}, "id_accion_max_size_ko"),
    Array("funcionalidad_accion", "id_accion", 13, 13, "SEARCH", {"id_accion":999999999999}, "id_accion_max_size_ko"),

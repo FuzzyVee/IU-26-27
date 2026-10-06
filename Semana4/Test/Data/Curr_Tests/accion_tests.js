@@ -30,8 +30,8 @@ let accion_def_tests = Array(
 );
 
 let accion_pruebas = Array(
-   Array("accion", "id_accion", 1, 1, "ADD", {"id_accion":0}, "id_accion_min_size_ko"),
-   Array("accion", "id_accion", 2, 2, "EDIT", {"id_accion":0}, "id_accion_min_size_ko"),
+   Array("accion", "id_accion", 1, 1, "ADD", {"id_accion":-1}, "id_accion_min_size_ko"),
+   Array("accion", "id_accion", 2, 2, "EDIT", {"id_accion":-1}, "id_accion_min_size_ko"),
    Array("accion", "id_accion", 3, 3, "ADD", {"id_accion":999999999999}, "id_accion_max_size_ko"),
    Array("accion", "id_accion", 4, 4, "EDIT", {"id_accion":999999999999}, "id_accion_max_size_ko"),
    Array("accion", "id_accion", 5, 5, "ADD", {"id_accion":3}, true),
@@ -44,9 +44,9 @@ let accion_pruebas = Array(
    Array("accion", "nombre_accion", 12, 12, "ADD", {"nombre_accion":"Añadir123"}, "nombre_accion_format_ko"),
    Array("accion", "nombre_accion", 13, 13, "EDIT", {"nombre_accion":"Añadir123"}, "nombre_accion_format_ko"),
    Array("accion", "nombre_accion", 14, 14, "SEARCH", {"nombre_accion":"Añadir123"}, "nombre_accion_format_ko"),
-   Array("accion", "nombre_accion", 15, 15, "ADD", {"nombre_accion":"Consultar con ñ"}, true),
-   Array("accion", "nombre_accion", 16, 16, "EDIT", {"nombre_accion":"Consultar con ñ"}, true),
-   Array("accion", "nombre_accion", 17, 17, "SEARCH", {"nombre_accion":"Consultar con ñ"}, true),
+   Array("accion", "nombre_accion", 15, 15, "ADD", {"nombre_accion":"Coñsultar"}, true),
+   Array("accion", "nombre_accion", 16, 16, "EDIT", {"nombre_accion":"Coñsultar"}, true),
+   Array("accion", "nombre_accion", 17, 17, "SEARCH", {"nombre_accion":"Coñsultar"}, true),
    Array("accion", "descrip_accion", 18, 18, "ADD", {"descrip_accion":"desc"}, "descrip_accion_min_size_ko"),
    Array("accion", "descrip_accion", 19, 19, "EDIT", {"descrip_accion":"desc"}, "descrip_accion_min_size_ko"),
    Array("accion", "descrip_accion", 20, 20, "ADD", {"descrip_accion":"ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}, "descrip_accion_max_size_ko"),

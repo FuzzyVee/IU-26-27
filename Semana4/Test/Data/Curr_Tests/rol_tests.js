@@ -30,8 +30,8 @@ let rol_def_tests = Array(
 );
 
 let rol_pruebas = Array(
-   Array("rol", "id_rol", 1, 1, "ADD", {"id_rol":0}, "id_rol_min_size_ko"),
-   Array("rol", "id_rol", 2, 2, "EDIT", {"id_rol":0}, "id_rol_min_size_ko"),
+   Array("rol", "id_rol", 1, 1, "ADD", {"id_rol":-1}, "id_rol_min_size_ko"),
+   Array("rol", "id_rol", 2, 2, "EDIT", {"id_rol":-1}, "id_rol_min_size_ko"),
    Array("rol", "id_rol", 3, 3, "ADD", {"id_rol":999999999999}, "id_rol_max_size_ko"),
    Array("rol", "id_rol", 4, 4, "EDIT", {"id_rol":999999999999}, "id_rol_max_size_ko"),
    Array("rol", "id_rol", 5, 5, "SEARCH", {"id_rol":999999999999}, "id_rol_max_size_ko"),

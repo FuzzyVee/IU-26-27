@@ -15,4 +15,3 @@ class rolaccionfuncionalidad extends General_Entity_Class {
         super('rolaccionfuncionalidad', fields, ['id_funcionalidad', 'id_accion', 'id_rol'], [], esTest);
     }
 }
-

@@ -32,8 +32,8 @@ let funcionalidad_def_tests = Array(
 );
 
 let funcionalidad_pruebas = Array(
-   Array("funcionalidad", "id_funcionalidad", 1, 1, "ADD", {"id_funcionalidad":0}, "id_funcionalidad_min_size_ko"),
-   Array("funcionalidad", "id_funcionalidad", 2, 2, "EDIT", {"id_funcionalidad":0}, "id_funcionalidad_min_size_ko"),
+   Array("funcionalidad", "id_funcionalidad", 1, 1, "ADD", {"id_funcionalidad":-1}, "id_funcionalidad_min_size_ko"),
+   Array("funcionalidad", "id_funcionalidad", 2, 2, "EDIT", {"id_funcionalidad":-1}, "id_funcionalidad_min_size_ko"),
    Array("funcionalidad", "id_funcionalidad", 3, 3, "ADD", {"id_funcionalidad":999999999999}, "id_funcionalidad_max_size_ko"),
    Array("funcionalidad", "id_funcionalidad", 4, 4, "EDIT", {"id_funcionalidad":999999999999}, "id_funcionalidad_max_size_ko"),
    Array("funcionalidad", "id_funcionalidad", 5, 5, "SEARCH", {"id_funcionalidad":999999999999}, "id_funcionalidad_max_size_ko"),
