@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Runner - ET1</title>
+    <link rel="stylesheet" href="../../Base/css/styles_test.css">
+
+    <!-- 1. Core Classes (from ../Core/) -->
+    <script type="text/javascript" src="../../Core/Validations_Class.js"></script>
+    <script type="text/javascript" src="../../Core/Dom_table_Class.js"></script>
+    <script type="text/javascript" src="../../Core/Dom_Class.js"></script>
+    <script type="text/javascript" src="../../Core/ExternalAccess_class.js"></script>
+    <script type="text/javascript" src="../../Core/General_Entity_Class.js"></script>
+    
+    <!-- 3. Entity Classes (from ../app/) -->
+    <script type="text/javascript" src="../../app/persona_Class.js"></script>
+    <script type="text/javascript" src="../../app/usuario_Class.js"></script>
+    <script type="text/javascript" src="../../app/rol_Class.js"></script>
+    <script type="text/javascript" src="../../app/accion_Class.js"></script>
+    <script type="text/javascript" src="../../app/funcionalidad_Class.js"></script>
+    <script type="text/javascript" src="../../app/funcionalidad_accion_Class.js"></script>
+    <script type="text/javascript" src="../../app/rolaccionfuncionalidad_Class.js"></script>
+
+    <!-- 4. Generated Test Data Files (from ./Data/) -->
+    <script type="text/javascript" src="./Curr_Tests/persona_tests.js"></script>
+    <script type="text/javascript" src="./Curr_Tests/usuario_tests.js"></script>
+    <script type="text/javascript" src="./Curr_Tests/rol_tests.js"></script>
+    <script type="text/javascript" src="./Curr_Tests/accion_tests.js"></script>
+    <script type="text/javascript" src="./Curr_Tests/funcionalidad_tests.js"></script>
+    <script type="text/javascript" src="./Curr_Tests/funcionalidad_accion_tests.js"></script>
+    <script type="text/javascript" src="./Curr_Tests/rolaccionfuncionalidad_tests.js"></script>
+    
+    <script type="text/javascript" src="./test_app.js"></script>
+    
+</head>
+    
+<body>
+
+    <h1>Batería de Pruebas Automáticas - Entidad Persona</h1>
+    <a href="./index.html">← Volver al Formulario Principal</a>
+    <br><br>
+
+       
+    <label for="entidadSelect">Seleccionar entidad:</label>
+    <select id="entidadSelect">
+        <option value="persona">persona</option>
+        <option value="usuario">usuario</option>
+        <option value="rol">rol</option>
+        <option value="accion">accion</option>
+        <option value="funcionalidad">funcionalidad</option>
+        <option value="rolfuncionalidadaccion">rolfuncionalidadaccion</option>
+        <option value="funcionalidad_accion">funcionalidad_accion</option>
+        <option value="all">all</option>
+    </select>
+
+    <button type="button" onclick="runAllTests()">Ejecutar Todas las Pruebas</button>
+
+    <div id="hidden-form-container">
+        <section id="IU_form">
+            <input type="text" id="dni">
+            <span id="span_error_dni"><span id="error_dni"></span></span>
+
+            <input type="text" id="nombre_persona">
+            <span id="span_error_nombre_persona"><span id="error_nombre_persona"></span></span>
+
+            <input type="text" id="apellidos_persona">
+            <span id="span_error_apellidos_persona"><span id="error_apellidos_persona"></span></span>
+
+            <input type="text" id="fechaNacimiento_persona">
+            <span id="span_error_fechaNacimiento_persona"><span id="error_fechaNacimiento_persona"></span></span>
+
+            <input type="text" id="direccion_persona">
+            <span id="span_error_direccion_persona"><span id="error_direccion_persona"></span></span>
+
+            <input type="text" id="telefono_persona">
+            <span id="span_error_telefono_persona"><span id="error_telefono_persona"></span></span>
+
+            <input type="email" id="email_persona">
+            <span id="span_error_email_persona"><span id="error_email_persona"></span></span>
+
+            <input type="file" id="foto_persona">
+            <span id="span_error_foto_persona"><span id="error_foto_persona"></span></span>
+
+            <button id="submit_button"></button>
+        </section>
+        <section id="">
+    </div>
+
+    <!-- Results Table -->
+    <table id="results-table">
+        <thead>
+            <tr>
+                <th>Prueba </th>
+                <th>Campo</th>
+                <th>Acción</th>
+                <th>Valor Probado</th>
+                <th>Resultado Esperado</th>
+                <th>Resultado Obtenido</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody id="results-body">
+            <tr>
+                <td colspan="7">Haz clic en "Ejecutar Todas las Pruebas" para iniciar el test.</td>
+            </tr>
+        </tbody>
+    </table>    
+
+</body>
+
+</html>

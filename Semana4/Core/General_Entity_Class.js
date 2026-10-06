@@ -39,101 +39,101 @@ class General_Entity_Class {
   /**
    * Dynamically constructs validation functions on 'this'
    */
-  generateValidationMethods() {
+generateValidationMethods() {
     ['ADD', 'EDIT', 'SEARCH'].forEach((action) => {
-      this.fields.forEach((f) => {
-        const methodName = `${action}_${f.name}_validation`;
-        const rules = f.rules ? f.rules[action] : null;
+        this.fields.forEach((f) => {
+            const methodName = `${action}_${f.name}_validation`;
+            const rules = f.rules ? f.rules[action] : null;
 
-        // Dynamically assign function to this instance
-        this[methodName] = () => {
-          if (!rules) return true;
+            // Dynamically assign validation function to this instance
+            this[methodName] = () => {
+                if (!rules) return true;
 
-          // SEARCH rule: Empty fields are valid search inputs
-          if (action === 'SEARCH') {
-            const elem = document.getElementById(f.name);
-            const val = elem ? elem.value : '';
-            if (!val) {
-              this.dom.mostrar_exito_campo(f.name);
-              return true;
-            }
-          }
+                // SEARCH rule: Empty fields are valid search inputs
+                if (action === 'SEARCH') {
+                    const elem = document.getElementById(f.name);
+                    const val = elem ? elem.value : '';
+                    if (!val) {
+                        this.dom.mostrar_exito_campo(f.name);
+                        return true;
+                    }
+                }
 
-          // 1. min_size
-          if (
-            rules.min_size !== undefined &&
-            rules.min_size !== null &&
-            !this.validations.min_size(f.name, rules.min_size)
-          ) {
-            const ko = `${f.name}_min_size_ko`;
-            this.dom.mostrar_error_campo(f.name, ko);
-            return ko;
-          }
+                // 1. min_size
+                if (
+                    rules.min_size !== undefined &&
+                    rules.min_size !== null &&
+                    !this.validations.min_size(f.name, rules.min_size)
+                ) {
+                    const ko = `${f.name}_min_size_ko`;
+                    this.dom.mostrar_error_campo(f.name, ko);
+                    return ko;
+                }
 
-          // 2. max_size
-          if (
-            rules.max_size !== undefined &&
-            rules.max_size !== null &&
-            !this.validations.max_size(f.name, rules.max_size)
-          ) {
-            const ko = `${f.name}_max_size_ko`;
-            this.dom.mostrar_error_campo(f.name, ko);
-            return ko;
-          }
+                // 2. max_size
+                if (
+                    rules.max_size !== undefined &&
+                    rules.max_size !== null &&
+                    !this.validations.max_size(f.name, rules.max_size)
+                ) {
+                    const ko = `${f.name}_max_size_ko`;
+                    this.dom.mostrar_error_campo(f.name, ko);
+                    return ko;
+                }
 
-          // 3. format
-          if (
-            rules.format !== undefined &&
-            rules.format !== null &&
-            !this.validations.format(f.name, rules.format)
-          ) {
-            const ko = `${f.name}_format_ko`;
-            this.dom.mostrar_error_campo(f.name, ko);
-            return ko;
-          }
+                // 3. format
+                if (
+                    rules.format !== undefined &&
+                    rules.format !== null &&
+                    !this.validations.format(f.name, rules.format)
+                ) {
+                    const ko = `${f.name}_format_ko`;
+                    this.dom.mostrar_error_campo(f.name, ko);
+                    return ko;
+                }
 
-          // 4. File-specific validations
-          if (f.type === 'file') {
-            if (rules.exist_file && !this.validations.exist_file(f.name)) {
-              const ko = `${f.name}_exist_file_ko`;
-              this.dom.mostrar_error_campo(f.name, ko);
-              return ko;
-            }
-            if (
-              rules.max_size_file &&
-              !this.validations.max_size_file(f.name, rules.max_size_file)
-            ) {
-              const ko = `${f.name}_max_size_file_ko`;
-              this.dom.mostrar_error_campo(f.name, ko);
-              return ko;
-            }
-            if (
-              rules.type_file &&
-              !this.validations.type_file(f.name, rules.type_file)
-            ) {
-              const ko = `${f.name}_type_file_ko`;
-              this.dom.mostrar_error_campo(f.name, ko);
-              return ko;
-            }
-            if (
-              rules.format_name_file &&
-              !this.validations.format_name_file(
-                f.name,
-                rules.format_name_file
-              )
-            ) {
-              const ko = `${f.name}_format_name_file_ko`;
-              this.dom.mostrar_error_campo(f.name, ko);
-              return ko;
-            }
-          }
+                // 4. File-specific validations
+                if (f.type === 'file') {
+                    const hasFile = this.validations.exist_file(f.name);
 
-          this.dom.mostrar_exito_campo(f.name);
-          return true;
-        };
-      });
+                    // If file is required (e.g. ADD) and missing
+                    if (rules.exist_file && !hasFile) {
+                        const ko = `${f.name}_exist_file_ko`;
+                        this.dom.mostrar_error_campo(f.name, ko);
+                        return ko;
+                    }
+
+                    // On EDIT (or if file is optional) and no file is uploaded, skip file size/format checks
+                    if (!hasFile) {
+                        this.dom.mostrar_exito_campo(f.name);
+                        return true;
+                    }
+
+                    if (rules.max_size_file && !this.validations.max_size_file(f.name, rules.max_size_file)) {
+                        const ko = `${f.name}_max_size_file_ko`;
+                        this.dom.mostrar_error_campo(f.name, ko);
+                        return ko;
+                    }
+
+                    if (rules.type_file && !this.validations.type_file(f.name, rules.type_file)) {
+                        const ko = `${f.name}_type_file_ko`;
+                        this.dom.mostrar_error_campo(f.name, ko);
+                        return ko;
+                    }
+
+                    if (rules.format_name_file && !this.validations.format_name_file(f.name, rules.format_name_file)) {
+                        const ko = `${f.name}_format_name_file_ko`;
+                        this.dom.mostrar_error_campo(f.name, ko);
+                        return ko;
+                    }
+                }
+
+                this.dom.mostrar_exito_campo(f.name);
+                return true;
+            };
+        });
     });
-  }
+}
 
   /**
    * Dynamically constructs ADD_submit_<entity>, EDIT_submit_<entity>, etc.
@@ -162,18 +162,18 @@ class General_Entity_Class {
     let html = `<form id="form_iu" action="http://193.147.87.202/procesaform.php" method="POST" enctype="multipart/form-data" onsubmit="return entidad.ADD_submit_${this.nombreentidad}();">\n`;
 
     this.fields.forEach((f) => {
-      html += `  <label class="label_${f.name}">${f.label}</label>\n`;
-      if (f.type === 'textarea') {
-        html += `  <textarea id="${f.name}" name="${f.name}" onblur="return entidad.ADD_${f.name}_validation();"></textarea>\n`;
-      } else {
-        html += `  <input type="${f.type || 'text'}" id="${f.name}" name="${f.name}" onblur="return entidad.ADD_${f.name}_validation();">\n`;
-      }
-      html += `  <span id="span_error_${f.name}"><a id="error_${f.name}"></a></span>\n  <br>\n`;
+        html += `  <label class="label_${f.name}">${f.label}</label>\n`;
+        if (f.type === 'file') {
+            html += `  <input type="file" id="${f.name}" name="${f.name}" onblur="return entidad.ADD_${f.name}_validation();">\n`;
+        } else {
+            html += `  <input type="text" id="${f.name}" name="${f.name}" onblur="return entidad.ADD_${f.name}_validation();">\n`;
+        }
+        html += `  <span id="span_error_${f.name}"><a id="error_${f.name}"></a></span>\n  <br>\n`;
     });
 
     html += `  <input id="submit_button" type="submit" value="Submit">\n</form>`;
     return html;
-  }
+}
 
   initUI() {
     const manageDiv = document.getElementById('IU_manage_entity');
