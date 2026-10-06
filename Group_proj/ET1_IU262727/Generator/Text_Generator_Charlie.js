@@ -48,9 +48,11 @@ const esquemasET1 = {
         campo: "direccion_persona",
         elemento: "input",
         reglas: [
-          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "direccion_persona_min_size_ko", desc: "cumple tamaño minimo direccion_persona", msgError: "Direccion muy corta (min 10)", valorInvalido: { "direccion_persona": "C/ Mayor" } },
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "direccion_persona_min_size_ko", desc: "cumple tamaño minimo direccion_persona", msgError: "Direccion muy corta (min 10)", valorInvalido: { "direccion_persona": "C. Mayor" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "direccion_persona_max_size_ko", desc: "cumple tamaño maximo direccion_persona", msgError: "Direccion muy larga (max 200)", valorInvalido: { "direccion_persona": "D".repeat(201) } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "direccion_persona_format_ko", desc: "cumple formato direccion", msgError: "Formato direccion invalido", valorInvalido: { "direccion_persona": "C/ Mayor @ #" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "direccion_persona_format_ko", desc: "cumple formato direccion", msgError: "Formato direccion invalido", valorInvalido: { "direccion_persona": "C/ Mayor but this is also longer" } },
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "direccion_persona_format_ko", desc: "cumple formato direccion", msgError: "Formato direccion invalido", valorInvalido: { "direccion_persona": "Av. de la Libertad@domain.com" } }
+
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto direccion_persona", msgExito: "Direccion correcta", valorValido: { "direccion_persona": "Rua das Aflitas, 12; 4ºA / Vigo" } }
       },
@@ -70,7 +72,7 @@ const esquemasET1 = {
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_format_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "correo.invalido.com" } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_format_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "correo_invalido.com" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto email_persona", msgExito: "Email correcto", valorValido: { "email_persona": "normal(wtf␣is␣this?+tag@[::1]" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto email_persona", msgExito: "Email correcto", valorValido: { "email_persona": "actu@domain.com" } } //normal(wtf␣is␣this?+tag@[::1] its technically valid but not practical)
       },
       {
         campo: "foto_persona",
@@ -97,7 +99,7 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "dni_min_size_ko", desc: "cumple tamaño minimo dni", msgError: "DNI demasiado corto (min 9)", valorInvalido: { "dni": "123" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_max_size_ko", desc: "cumple tamaño maximo dni", msgError: "DNI demasiado largo (max 9)", valorInvalido: { "dni": "1234567890" } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "A12345678A" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "A1234567A" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto dni", msgExito: "DNI correcto", valorValido: { "dni": "80423097D" } }
       },
@@ -107,7 +109,9 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "usuario_min_size_ko", desc: "cumple tamaño minimo usuario", msgError: "Usuario muy corto (min 5)", valorInvalido: { "usuario": "user" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_max_size_ko", desc: "cumple tamaño maximo usuario", msgError: "Usuario muy largo (max 45)", valorInvalido: { "usuario": "u".repeat(46) } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "ni-ño_úser" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "niñoser" } },
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "úser" } },
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "Joy_User" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto usuario", msgExito: "Usuario correcto", valorValido: { "usuario": "johndoe" } }
       },
@@ -117,7 +121,10 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_min_size_ko", desc: "cumple tamaño minimo contrasena", msgError: "Contraseña muy corta (min 8)", valorInvalido: { "contrasena": "pass" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_max_size_ko", desc: "cumple tamaño maximo contrasena", msgError: "Contraseña muy larga (max 45)", valorInvalido: { "contrasena": "p".repeat(46) } },
-          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos)", valorInvalido: { "contrasena": "co-ntra_seña123" } }
+          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos) Alfabetico", valorInvalido: { "contrasena": "contraseña" } },
+          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos) Alfabetico", valorInvalido: { "contrasena": "co-ntra_sena" } },
+          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos) Alfabetico", valorInvalido: { "contrasena": "Password123" } },
+
         ],
         testExito: { acciones: ["ADD", "EDIT"], desc: "es correcto contrasena", msgExito: "Contraseña correcta", valorValido: { "contrasena": "securePass" } }
       },
@@ -126,9 +133,10 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_rol_min_size_ko", desc: "cumple tamaño numerico minimo id_rol", msgError: "Minimo 1", valorInvalido: { "id_rol": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_rol_max_size_ko", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_rol_max_size_ko", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 999999999999 } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_rol", msgExito: "ID rol correcto", valorValido: { "id_rol": 5 } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_rol", msgExito: "ID rol correcto", valorValido: { "id_rol": 1 } },
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_rol", msgExito: "ID rol correcto", valorValido: { "id_rol": 99999999999 } }
       }
     ]
   },
@@ -142,7 +150,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_rol_min_size_ko", desc: "cumple tamaño numerico minimo id_rol", msgError: "Minimo 1", valorInvalido: { "id_rol": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO:    "id_rol_max_size_ko", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO:    "id_rol_max_size_ko", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_rol", msgExito: "ID rol correcto", valorValido: { "id_rol": 5 } }
       },
@@ -164,7 +172,7 @@ const esquemasET1 = {
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "rol_description_max_size_ko", desc: "cumple tamaño maximo rol_description", msgError: "Descripcion muy larga (max 200)", valorInvalido: { "rol_description": "d".repeat(201) } },
           { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "rol_description_format_ko", desc: "cumple formato alfabetico con ñ, espacio y puntuacion", msgError: "Formato invalido", valorInvalido: { "rol_description": "Rol_123_invalid" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto rol_description", msgExito: "Descripcion correcta", valorValido: { "rol_description": "Permisos de edicion y consulta." } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto rol_description", msgExito: "Descripcion correcta", valorValido: { "rol_description": "Permisos de ediciÓn y consulta mas ñ." } }
       }
     ]
   },
@@ -178,7 +186,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_accion_min_size_ko", desc: "cumple tamaño numerico minimo id_accion", msgError: "Minimo 1", valorInvalido: { "id_accion": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT"], codigoKO: "id_accion_max_size_ko", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT"], codigoKO: "id_accion_max_size_ko", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT"], desc: "es correcto id_accion", msgExito: "ID accion correcto", valorValido: { "id_accion": 3 } }
       },
@@ -190,7 +198,7 @@ const esquemasET1 = {
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_accion_max_size_ko", desc: "cumple tamaño maximo nombre_accion", msgError: "Nombre muy largo (max 48)", valorInvalido: { "nombre_accion": "a".repeat(49) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "nombre_accion_format_ko", desc: "cumple formato alfabetico con ñ", msgError: "Formato invalido", valorInvalido: { "nombre_accion": "Añadir123" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto nombre_accion", msgExito: "Accion correcta", valorValido: { "nombre_accion": "Consultar" } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto nombre_accion", msgExito: "Accion correcta", valorValido: { "nombre_accion": "Consultar con ñ" } }
       },
       {
         campo: "descrip_accion",
@@ -200,7 +208,7 @@ const esquemasET1 = {
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "descrip_accion_max_size_ko", desc: "cumple tamaño maximo descrip_accion", msgError: "Descripcion muy larga (max 200)", valorInvalido: { "descrip_accion": "d".repeat(201) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "descrip_accion_format_ko", desc: "cumple formato alfabetico con ñ, espacio y puntuacion", msgError: "Formato invalido", valorInvalido: { "descrip_accion": "Accion_123_fail" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto descrip_accion", msgExito: "Descripcion correcta", valorValido: { "descrip_accion": "Ejecuta la validacion y guardado." } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto descrip_accion", msgExito: "Descripcion correcta", valorValido: { "descrip_accion": "Ejecuta la validacion y guardado con ñ." } }
       }
     ]
   },
@@ -214,7 +222,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_funcionalidad_min_size_ko", desc: "cumple tamaño numerico minimo id_funcionalidad", msgError: "Minimo 1", valorInvalido: { "id_funcionalidad": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_ko", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_ko", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_funcionalidad", msgExito: "ID funcionalidad correcto", valorValido: { "id_funcionalidad": 2 } }
       },
@@ -236,7 +244,7 @@ const esquemasET1 = {
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "descrip_funcionalidad_max_size_ko", desc: "cumple tamaño maximo descrip_funcionalidad", msgError: "Descripcion muy larga (max 200)", valorInvalido: { "descrip_funcionalidad": "f".repeat(201) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "descrip_funcionalidad_format_ko", desc: "cumple formato alfabetico con ñ, espacio y puntuacion", msgError: "Formato invalido", valorInvalido: { "descrip_funcionalidad": "Modulo_123_bad" } }
         ],
-        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto descrip_funcionalidad", msgExito: "Descripcion correcta", valorValido: { "descrip_funcionalidad": "Control de acceso y permisos." } }
+        testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto descrip_funcionalidad", msgExito: "Descripcion correcta", valorValido: { "descrip_funcionalidad": "Control de acceso y permisos, con ñ." } }
       }
     ]
   },
@@ -250,7 +258,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_funcionalidad_min_size_ko", desc: "cumple tamaño numerico minimo id_funcionalidad", msgError: "Minimo 1", valorInvalido: { "id_funcionalidad": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_ko", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_ko", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_funcionalidad", msgExito: "ID funcionalidad correcto", valorValido: { "id_funcionalidad": 2 } }
       },
@@ -259,7 +267,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_accion_min_size_ko", desc: "cumple tamaño numerico minimo id_accion", msgError: "Minimo 1", valorInvalido: { "id_accion": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_accion_max_size_ko", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_accion_max_size_ko", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_accion", msgExito: "ID accion correcto", valorValido: { "id_accion": 2 } }
       }
@@ -275,7 +283,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_rol_min_size_ko", desc: "cumple tamaño numerico minimo id_rol", msgError: "Minimo 1", valorInvalido: { "id_rol": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_rol_max_size_ko", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_rol_max_size_ko", desc: "cumple tamaño numerico maximo id_rol", msgError: "Maximo 11", valorInvalido: { "id_rol": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_rol", msgExito: "ID rol correcto", valorValido: { "id_rol": 2 } }
       },
@@ -284,7 +292,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_funcionalidad_min_size_ko", desc: "cumple tamaño numerico minimo id_funcionalidad", msgError: "Minimo 1", valorInvalido: { "id_funcionalidad": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_ko", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_funcionalidad_max_size_ko", desc: "cumple tamaño numerico maximo id_funcionalidad", msgError: "Maximo 11", valorInvalido: { "id_funcionalidad": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_funcionalidad", msgExito: "ID funcionalidad correcto", valorValido: { "id_funcionalidad": 2 } }
       },
@@ -293,7 +301,7 @@ const esquemasET1 = {
         elemento: "input",
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "id_accion_min_size_ko", desc: "cumple tamaño numerico minimo id_accion", msgError: "Minimo 1", valorInvalido: { "id_accion": 0 } },
-          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_accion_max_size_ko", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 12 } }
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "id_accion_max_size_ko", desc: "cumple tamaño numerico maximo id_accion", msgError: "Maximo 11", valorInvalido: { "id_accion": 999999999999 } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto id_accion", msgExito: "ID accion correcto", valorValido: { "id_accion": 2 } }
       }
