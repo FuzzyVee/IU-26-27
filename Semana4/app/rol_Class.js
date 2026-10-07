@@ -29,7 +29,7 @@ class rol extends General_Entity_Class {
                 rules: { 
                     ADD: { min_size: 5, max_size: 200, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.,;:\\?!\\-]+$' }, 
                     EDIT: { min_size: 5, max_size: 200, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.,;:\\?!\\-]+$' }, 
-                    SEARCH: { max_size: 200 } 
+                    SEARCH: { max_size: 200, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.,;:\\?!\\-]+$' } 
                 } 
             }
         ];
