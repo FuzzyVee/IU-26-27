@@ -1,101 +1,90 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
-	<!-- css -->
-	<link rel="stylesheet" type="text/css" href="./Base/css/IU.css" media="screen" />
-	<!-- clases generales -->
-	<script type="text/javascript" src="./Core/Validations_Class.js"></script>
-	<script type="text/javascript" src="./Core/ExternalAccess_class.js"></script>
-	<!-- clases dom -->
-	<script type="text/javascript" src="./Core/Dom_form_Class.js"></script> 
-	<script type="text/javascript" src="./Core/Dom_fields_Class.js"></script>
-	<script type="text/javascript" src="./Core/Dom_table_Class.js"></script>
-	<script type="text/javascript" src="./Core/Dom_Class.js"></script>
-	<!-- clases entidades -->
-	<script type="text/javascript" src="./Base/AbstractEntidad_Class.js"></script>
-	<script type="text/javascript" src="./app/persona_Class.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Interfaz de Usuario</title>
+    <link rel="stylesheet" href="./Base/css/styles.css">
 
-	<!-- este es el script que carga las librerias ajax que usamos para acceder al back -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- JQuery for ExternalAccess AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- Core Utilities -->
+    <script type="text/javascript" src="./Core/Validations_Class.js"></script>
+    <script type="text/javascript" src="./Core/ExternalAccess_class.js"></script>
 
+    <!-- DOM Class Hierarchy Chain -->
+    <script type="text/javascript" src="./Core/Dom_form_Class.js"></script>
+    <script type="text/javascript" src="./Core/Dom_fields_Class.js"></script>
+    <script type="text/javascript" src="./Core/Dom_table_Class.js"></script>
+    <script type="text/javascript" src="./Core/Dom_Class.js"></script>
+
+    <!-- Base Entity Architecture -->
+    <script type="text/javascript" src="./Base/AbstractEntidad_Class.js"></script>
+    <script type="text/javascript" src="./Base/General_Entity_Class.js"></script>
+
+    <!-- Concrete Entity Subclasses -->
+    <script type="text/javascript" src="./app/persona_Class.js"></script>
+    <script type="text/javascript" src="./app/usuario_Class.js"></script>
+    <script type="text/javascript" src="./app/rol_Class.js"></script>
+    <script type="text/javascript" src="./app/accion_Class.js"></script>
+    <script type="text/javascript" src="./app/funcionalidad_Class.js"></script>
+    <script type="text/javascript" src="./app/funcionalidad_accion_Class.js"></script>
+    <script type="text/javascript" src="./app/rolaccionfuncionalidad_Class.js"></script>
 </head>
 
 <body>
+    <header id="header_page" class="bordeado">
+        <h1>SISTEMA DE GESTIÓN DE ENTIDADES</h1>
+    </header>
 
-	<header id='header_page' class='bordeado'>texto titulo aplicación</header>
-	<nav class='bordeado'><span onclick="menu_work();">Opciones de ménu</span>
-	</nav>
-	<aside id='div-menu'>
-		<ol>
-		    <li class="opcionmenu"><span onclick="entidad = new persona();">Gestionar persona</span></li>
-		    <li class="opcionmenu"><span onclick="entidad = new entidad();">Gestionar otra entidad</span></li>
-	  	</ol>
-	</aside>
-	<section id="IU_manage_entity">
-		<section id="IU_manage_head">
-			<div id='title_page' class='bordeado'><span id = "text_title_page" class="">titulo de pagina de entidad</span>
-			</div>
-			<div id="add_search_columns">
-        		<img id="botonADD" src="./iconos/ADD.png" onclick="entidad.createForm_ADD();" />
-        		<img id="botonSEARCH" src="./iconos/SEARCH.png" onclick="entidad.createForm_SEARCH();"/>
-				
-				<label id="label_seleccioncolumnas">Columnas</label>
-				<select id="seleccioncolumnas" multiple>
-				</select>
-				
-        	</div>
-		</section>
+    <!-- Entity Navigation Sidebar / Menu -->
+    <aside id="div-menu">
+        <nav class="IU_nav">
+            <a href="#" class="nav-link" onclick="entidad = new persona();">Gestionar Persona</a>
+            <a href="#" class="nav-link" onclick="entidad = new usuario();">Gestionar Usuario</a>
+            <a href="#" class="nav-link" onclick="entidad = new rol();">Gestionar Rol</a>
+            <a href="#" class="nav-link" onclick="entidad = new accion();">Gestionar Acción</a>
+            <a href="#" class="nav-link" onclick="entidad = new funcionalidad();">Gestionar Funcionalidad</a>
+            <a href="#" class="nav-link" onclick="entidad = new funcionalidad_accion();">Gestionar Funcionalidad-Acción</a>
+            <a href="#" class="nav-link" onclick="entidad = new rolaccionfuncionalidad();">Gestionar Rol-Acción-Funcionalidad</a>
+        </nav>
+    </aside>
 
-		<section id="IU_manage_table">
+    <!-- Main Entity Table View -->
+    <section id="IU_manage_entity" style="display: none;">
+        <section id="IU_manage_head">
+            <div id="title_page" class="bordeado">
+                <span id="text_title_page"></span>
+            </div>
+            
+            <div id="add_search_columns">
+                <img id="botonADD" src="./iconos/ADD.png" alt="ADD" onclick="entidad.createForm_ADD();" />
+                <img id="botonSEARCH" src="./iconos/SEARCH.png" alt="SEARCH" onclick="entidad.createForm_SEARCH();"/>
+                
+                <label id="label_seleccioncolumnas">Columnas:</label>
+                <select id="seleccioncolumnas" multiple></select>
+            </div>
+        </section>
 
-		</section>
+        <!-- Dynamic Data Table Container -->
+        <section id="IU_manage_table"></section>
+    </section>
 
-	</section>
-	<section id="Div_IU_form" class='div_IU_form bordeado'>
-		<div class = "contenidoForm" id="contenidoForm">
-			<div class = "class_titulo_form">
-				<span id="class_contenido_titulo_form" class = "" >titulo para el formulario de este tamano</span>
-			</div>
-		<div id="contenedor_IU_form">
-			
-		</div>
-			<br>
-			<img src="./iconos/BACK.png" onclick="entidad.dom.hide_element('Div_IU_form');" />
-		</div>
-	</section>
+    <!-- Overlay / Modal Form Container -->
+    <div id="Div_IU_form" style="display: none; position: fixed; top: 10%; left: 25%; width: 50%; background: #fff; z-index: 1000; padding: 20px; border: 2px solid #333;">
+        <button type="button" style="float: right;" onclick="entidad.dom.hide_element('Div_IU_form');">X</button>
+        <div id="contenedor_IU_form"></div>
+    </div>
 
-	<!-- Overlay para acompañar el modal -->
-	<div id="modal_action_overlay"></div>
+    <!-- Error Modal Popup -->
+    <div id="modalError" style="display: none; position: fixed; top: 30%; left: 35%; width: 30%; background: #ffdddd; padding: 15px; border: 1px solid red; z-index: 2000;">
+        <p id="mensajeErrorModal"></p>
+        <button type="button" onclick="document.getElementById('modalError').style.display='none';">Cerrar</button>
+    </div>
 
-	<!-- Modal para mostrar los errores de accion -->
-	<div id="error_action_modal">
-		<span id="error_action_msg"></span>
-		<!--<img src="./iconos/BACK.png" onclick="cerrarModalError();" />-->
-		<button onclick="entidad.dom.cerrarModalError()">X</button>
-	</div>
-
-	<article class='bordeado'>Sección article</article>
-
-	<footer class='bordeado'>Pie de página</footer>
-	
-	<script type="text/javascript">
-		document.getElementById('div-menu').style.display = 'none';
-		document.getElementById('Div_IU_form').style.display = 'none';
-		document.getElementById('IU_manage_entity').style.display = 'none';
-		
-		function menu_work(){
-			if (document.getElementById('div-menu').style.display == 'none'){
-				document.getElementById('div-menu').style.display = 'block';
-			}
-			else{
-				document.getElementById('div-menu').style.display = 'none';
-			}
-		}
-	</script>
-
+    <footer class="bordeado">
+        <p>Gestión de Interfaces de Usuario - ET1</p>
+    </footer>
 </body>
-
-
 </html>

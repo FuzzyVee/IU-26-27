@@ -1,0 +1,379 @@
+:root {
+  --bg: #0d1117;
+  --panel-bg: rgba(22, 27, 34, 0.95);
+  --card-bg: #161b22;
+  --input-bg: #21262d;
+  --border-color: #30363d;
+  --text-primary: #ffffff;
+  --text-muted: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-blue-hover: #1f6feb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: 
+    linear-gradient(rgba(13, 17, 23, 0.72), rgba(13, 17, 23, 0.72)),
+    url('https://f2.toyhou.se/file/f2-toyhou-se/images/116329354_1XMc1olgmXT12cp.png') no-repeat center center fixed;
+  background-size: cover;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  min-height: 100vh;
+}
+
+#header_page h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+#div-menu {
+  margin-bottom: 24px;
+}
+
+.IU_nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.nav-link {
+  display: inline-block;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  border-color: var(--accent-blue);
+  background: var(--input-bg);
+}
+
+#IU_manage_head {
+  background: var(--panel-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+#add_search_columns {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* White tile background for toolbar & table action buttons */
+#add_search_columns img#botonADD, 
+#add_search_columns img#botonSEARCH,
+#IU_manage_table img#botonEDIT,
+#IU_manage_table img#botonDELETE,
+#IU_manage_table img#botonSHOWCURRENT {
+  background-color: #f0f6fc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  filter: none !important;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+#add_search_columns img#botonADD:hover, 
+#add_search_columns img#botonSEARCH:hover,
+#IU_manage_table img#botonEDIT:hover,
+#IU_manage_table img#botonDELETE:hover,
+#IU_manage_table img#botonSHOWCURRENT:hover {
+  background-color: #ffffff;
+  border-color: #58a6ff;
+  transform: scale(1.08);
+}
+
+#label_seleccioncolumnas {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-left: auto;
+}
+
+/* High-Contrast Column Selection Fix */
+select#seleccioncolumnas {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #0d1117 !important;
+  color: #ffffff !important;
+  border: 2px solid #484f58 !important;
+  border-radius: 8px;
+  padding: 6px 8px;
+  min-width: 250px;
+  height: 120px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  overflow-y: auto;
+}
+
+select#seleccioncolumnas option {
+  background-color: #0d1117 !important;
+  color: #ffffff !important;
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+select#seleccioncolumnas option:hover {
+  background-color: #1f6feb !important;
+  color: #ffffff !important;
+}
+
+select#seleccioncolumnas option:checked {
+  background-color: #1f6feb !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px 100px #1f6feb inset !important; /* Force high contrast selection color across browser engines */
+  font-weight: 700;
+}
+
+#IU_manage_table {
+  background: var(--panel-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+#IU_manage_table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--text-primary);
+}
+
+#IU_manage_table th {
+  background: var(--card-bg);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#IU_manage_table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+#IU_manage_table td a img,
+.tabla-td-foto_persona img {
+  filter: none !important;
+  width: 70px !important;
+  height: 70px !important;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  vertical-align: middle;
+  background: var(--input-bg);
+}
+
+/* Modal Form Container */
+#Div_IU_form {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(700px, 92vw) !important;
+  max-height: 85vh !important;
+  overflow-y: auto !important;
+  background: #161b22 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
+  padding: 24px !important;
+  color: var(--text-primary) !important;
+  z-index: 1000 !important;
+}
+
+#Div_IU_form > button[onclick*="hide_element"] {
+  position: sticky;
+  top: 0;
+  float: right;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1010;
+}
+
+#Div_IU_form > button[onclick*="hide_element"]:hover {
+  border-color: #f85149;
+  color: #f85149;
+}
+
+#contenedor_IU_form {
+  clear: both;
+}
+
+.formulario br {
+  display: none !important;
+}
+
+/* 2-Column Form Layout */
+.formulario {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+.formulario label {
+  grid-column: span 1;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.formulario input[type="text"], 
+.formulario select {
+  grid-column: span 1;
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  width: 100%;
+  outline: none;
+}
+
+.formulario span[id^="span_error_"] {
+  grid-column: span 1;
+  color: #f85149;
+  font-size: 0.78rem;
+  min-height: 14px;
+  display: block;
+}
+
+.formulario textarea,
+.formulario input[type="file"],
+.formulario label[class*="label_direccion"],
+.formulario label[class*="label_foto"],
+.formulario span[id*="span_error_direccion"],
+.formulario span[id*="span_error_foto"],
+#div_boton {
+  grid-column: span 2 !important;
+}
+
+.formulario textarea {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  min-height: 55px;
+  resize: vertical;
+}
+
+input[type="file"] {
+  background: var(--input-bg);
+  border: 1px dashed var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+input[type="file"]::file-selector-button {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+#div_boton {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#submit_button, 
+#div_boton button {
+  background: var(--accent-blue);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#submit_button:hover, 
+#div_boton button:hover {
+  background: var(--accent-blue-hover);
+}
+
+#submit_button img, 
+#div_boton button img {
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) invert(1);
+}
+
+#modalError {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: #2d1517 !important;
+  border: 1px solid #f85149 !important;
+  border-radius: 8px !important;
+  color: #ff7b72 !important;
+  padding: 20px !important;
+  z-index: 10001;
+}
+
+footer {
+  margin-top: 32px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}

@@ -1,0 +1,76 @@
+     body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        
+       code {
+            font-family: monospace;
+            font-size: 0.82rem;
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            
+            max-width: 100%;
+            box-sizing: border-box;
+            display: inline-block;
+            white-space: normal;
+            word-break: break-word;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+            background: white; 
+            table-layout: fixed; 
+        }
+        
+        th, td { 
+            border: 1px solid #ccc; 
+            padding: 6px 10px; 
+            text-align: left; 
+            font-size: 0.85rem; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word; 
+        }
+        
+        th {
+            background-color: #0275d8;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            background-color: #0078d4;
+            z-index: 10; 
+        }
+        
+        th:nth-child(1) { width: 8%; }  
+        th:nth-child(2) { width: 9%; }  
+        th:nth-child(3) { width: 7%; }  
+        th:nth-child(4) { width: 34%; } 
+        th:nth-child(5) { width: 18%; } 
+        th:nth-child(6) { width: 18%; } 
+        th:nth-child(7) { width: 6%; text-align: center; }  
+    
+        code {
+            font-family: monospace;
+            font-size: 0.82rem;
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            display: inline-block;
+            white-space: pre-wrap;
+        }
+
+        td {
+            border: 1px solid #ccc; 
+            padding: 6px 10px; 
+            text-align: left; 
+            font-size: 0.85rem; 
+            
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+    
+        .pass { background-color: #d4edda; color: #155724; font-weight: bold; text-align: center; }
+        .fail { background-color: #f8d7da; color: #721c24; font-weight: bold; text-align: center; }
+    
+        #hidden-form-container { display: none; }
+        button { padding: 8px 16px; font-size: 0.95rem; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 4px; }

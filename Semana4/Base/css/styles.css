@@ -1,0 +1,231 @@
+:root {
+    --bg: #0d1117;
+    /* Darkened panels for full opacity/readability */
+    --panel: #161b22;
+    --panel2: #1c2330;
+    --border: #30363d;
+    --text: #f0f6fc;
+    /* Lightened muted text so it stands out against dark containers */
+    --muted: #a3b3c6;
+    --free: #23d160;
+    --free-bg: rgba(35, 209, 96, 0.2);
+    --busy: #f59e0b;
+    --busy-bg: rgba(245, 158, 11, 0.2);
+    --accent: #58a6ff;
+}
+
+
+
+body {
+  background: 
+    linear-gradient(rgba(13, 17, 23, 0.69), rgba(13, 17, 23, 0.67)),
+    url('https://f2.toyhou.se/file/f2-toyhou-se/images/116329354_1XMc1olgmXT12cp.png') no-repeat center center fixed;
+  background-size: cover;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+  min-height: 100vh;
+}
+
+.IU_nav {
+    margin-bottom: 22px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 10;
+  padding: 10;
+}
+
+.input\_success {
+    border: 6px solid green;
+}
+
+
+.input\_error {
+    border: 6px solid red;
+}
+
+.error\_span {
+    color: red;
+    display: none;
+    margin-left: 8px;
+    font-size: 0.85em;
+}
+
+#error {
+  display: none;
+  background: rgba(245, 158, 11, 0.1);
+  border: 2px solid var(--busy);
+  color: var(--busy);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+}
+
+input, button, select, textarea {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+    
+}
+
+textarea {
+    margin-bottom: auto;
+}
+
+.nav-link {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  margin-left: 12px;  
+}
+
+.nav-link:hover {
+    border-color: var(--accent);
+}
+
+.nav-link:active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #06121f;
+  font-weight: 600;
+}
+
+.fechaNacimiento_persona .foto_persona {
+  color: var(--muted);
+  font-size: 0.8rem;
+  background: var(--accent);
+
+}
+
+.flexible_textarea {
+    display: flex;
+    field-sizing: content;
+    min-width: 300px;
+    max-width: 400px;
+    resize: none;    
+}
+
+input[type="file"] {
+    color: #e0e0e0;
+    background-color: rgba(30, 30, 45, 0.7);
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #2b2b3d;
+    color: #ffffff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #3b3b52;
+    border-color: #777;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background-color: #2b2b3d;
+    color: #ffffff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 300px;
+    padding: 6px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group span[id^="span_error_"] {
+    color: #ff4d4d;
+    font-size: 0.85rem;
+    margin-top: -6px;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: 200px 280px 1fr; 
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-group span[id^="span_error_"] {
+    min-height: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.error_span {
+    color: #ffe81d;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+#submit_button {
+    padding: 10px 20px;
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#submit_button:hover {
+    background-color: #025aa5;
+}
+
+a:link{
+    text-decoration: none;
+}
