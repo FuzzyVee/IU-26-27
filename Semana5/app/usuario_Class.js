@@ -31,10 +31,25 @@ class usuario extends General_Entity_Class {
             { name: 'id_rol', label: 'ID Rol', type: 'text', rules: { ADD: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, EDIT: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, SEARCH: { max_size: 11, format: '^[0-9]+$' } } }
         ];
         super('usuario', fields, ['dni', 'usuario', 'id_rol'], [], esTest);
+    },
+        
+    {
+        name: 'foto_persona',
+        label: 'Foto Persona',
+        type: 'file',
+        rules: {
+            ADD: {
+                exist_file: true,
+                max_size_file: 2000000,
+                type_file: ['image/jpeg', 'image/jpg', 'image/pjpeg', 'image/png'], 
+                format_name_file: '^[a-zA-Z0-9_\\-\\.]+\\.(jpg|jpeg|png|JPG|JPEG|PNG)$' 
+            },
+            EDIT: {
+                max_size_file: 2000000,
+                type_file: ['image/jpeg', 'image/jpg', 'image/pjpeg', 'image/png'],
+                format_name_file: '^[a-zA-Z0-9_\\-\\.]+\\.(jpg|jpeg|png|JPG|JPEG|PNG)$'
+            }
+        }
     }
+
 }
-
-
-const fields = [
-    
-];
