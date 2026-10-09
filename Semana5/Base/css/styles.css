@@ -82,22 +82,31 @@ body {
   width: 100%;
 }
 
+/* White tile background for toolbar & table action buttons */
 #add_search_columns img#botonADD, 
-#add_search_columns img#botonSEARCH {
-  cursor: pointer;
-  width: 44px;
-  height: 44px;
-  padding: 8px;
-  background: var(--input-bg);
-  border: 1px solid var(--border-color);
+#add_search_columns img#botonSEARCH,
+#IU_manage_table img#botonEDIT,
+#IU_manage_table img#botonDELETE,
+#IU_manage_table img#botonSHOWCURRENT {
+  background-color: #f0f6fc;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  filter: none;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  padding: 6px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  filter: none !important;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-#add_search_columns img:hover {
-  border-color: var(--accent-blue);
-  transform: scale(1.05);
+#add_search_columns img#botonADD:hover, 
+#add_search_columns img#botonSEARCH:hover,
+#IU_manage_table img#botonEDIT:hover,
+#IU_manage_table img#botonDELETE:hover,
+#IU_manage_table img#botonSHOWCURRENT:hover {
+  background-color: #ffffff;
+  border-color: #58a6ff;
+  transform: scale(1.08);
 }
 
 #label_seleccioncolumnas {
@@ -107,36 +116,42 @@ body {
   margin-left: auto;
 }
 
-#seleccioncolumnas {
+/* High-Contrast Column Selection Fix */
+select#seleccioncolumnas {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background-color: #0d1117 !important;
   color: #ffffff !important;
-  border: 1px solid #484f58 !important;
+  border: 2px solid #484f58 !important;
   border-radius: 8px;
-  padding: 6px;
-  min-width: 260px;
-  height: 110px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  padding: 6px 8px;
+  min-width: 250px;
+  height: 120px;
+  font-size: 0.88rem;
+  font-weight: 600;
   outline: none;
   cursor: pointer;
+  overflow-y: auto;
 }
 
-#seleccioncolumnas option {
+select#seleccioncolumnas option {
   background-color: #0d1117 !important;
-  color: #f0f6fc !important;
+  color: #ffffff !important;
   padding: 6px 10px;
   border-radius: 4px;
   margin-bottom: 2px;
 }
 
-#seleccioncolumnas option:hover {
+select#seleccioncolumnas option:hover {
   background-color: #1f6feb !important;
   color: #ffffff !important;
 }
 
-#seleccioncolumnas option:checked {
-  background: #1f6feb linear-gradient(0deg, #1f6feb 0%, #1f6feb 100%) !important;
+select#seleccioncolumnas option:checked {
+  background-color: #1f6feb !important;
   color: #ffffff !important;
+  box-shadow: 0 0 10px 100px #1f6feb inset !important; /* Force high contrast selection color across browser engines */
   font-weight: 700;
 }
 
@@ -175,32 +190,11 @@ body {
   vertical-align: middle;
 }
 
-#IU_manage_table img#botonEDIT,
-#IU_manage_table img#botonDELETE,
-#IU_manage_table img#botonSHOWCURRENT {
-  cursor: pointer;
-  width: 38px;
-  height: 38px;
-  padding: 6px;
-  background: var(--input-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  filter: none;
-  transition: all 0.15s ease;
-}
-
-#IU_manage_table img#botonEDIT:hover,
-#IU_manage_table img#botonDELETE:hover,
-#IU_manage_table img#botonSHOWCURRENT:hover {
-  border-color: var(--accent-blue);
-  transform: translateY(-1px);
-}
-
 #IU_manage_table td a img,
 .tabla-td-foto_persona img {
   filter: none !important;
-  width: 80px !important;
-  height: 80px !important;
+  width: 70px !important;
+  height: 70px !important;
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid var(--border-color);
@@ -208,13 +202,14 @@ body {
   background: var(--input-bg);
 }
 
+/* Modal Form Container */
 #Div_IU_form {
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: min(580px, 92vw) !important;
-  max-height: 88vh !important;
+  width: min(700px, 92vw) !important;
+  max-height: 85vh !important;
   overflow-y: auto !important;
   background: #161b22 !important;
   border: 1px solid var(--border-color) !important;
@@ -250,59 +245,67 @@ body {
   clear: both;
 }
 
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 12px;
-}
-
 .formulario br {
-  display: none;
+  display: none !important;
 }
 
-.formulario label {
-  font-size: 0.88rem;
-  color: var(--text-primary);
-  font-weight: 600;
+/* 2-Column Form Layout */
+.formulario {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  align-items: start;
   margin-top: 8px;
 }
 
-input[type="text"], 
-select, 
-textarea {
+.formulario label {
+  grid-column: span 1;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.formulario input[type="text"], 
+.formulario select {
+  grid-column: span 1;
   background: var(--input-bg) !important;
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
   border-radius: 6px;
-  padding: 10px 12px;
-  font-size: 0.9rem;
+  padding: 8px 12px;
+  font-size: 0.88rem;
   width: 100%;
   outline: none;
 }
 
-textarea {
-  min-height: 70px;
-  resize: vertical;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent-blue) !important;
-}
-
-.input_success {
-  border-color: #23d160 !important;
-}
-
-.input_error {
-  border-color: #f85149 !important;
-}
-
-span[id^="span_error_"] {
+.formulario span[id^="span_error_"] {
+  grid-column: span 1;
   color: #f85149;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   min-height: 14px;
   display: block;
+}
+
+.formulario textarea,
+.formulario input[type="file"],
+.formulario label[class*="label_direccion"],
+.formulario label[class*="label_foto"],
+.formulario span[id*="span_error_direccion"],
+.formulario span[id*="span_error_foto"],
+#div_boton {
+  grid-column: span 2 !important;
+}
+
+.formulario textarea {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  min-height: 55px;
+  resize: vertical;
 }
 
 input[type="file"] {
@@ -326,7 +329,7 @@ input[type="file"]::file-selector-button {
 }
 
 #div_boton {
-  margin-top: 16px;
+  margin-top: 12px;
   display: flex;
   justify-content: flex-end;
 }

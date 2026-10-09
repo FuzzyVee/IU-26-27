@@ -303,17 +303,20 @@ class General_Entity_Class extends AbstractEntidad {
     }
 
     /**
-     * 1. Transforms photo filenames into clickable thumbnails with fallbacks
+     * Renderiza miniaturas de imágenes .jpeg/.jpg en las tablas de datos
+     * con fallback automático si la imagen no se puede cargar directamente.
      */
     cambiarmostrarespecial(atributo, valor) {
         if (!valor || valor === '') return '';
     
         if (atributo.includes('foto') || atributo.includes('file')) {
-            const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${atributo}/${valor}`;
+            const encodedFile = encodeURIComponent(valor);
+            const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${atributo}/${encodedFile}`;
+            
             return `<a href="${fileUrl}" target="_blank" title="${valor}">
                         <img src="${fileUrl}" 
                              alt="${valor}" 
-                             style="max-height: 36px; max-width: 50px; border-radius: 4px; vertical-align: middle; object-fit: cover;" 
+                             style="max-height: 32px; max-width: 45px; border-radius: 4px; vertical-align: middle; object-fit: cover;" 
                              onerror="this.onerror=null; this.src='./iconos/FILE.png';" />
                     </a>`;
         }
@@ -321,32 +324,39 @@ class General_Entity_Class extends AbstractEntidad {
     }
     
     /**
-     * 2. Populates <select id="seleccioncolumnas" multiple> using onchange instead of option onclick
+     * Actualiza la vista previa y el enlace directo de la imagen .jpeg en los formularios
      */
-    crearSeleccionablecolumnas(columnasamostrar, atributos) {
-        const select = document.getElementById("seleccioncolumnas");
-        if (!select) return;
+    actualizarEnlaceFotoFormulario(fila) {
+        if (!fila) return;
     
-        select.innerHTML = '';
+        // Buscar cualquier campo de foto (ej. foto_persona)
+        const fotoKey = Object.keys(fila).find(k => k.includes('foto') || k.includes('file'));
+        if (!fotoKey || !fila[fotoKey]) return;
     
-        atributos.forEach(atributo => {
-            const option = document.createElement('option');
-            option.value = atributo;
-            option.textContent = atributo;
-            option.className = atributo;
+        const valorFoto = fila[fotoKey];
+        const encodedFile = encodeURIComponent(valorFoto);
+        const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${fotoKey}/${encodedFile}`;
     
-            if (columnasamostrar.includes(atributo)) {
-                option.selected = true;
+        let linkFoto = document.getElementById(`link_${fotoKey}`);
+        
+        // Si el enlace no existe en el DOM, se crea dinámicamente junto al input
+        if (!linkFoto) {
+            const inputFoto = document.getElementById(fotoKey);
+            if (inputFoto) {
+                linkFoto = document.createElement('a');
+                linkFoto.id = `link_${fotoKey}`;
+                inputFoto.parentNode.insertBefore(linkFoto, inputFoto.nextSibling);
             }
-            select.appendChild(option);
-        });
+        }
     
-        // Handle multiselect changes cleanly across all browsers
-        select.onchange = () => {
-            const selectedValues = Array.from(select.selectedOptions).map(opt => opt.value);
-            this.columnasamostrar = selectedValues;
-            this.mostrarocultarcolumnas();
-        };
+        if (linkFoto) {
+            linkFoto.href = fileUrl;
+            linkFoto.target = '_blank';
+            linkFoto.innerHTML = `<img src="${fileUrl}" 
+              alt="${valorFoto}" 
+              class="tabla-foto-preview" 
+              onerror="this.onerror=null; this.src='./iconos/FILE.png';" />`;
+        }
     }
     
     /**
