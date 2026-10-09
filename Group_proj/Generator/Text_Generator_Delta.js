@@ -306,6 +306,8 @@ const esquemasET1 = {
 };
 
 
+
+
 function generarCodigoEntidad(esquema) {
   if (!esquema || !esquema.campos) return "";
 
@@ -315,7 +317,7 @@ function generarCodigoEntidad(esquema) {
   let idPruebaSecuencial = 1;
 
   esquema.campos.forEach(c => {
-    // 1. KO Tests (From reglas using valorInvalido)
+    // 1. KO Tests
     c.reglas.forEach(regla => {
       regla.acciones.forEach(accion => {
         const numTest = idTestSecuencial++;
@@ -325,9 +327,6 @@ function generarCodigoEntidad(esquema) {
           elementoActual = "input";
         }
 
-        const isSearchSizeRule = accion === "SEARCH" && (regla.tipo === "min_size");
-        const codigoResultado = isSearchSizeRule ? true : regla.codigoKO;
-
         defTests.push([
           esquema.entidad,
           c.campo,
@@ -336,7 +335,7 @@ function generarCodigoEntidad(esquema) {
           `${regla.desc} en ${accion}`,
           regla.tipo,
           accion,
-          codigoResultado,
+          regla.codigoKO,
           regla.msgError
         ]);
 
@@ -347,14 +346,13 @@ function generarCodigoEntidad(esquema) {
           idPruebaSecuencial++,
           accion,
           regla.valorInvalido || {},
-          codigoResultado
+          regla.codigoKO
         ]);
       });
     });
 
-    // 2. OK Tests (Handles both an object or an array of objects in testExito)
+    // OK Tests
     if (c.testExito) {
-      // Normalize to an array regardless of whether testExito is a single object or an array
       const exitos = Array.isArray(c.testExito) ? c.testExito : [c.testExito];
 
       exitos.forEach(exito => {
@@ -405,24 +403,14 @@ function generarCodigoEntidad(esquema) {
   return defTestsFormatted + `\n` + pruebasFormatted;
 }
 
-function executeAndDownload() {
-  const selectElem = document.getElementById('entidadSelect');
-  if (!selectElem) return;
-
-  const entidadKey = selectElem.value;
+// Función encargada de forzar la descarga del Blob de una entidad
+function descargarArchivo(entidadKey) {
   const esquema = esquemasET1[entidadKey];
-
-  if (!esquema) {
-    alert("Selecciona una entidad valida.");
-    return;
-  }
+  if (!esquema) return "";
 
   const resultText = generarCodigoEntidad(esquema);
-
-  const demoElem = document.getElementById('demo');
-  if (demoElem) demoElem.textContent = resultText;
-
   const fileName = `${entidadKey}_tests.js`;
+
   const blob = new Blob([resultText], { type: 'text/javascript;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -433,4 +421,39 @@ function executeAndDownload() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+
+  return resultText;
+}
+
+// Función principal vinculada al botón del HTML
+function executeAndDownload() {
+  const selectElem = document.getElementById('entidadSelect');
+  if (!selectElem) return;
+
+  const entidadKey = selectElem.value;
+  const demoElem = document.getElementById('demo');
+
+  if (entidadKey === "ALL") {
+    const listaEntidades = Object.keys(esquemasET1);
+
+    listaEntidades.forEach((key, index) => {
+      setTimeout(() => {
+        const codigo = descargarArchivo(key);
+        if (demoElem) {
+          demoElem.textContent = `[${index + 1}/${listaEntidades.length}] Generado y descargado: ${key}_tests.js\n\n` + codigo;
+        }
+      }, index * 300);
+    });
+  } else {
+    // Descarga individual
+    const esquema = esquemasET1[entidadKey];
+    if (!esquema) {
+      alert("Selecciona una entidad válida.");
+      return;
+    }
+    const resultText = descargarArchivo(entidadKey);
+    if (demoElem) {
+      demoElem.textContent = resultText;
+    }
+  }
 }
