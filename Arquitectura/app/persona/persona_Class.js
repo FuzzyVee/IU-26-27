@@ -8,7 +8,7 @@ class persona extends AbstractEntidad{
 		this.mostrarespecial = ['foto_persona','fechaNacimiento_persona'];
 		this.nombreentidad = 'persona';
 
-		this.dom = new dom_fields();
+		this.dom = new entity_dom_fields();
 		this.validations = new Validations();
 		this.access_functions = new ExternalAccess();
 
