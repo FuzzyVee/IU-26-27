@@ -112,8 +112,8 @@ class persona {
 			return "dni_format_ko";
 		}
 
-		if (!(this.dni_personalize_validation('dni'))){
-			this.dom.mostrar_error_campo('dni','dni_personalize_validate_dni_ko');
+		if (!(this.dni_personalized_validation('dni'))){
+			this.dom.mostrar_error_campo('dni','dni_personalized_validate_dni_ko');
 			return "dni_personalize_validate_dni_ko";
 		}
 		
@@ -127,7 +127,7 @@ class persona {
 	 * @param {string} dni id of the field to validate
 	 * @returns {bool} true if the dni is valid or false if the dni is not valid
 	 */
-	dni_personalize_validation(dni){
+	dni_personalized_validation(dni){
 		
 		dni = document.getElementById('dni').value;
 		var dni_letters = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -190,24 +190,39 @@ class persona {
 	}
 
 	/**
-		
-		@param 
-		@return
-			{bool} true if all field validations are correct or false if any field validation is false
-
+	 
+		@param
+		@return	{bool} true if all fields validations are ok or 
+		@return {object} object with the ids of elements and error code if field validation is not ok and true if field validation is ok
 	*/
 	ADD_submit_persona(){
 
+		// object to store de fields validations
+		var set_result = {};
+
+		// store in key (id element) value (result of field validation method)
+		set_result.dni = this.ADD_dni_validation();
+		set_result.nombre_persona = this.ADD_nombre_persona_validation();
+		set_result.nuevo_foto_persona = this.ADD_nuevo_foto_persona_validation();
+
+		// calculate combination of all field validations
 		let result = (
-					(this.ADD_dni_validation()) &
-					(this.ADD_nombre_persona_validation())
-					(this.ADD_nuevo_foto_persona_validation())
+					(set_result.dni) &
+					(set_result.nombre_persona) &
+					(set_result.nuevo_foto_persona)
 					)
 		
+		// convert the result to boolean
 		result = Boolean(result);
-		
-		return result;	
 
+		// if boolean and true return true
+		if ((typeof result === 'boolean') && (result == true)){
+			return result;
+		}// if not boolean or false return the object with id element as key and code error as value
+		else{
+			return set_result;
+		}
+		
 
 	}
 

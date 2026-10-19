@@ -58,7 +58,7 @@ class dom extends dom_table {
 		document.getElementById(idform).style.display = 'block';
 	}
 
-	/**
+/**
 	 * crea un elemento del DOM y lo devuelve
 	 * 
 	 * @param {string} tag html a crear
@@ -175,7 +175,7 @@ class dom extends dom_table {
 		}
 	
 	}
-
+	
 	/**
 	 * vacia el contenido de un div
 	 * @name vaciarDiv
