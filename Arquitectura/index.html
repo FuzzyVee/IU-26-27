@@ -7,21 +7,36 @@
 	<!-- clases generales -->
 	<script type="text/javascript" src="./locale/idioma.js"></script>
 	<script type="text/javascript" src="./Core/ExternalAccess_class.js"></script>
-	<!-- clases dom -->
+	<!-- clases base y core -->
 	<script type="text/javascript" src="./Core/Dom_table_Class.js"></script>
 	<script type="text/javascript" src="./Core/Dom_Class.js"></script>
 	<script type="text/javascript" src="./Core/Dom_form_Class.js"></script> 
+	<script type="text/javascript" src="./Base/AbstractEntidad_Class.js"></script>
+	<script type="text/javascript" src="./Core/Validations_Class.js"></script>
+	<script type="text/javascript" src="./Core/Dom_fields_Class.js"></script>
+	<script type="text/javascript" src="./Core/Data_Test_Class.js"></script>
 	
 	<!-- clases desarrollo -->
-	<script type="text/javascript" src="./Base/AbstractEntidad_Class.js"></script>
 	<script type="text/javascript" src="./app/persona/persona_Class.js"></script>
 	<script type="text/javascript" src="./app/persona/persona_tests.js"></script>
-	<script type="text/javascript" src="./app/Dom_fields_Class.js"></script>
-	<script type="text/javascript" src="./app/Validations_Class.js"></script>
+	<script type="text/javascript" src="./app/usuario/usuario_Class.js"></script>
+	<script type="text/javascript" src="./app/usuario/usuario_tests.js"></script>
+	<script type="text/javascript" src="./app/rol/rol_Class.js"></script>
+	<script type="text/javascript" src="./app/rol/rol_tests.js"></script>
+	<script type="text/javascript" src="./app/accion/accion_Class.js"></script>
+	<script type="text/javascript" src="./app/accion/accion_tests.js"></script>
+	<script type="text/javascript" src="./app/funcionalidad/funcionalidad_Class.js"></script>
+	<script type="text/javascript" src="./app/funcionalidad/funcionalidad_tests.js"></script>
+	<script type="text/javascript" src="./app/funcionalidad_accion/funcionalidad_accion_Class.js"></script>
+	<script type="text/javascript" src="./app/funcionalidad_accion/funcionalidad_accion_tests.js"></script>
+	<script type="text/javascript" src="./app/rolaccionfuncionalidad/rolaccionfuncionalidad_Class.js"></script>
+	<script type="text/javascript" src="./app/rolaccionfuncionalidad/rolaccionfuncionalidad_tests.js"></script>
 	<script type="text/javascript" src="./app/Textos_ES.js"></script>
 	<script type="text/javascript" src="./app/Textos_EN.js"></script>
-	<script type="text/javascript" src="./Core/Data_Test_Class.js"></script>
 	<script type="text/javascript" src="./app/Entity_Test_Data_Class.js"></script>
+	<script type="text/javascript" src="./app/Entity_Dom_fields_Class.js"></script>
+	<script type="text/javascript" src="./app/Entity_Validations_Class.js"></script>
+
 
 	<!-- este es el script que carga las librerias ajax que usamos para acceder al back -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -42,8 +57,14 @@
 		<ol>
 		    <ol>
 		    <li class="opcionmenu"><span class = 'text_menu_persona' onclick="entidad = new persona();"></span></li>
+			<li class="opcionmenu"><span class = 'text_menu_usuario' onclick="entidad = new usuario();"></span></li>
+			<li class="opcionmenu"><span class = 'text_menu_rol' onclick="entidad = new rol();"></span></li>
+			<li class="opcionmenu"><span class = 'text_menu_accion' onclick="entidad = new accion();"></span></li>
+			<li class="opcionmenu"><span class = 'text_menu_funcionalidad' onclick="entidad = new funcionalidad();"></span></li>
+			<li class="opcionmenu"><span class = 'text_menu_funcionalidad_accion' onclick="entidad = new funcionalidad_accion();"></span></li>
+			<li class="opcionmenu"><span class = 'text_menu_rolaccionfuncionalidad' onclick="entidad = new rolaccionfuncionalidad();"></span></li>
 		    <li class="opcionmenu"><span onclick="entidad = new entidad();">Gestionar otra entidad</span></li>
-	  	</ol>
+	  		</ol>
 	  	</ol>
 	</aside>
 	<section id="IU_manage_entity">
