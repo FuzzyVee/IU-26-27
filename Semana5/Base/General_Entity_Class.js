@@ -27,27 +27,27 @@ class General_Entity_Class extends AbstractEntidad {
      */
     generateValidationMethods() {
         ['ADD', 'EDIT', 'SEARCH'].forEach((action) => {
-            this.fields.forEach((f) => {
-                const methodName = `${action}_${f.name}_validation`;
-                const rules = f.rules ? f.rules[action] : null;
+            this.fields.forEach((data) => {
+                const methodName = `${action}_${data.name}_validation`;
+                const rules = data.rules ? data.rules[action] : null;
 
                 this[methodName] = () => {
                     if (!rules) return true;
 
                     // SEARCH: campo vacío es válido para búsqueda
                     if (action === 'SEARCH') {
-                        const elem = document.getElementById(f.name);
+                        const elem = document.getElementById(data.name);
                         const val = elem ? elem.value : '';
                         if (!val) {
-                            this.dom.mostrar_exito_campo(f.name);
+                            this.dom.mostrar_exito_campo(data.name);
                             return true;
                         }
                     }
 
                     // 1. min_size (incluye verificación de magnitud para números/IDs)
                     if (rules.min_size !== undefined && rules.min_size !== null) {
-                        let minSizeFailed = !this.validations.min_size(f.name, rules.min_size);
-                        const elem = document.getElementById(f.name);
+                        let minSizeFailed = !this.validations.min_size(data.name, rules.min_size);
+                        const elem = document.getElementById(data.name);
                         const val = elem ? elem.value : '';
                         if (!minSizeFailed && !isNaN(val) && val !== '' && val !== null) {
                             if (Number(val) < rules.min_size) {
@@ -55,8 +55,8 @@ class General_Entity_Class extends AbstractEntidad {
                             }
                         }
                         if (minSizeFailed) {
-                            const ko = `${f.name}_min_size_ko`;
-                            this.dom.mostrar_error_campo(f.name, ko);
+                            const ko = `${data.name}_min_size_ko`;
+                            this.dom.mostrar_error_campo(data.name, ko);
                             return ko;
                         }
                     }
@@ -65,10 +65,10 @@ class General_Entity_Class extends AbstractEntidad {
                     if (
                         rules.max_size !== undefined &&
                         rules.max_size !== null &&
-                        !this.validations.max_size(f.name, rules.max_size)
+                        !this.validations.max_size(data.name, rules.max_size)
                     ) {
-                        const ko = `${f.name}_max_size_ko`;
-                        this.dom.mostrar_error_campo(f.name, ko);
+                        const ko = `${data.name}_max_size_ko`;
+                        this.dom.mostrar_error_campo(data.name, ko);
                         return ko;
                     }
 
@@ -76,57 +76,57 @@ class General_Entity_Class extends AbstractEntidad {
                     if (
                         rules.format !== undefined &&
                         rules.format !== null &&
-                        !this.validations.format(f.name, rules.format)
+                        !this.validations.format(data.name, rules.format)
                     ) {
-                        const ko = `${f.name}_format_ko`;
-                        this.dom.mostrar_error_campo(f.name, ko);
+                        const ko = `${data.name}_format_ko`;
+                        this.dom.mostrar_error_campo(data.name, ko);
                         return ko;
                     }
 
                     // 4. Validaciones de ficheros
-                    if (f.type === 'file') {
-                        const hasFile = this.validations.exist_file(f.name);
+                    if (data.type === 'file') {
+                        const hasFile = this.validations.exist_file(data.name);
 
                         if (rules.exist_file && !hasFile) {
-                            const ko = `${f.name}_exist_file_ko`;
-                            this.dom.mostrar_error_campo(f.name, ko);
+                            const ko = `${data.name}_exist_file_ko`;
+                            this.dom.mostrar_error_campo(data.name, ko);
                             return ko;
                         }
 
                         if (!hasFile) {
-                            this.dom.mostrar_exito_campo(f.name);
+                            this.dom.mostrar_exito_campo(data.name);
                             return true;
                         }
 
                         if (
                             rules.max_size_file &&
-                            !this.validations.max_size_file(f.name, rules.max_size_file)
+                            !this.validations.max_size_file(data.name, rules.max_size_file)
                         ) {
-                            const ko = `${f.name}_max_size_file_ko`;
-                            this.dom.mostrar_error_campo(f.name, ko);
+                            const ko = `${data.name}_max_size_file_ko`;
+                            this.dom.mostrar_error_campo(data.name, ko);
                             return ko;
                         }
 
                         if (
                             rules.type_file &&
-                            !this.validations.type_file(f.name, rules.type_file)
+                            !this.validations.type_file(data.name, rules.type_file)
                         ) {
-                            const ko = `${f.name}_type_file_ko`;
-                            this.dom.mostrar_error_campo(f.name, ko);
+                            const ko = `${data.name}_type_file_ko`;
+                            this.dom.mostrar_error_campo(data.name, ko);
                             return ko;
                         }
 
                         if (
                             rules.format_name_file &&
-                            !this.validations.format_name_file(f.name, rules.format_name_file)
+                            !this.validations.format_name_file(data.name, rules.format_name_file)
                         ) {
-                            const ko = `${f.name}_format_name_file_ko`;
-                            this.dom.mostrar_error_campo(f.name, ko);
+                            const ko = `${data.name}_format_name_file_ko`;
+                            this.dom.mostrar_error_campo(data.name, ko);
                             return ko;
                         }
                     }
 
-                    this.dom.mostrar_exito_campo(f.name);
+                    this.dom.mostrar_exito_campo(data.name);
                     return true;
                 };
             });

@@ -1,0 +1,41 @@
+INFORMACIÓN DE TAREAS Y HORAS - ENTREGA ET1
+Asignatura: Interfaces de Usuario (Curso 2026-2027)
+Grupo: UI262727
+Alumno: NicolasCadornigaPares
+
+--------------------------------------------------------------------
+TAREA REALIZADA                                   |  HORAS DEDICADAS
+--------------------------------------------------------------------
+Análisis de especificaciones y reglas de validación
+ |- Paralelizado con el Diseño de sus reglas 
+ \- =~ 1h 
+Revisión cruzada de los requisitos de desarrollo 
+ |- Integracion adecuado de estos
+ \- =~ 30min
+Investigacion y aprendizaje del javascript necesario
+para hacer un generador
+ \- =~ 12h
+Creacion de un generador de pruebas base para su desarrollo
+ \- =~ 30min
+desarrollo de las pruebas correctas acorde a como se pidien en
+el documento
+ \- =~ 10min
+Creacion e investigacion para crear todaos los tipos de validación
+ \- =~ 2h
+Refactorizacion de las clases para que se guarden como un array de arrays y 
+no una varaible de listas.
+ \- =~ 1h
+Reuinion entre los participantes n1
+ |- arreglamos errores de nombrado idioticos -v-
+ \- =~ 4h
+Aprendizaje del uso de una clase general para facilitar el desarrollo de
+preubas, su creacion y tener un "default" y su aplicacion
+ \- =~ 1h ( poco porque me ayudo me enseño mi hermano )
+Reunion entre los participantes y observacion de pruebas (all tests pass)
+ \- =~ 2h
+
+
+
+--------------------------------------------------------------------
+TOTAL HORAS DEDICADAS                              | 13.5
+--------------------------------------------------------------------
