@@ -4,12 +4,9 @@ class persona extends General_Entity_Class {
             { 
                 name: 'dni', 
                 label: 'DNI', 
-                type: 'text', 
-                rules: { 
-                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' }, 
-                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' }, 
-                    SEARCH: { max_size: 9, format: '^[0-9]*[A-Za-z]$' } 
-                } 
+                type: 'select',
+                isFK: true,
+                options: [],
             },
             { 
                 name: 'nombre_persona', 
