@@ -17,7 +17,12 @@
 }
 
 body {
-  background: 
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--input-bg);
+}
+
+body {
+  background:
     linear-gradient(rgba(13, 17, 23, 0.72), rgba(13, 17, 23, 0.72)),
     url('https://f2.toyhou.se/file/f2-toyhou-se/images/116329354_1XMc1olgmXT12cp.png') no-repeat center center fixed;
   background-size: cover;
@@ -83,7 +88,7 @@ body {
 }
 
 /* White tile background for toolbar & table action buttons */
-#add_search_columns img#botonADD, 
+#add_search_columns img#botonADD,
 #add_search_columns img#botonSEARCH,
 #IU_manage_table img#botonEDIT,
 #IU_manage_table img#botonDELETE,
@@ -99,7 +104,7 @@ body {
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-#add_search_columns img#botonADD:hover, 
+#add_search_columns img#botonADD:hover,
 #add_search_columns img#botonSEARCH:hover,
 #IU_manage_table img#botonEDIT:hover,
 #IU_manage_table img#botonDELETE:hover,
@@ -116,43 +121,51 @@ body {
   margin-left: auto;
 }
 
-/* High-Contrast Column Selection Fix */
+/* High-contrast column selection */
 select#seleccioncolumnas {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   background-color: #0d1117 !important;
   color: #ffffff !important;
-  border: 2px solid #484f58 !important;
-  border-radius: 8px;
-  padding: 6px 8px;
-  min-width: 250px;
-  height: 120px;
-  font-size: 0.88rem;
+  border: 2px solid #484f58;
+  border-radius: 10px;
+  padding: 8px;
+  width: clamp(280px, 28vw, 360px);
+  height: 180px;
+  font-size: 0.96rem;
   font-weight: 600;
   outline: none;
   cursor: pointer;
   overflow-y: auto;
 }
 
+select#seleccioncolumnas:focus-visible {
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.35);
+}
+
 select#seleccioncolumnas option {
   background-color: #0d1117 !important;
   color: #ffffff !important;
-  padding: 6px 10px;
-  border-radius: 4px;
-  margin-bottom: 2px;
-}
-
-select#seleccioncolumnas option:hover {
-  background-color: #1f6feb !important;
-  color: #ffffff !important;
+  padding: 10px 12px;
+  line-height: 1.5;
 }
 
 select#seleccioncolumnas option:checked {
-  background-color: #1f6feb !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 10px 100px #1f6feb inset !important; /* Force high contrast selection color across browser engines */
+  background-color: #075985 ;
+  color: #ffffff ;
+}
+
+select#seleccioncolumnas option:checked {
+  box-shadow: 0 0 10px 100px #075985 inset ;
   font-weight: 700;
+}
+
+select#seleccioncolumnas option:hover {
+  background-color: #263b53 !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 0 0 2px var(--accent-blue) !important;
 }
 
 #IU_manage_table {
@@ -202,20 +215,19 @@ select#seleccioncolumnas option:checked {
   background: var(--input-bg);
 }
 
-/* Modal Form Container */
 #Div_IU_form {
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: min(700px, 92vw) !important;
-  max-height: 85vh !important;
+  width: min(750px, 92vw) !important;
+  max-height: 88vh !important;
   overflow-y: auto !important;
   background: #161b22 !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 12px !important;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
-  padding: 24px !important;
+  padding: 28px !important;
   color: var(--text-primary) !important;
   z-index: 1000 !important;
 }
@@ -249,73 +261,72 @@ select#seleccioncolumnas option:checked {
   display: none !important;
 }
 
-/* 2-Column Form Layout */
 .formulario {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  align-items: start;
-  margin-top: 8px;
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 16px;
 }
 
 .formulario label {
-  grid-column: span 1;
   font-size: 0.85rem;
   color: var(--text-primary);
   font-weight: 600;
   margin-top: 4px;
 }
 
-.formulario input[type="text"], 
-.formulario select {
-  grid-column: span 1;
-  background: var(--input-bg) !important;
-  border: 1px solid var(--border-color) !important;
-  color: var(--text-primary) !important;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 0.88rem;
-  width: 100%;
-  outline: none;
-}
-
-.formulario span[id^="span_error_"] {
-  grid-column: span 1;
-  color: #f85149;
-  font-size: 0.78rem;
-  min-height: 14px;
-  display: block;
-}
-
-.formulario textarea,
-.formulario input[type="file"],
-.formulario label[class*="label_direccion"],
-.formulario label[class*="label_foto"],
-.formulario span[id*="span_error_direccion"],
-.formulario span[id*="span_error_foto"],
-#div_boton {
-  grid-column: span 2 !important;
-}
-
+.formulario input:not([type="file"]),
+.formulario select,
 .formulario textarea {
   background: var(--input-bg) !important;
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 9px 12px;
   font-size: 0.88rem;
-  min-height: 55px;
+  width: min(100%, 32rem);
+  outline: none;
+}
+
+.formulario input[id^="id_"] {
+  width: min(100%, 14rem);
+}
+
+.formulario input[id*="fecha"],
+.formulario input[id*="telefono"] {
+  width: min(100%, 18rem);
+}
+
+.formulario input[id*="email"],
+.formulario input[id*="nombre"],
+.formulario input[id*="apellido"] {
+  width: min(100%, 36rem);
+}
+
+.formulario textarea {
+  width: min(100%, 42rem);
+  min-height: 90px;
   resize: vertical;
 }
 
-input[type="file"] {
+.formulario span[id^="span_error_"] {
+  color: #f85149;
+  font-size: 0.78rem;
+  min-height: 14px;
+  display: block;
+  width: 100%;
+  margin-top: -8px;
+}
+
+.formulario input[type="file"] {
+  width: min(100%, 32rem);
   background: var(--input-bg);
   border: 1px dashed var(--border-color);
   border-radius: 6px;
   padding: 8px;
   color: var(--text-primary);
   font-size: 0.85rem;
-  width: 100%;
 }
 
 input[type="file"]::file-selector-button {
@@ -329,12 +340,13 @@ input[type="file"]::file-selector-button {
 }
 
 #div_boton {
-  margin-top: 12px;
+  width: 100%;
+  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
 }
 
-#submit_button, 
+#submit_button,
 #div_boton button {
   background: var(--accent-blue);
   border: none;
@@ -346,12 +358,12 @@ input[type="file"]::file-selector-button {
   justify-content: center;
 }
 
-#submit_button:hover, 
+#submit_button:hover,
 #div_boton button:hover {
   background: var(--accent-blue-hover);
 }
 
-#submit_button img, 
+#submit_button img,
 #div_boton button img {
   width: 22px;
   height: 22px;
@@ -376,4 +388,43 @@ footer {
   text-align: center;
   color: var(--text-muted);
   font-size: 0.85rem;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--input-bg);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+  #Div_IU_form {
+    padding: 20px !important;
+  }
+
+  #add_search_columns {
+    flex-wrap: wrap;
+  }
+
+  #label_seleccioncolumnas {
+    margin-left: 0;
+  }
+
+  select#seleccioncolumnas {
+    width: 100%;
+    max-width: 360px;
+  margin-left: 0;
+  }
 }

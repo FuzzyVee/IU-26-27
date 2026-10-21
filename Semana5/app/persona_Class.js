@@ -1,5 +1,6 @@
 class persona extends General_Entity_Class {
     constructor(esTest = 'no') {
+        const fechaNacimientoFormat = '^(?:(?:0?[1-9]|[12][0-9]|3[01])[/\\-](?:0?[1-9]|1[0-2])[/\\-](?:19|20)\\d{2}|(?:19|20)\\d{2}-(?:0?[1-9]|1[0-2])-(?:0?[1-9]|[12][0-9]|3[01]))$';
         const fields = [
             { 
                 name: 'dni', 
@@ -33,9 +34,9 @@ class persona extends General_Entity_Class {
                 label: 'Fecha Nacimiento', 
                 type: 'text', 
                 rules: { 
-                    ADD: { format: '^((0?[1-9]|[12][0-9]|3[01])[/\\-](0?[1-9]|1[0-2])[/\\-](19|20)\\d{2})\$' },
-                    EDIT: { format: '^((0?[1-9]|[12][0-9]|3[01])[/\\-](0?[1-9]|1[0-2])[/\\-](19|20)\\d{2})\$' },
-                    SEARCH: { format: '^((0?[1-9]|[12][0-9]|3[01])[/\\-](0?[1-9]|1[0-2])[/\\-](19|20)\\d{2})\$' }
+                    ADD: { format: fechaNacimientoFormat },
+                    EDIT: { format: fechaNacimientoFormat },
+                    SEARCH: { format: fechaNacimientoFormat }
                 } 
             },
             { 
@@ -82,4 +83,3 @@ class persona extends General_Entity_Class {
         super('persona', fields, ['dni', 'nombre_persona', 'foto_persona'], ['foto_persona'], esTest);
     }
 }
-

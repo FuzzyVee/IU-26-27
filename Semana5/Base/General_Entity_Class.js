@@ -156,15 +156,34 @@ class General_Entity_Class extends AbstractEntidad {
 //       REUSABLE UI & HELPER METHODS
 
     /**
-     * Generación dinámica del formulario HTML base
+     * Dynamic HTML Form Generator
+     * @param {string} accion 'ADD' | 'SEARCH' | 'EDIT' | 'DELETE' | 'SHOWCURRENT'
      */
-    manual_form_creation() {
+    manual_form_creation(accion = 'ADD') {
         let html = `<form id="form_iu" action="" method="POST" enctype="multipart/form-data" onsubmit="" class="formulario">\n`;
 
         this.fields.forEach((f) => {
+            // 1. Hide file inputs (nuevo_foto_persona) in SEARCH, DELETE, and SHOWCURRENT
+            if (f.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(accion)) {
+                return;
+            }
+
+            // 2. Hide stored filename text field (foto_persona) in ADD
+            if (f.name.startsWith('foto_') && !f.name.startsWith('nuevo_') && accion === 'ADD') {
+                return;
+            }
+
             html += `  <label class="label_${f.name}">${f.label}</label>\n`;
 
-            if (f.type === 'select') {
+            const esClaveEspecial = (f.isPK || f.isFK || f.name === this.fields[0]?.name);
+            const esVistaSoloLectura = ['DELETE', 'SHOWCURRENT'].includes(accion);
+
+            // Render as <input type="text"> if:
+            // - It's DELETE or SHOWCURRENT (where all selects must be locked text inputs)
+            // - It's EDIT on a Primary Key or Foreign Key field
+            if (f.type === 'select' && (esVistaSoloLectura || (accion === 'EDIT' && esClaveEspecial))) {
+                html += `  <input type="text" id="${f.name}" name="${f.name}">\n`;
+            } else if (f.type === 'select') {
                 html += `  <select id="${f.name}" name="${f.name}">\n`;
                 html += `    <option value="">-- Seleccionar --</option>\n`;
                 if (f.options && Array.isArray(f.options)) {
@@ -191,12 +210,12 @@ class General_Entity_Class extends AbstractEntidad {
     }
 
     /**
-     * Abstracción general para la creación del contenedor y modal de formulario
+     * Base helper to inject form structure per action context
      */
-    baseCreateForm() {
+    baseCreateForm(accion = 'ADD') {
         const container = document.getElementById('contenedor_IU_form');
         if (container) {
-            container.innerHTML = this.manual_form_creation();
+            container.innerHTML = this.manual_form_creation(accion);
         }
         this.dom.show_element('Div_IU_form', 'block');
     }
@@ -225,49 +244,39 @@ class General_Entity_Class extends AbstractEntidad {
     }
 
     createForm_ADD() {
-        this.baseCreateForm();
+        this.baseCreateForm('ADD');
         this.setFormAttributes('ADD', `ADD_submit_${this.nombreentidad}`);
         this.dom.colocarvalidaciones('form_iu', 'ADD');
         this.dom.colocarboton('ADD');
     }
 
     createForm_SEARCH() {
-        this.baseCreateForm();
+        this.baseCreateForm('SEARCH');
         this.setFormAttributes('SEARCH', `SEARCH_submit_${this.nombreentidad}`);
         this.dom.colocarvalidaciones('form_iu', 'SEARCH');
         this.dom.colocarboton('SEARCH');
     }
 
     createForm_EDIT(fila) {
-        this.baseCreateForm();
+        this.baseCreateForm('EDIT');
         this.setFormAttributes('EDIT', `EDIT_submit_${this.nombreentidad}`);
         this.dom.rellenarvaloresform(fila);
         this.actualizarEnlaceFotoFormulario(fila);
 
+        // Lock primary keys / foreign keys with native readonly
         this.fields.forEach((f) => {
-            if ((f.isFK || f.isFK) || f.name === this.fields[0].name) {
-                const elem = document.getElementById(f.name);
-                if (elem) {
-                    if (f.type === 'select') {
-                        elem.setAttribute('disabled', 'true');
-                    } else {
-                        elem.setAttribute('readonly', 'true');
-                    }
-                }
+            if (f.isPK || f.isFK || f.name === this.fields[0]?.name) {
+                const inputElem = document.getElementById(f.name);
+                if (inputElem) inputElem.setAttribute('readonly', 'true');
             }
         });
-
-        if (this.fields && this.fields.length > 0) {
-            const pkInput = document.getElementById(this.fields[0].name);
-            if (pkInput) pkInput.setAttribute('readonly', 'true');
-        }
 
         this.dom.colocarvalidaciones('form_iu', 'EDIT');
         this.dom.colocarboton('EDIT');
     }
 
     createForm_DELETE(fila) {
-        this.baseCreateForm();
+        this.baseCreateForm('DELETE');
         this.setFormAttributes('DELETE', null);
         this.dom.rellenarvaloresform(fila);
         this.actualizarEnlaceFotoFormulario(fila);
@@ -276,7 +285,7 @@ class General_Entity_Class extends AbstractEntidad {
     }
 
     createForm_SHOWCURRENT(fila) {
-        this.baseCreateForm();
+        this.baseCreateForm('SHOWCURRENT');
         this.dom.rellenarvaloresform(fila);
         this.actualizarEnlaceFotoFormulario(fila);
         this.dom.colocartodosreadonly('form_iu');
