@@ -6,6 +6,7 @@ class rol extends General_Entity_Class {
                 name: 'id_rol', 
                 label: 'ID Rol', 
                 type: 'text', 
+                isPK: true,
                 rules: { 
                     ADD: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, 
                     EDIT: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, 

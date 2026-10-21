@@ -6,7 +6,7 @@ class usuario extends General_Entity_Class {
         name: 'dni', 
         label: 'DNI', 
         type: 'select', 
-        options: [],
+        isPK: true,
         rules: { 
             ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
             EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
@@ -17,10 +17,7 @@ class usuario extends General_Entity_Class {
         name: 'id_rol', 
         label: 'Rol Asignado', 
         type: 'select', 
-        options: [
-            { value: '1', label: 'Admin' },
-            { value: '2', label: 'Usuario' }
-        ],
+        options: [],
         rules: { 
             ADD: { min_size: 1, max_size: 11, format: '^[0-9]+$' },
             EDIT: { min_size: 1, max_size: 11, format: '^[0-9]+$' },

@@ -243,13 +243,26 @@ class General_Entity_Class extends AbstractEntidad {
         this.setFormAttributes('EDIT', `EDIT_submit_${this.nombreentidad}`);
         this.dom.rellenarvaloresform(fila);
         this.actualizarEnlaceFotoFormulario(fila);
-        this.dom.colocarvalidaciones('form_iu', 'EDIT');
+
+        this.fields.forEach((f) => {
+            if ((f.isFK || f.isFK) || f.name === this.fields[0].name) {
+                const elem = document.getElementById(f.name);
+                if (elem) {
+                    if (f.type === 'select') {
+                        elem.setAttribute('disabled', 'true');
+                    } else {
+                        elem.setAttribute('readonly', 'true');
+                    }
+                }
+            }
+        });
 
         if (this.fields && this.fields.length > 0) {
             const pkInput = document.getElementById(this.fields[0].name);
             if (pkInput) pkInput.setAttribute('readonly', 'true');
         }
 
+        this.dom.colocarvalidaciones('form_iu', 'EDIT');
         this.dom.colocarboton('EDIT');
     }
 
