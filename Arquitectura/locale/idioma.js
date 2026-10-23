@@ -20,18 +20,22 @@ function setLang(lang=''){
     }
 
     setCookie('lang', lang, 1);
+    
     var traduccion;
 
 
     switch(lang) {
         case 'ES' : 
-           traduccion=textos_ES;
+            window.traduccion = textos_ES;
+            traduccion=textos_ES;
         break;
         case 'EN' :
+            window.traduccion = textos_EN;
            traduccion=textos_EN;
         break;
         default:
-           traduccion=textos_ES;
+            window.traduccion = textos_EN;
+            traduccion=textos_ES;
         break;
     }
 
