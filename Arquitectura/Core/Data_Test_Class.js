@@ -51,7 +51,8 @@ class Data_Test {
             valorprueba: '',
             respuestaesperada: '',
             resultadoprueba:'',
-            pruebastatus:''      
+            pruebastatus:'',
+            traduccionError:''     
         };
 
         var contadorpruebas = 0;
@@ -119,6 +120,14 @@ class Data_Test {
                 resultadopruebas.pruebastatus = 'INCORRECTO';
             }
 
+            //introduccion de traduccion de error obtenido
+            if (window.traduccion[resultadoprueba]){
+                resultadopruebas.traduccionError = window.traduccion[resultadoprueba];
+            }
+            else{
+                resultadopruebas.traduccionError = 'sintraduccion';
+            }
+
             salidapruebas[contadorpruebas] = resultadopruebas;
             contadorpruebas++;
             resultadopruebas = 
@@ -132,7 +141,8 @@ class Data_Test {
                     valorprueba: '',
                     respuestaesperada: '',  
                     resultadoprueba:'',
-                    pruebastatus:''      
+                    pruebastatus:'',
+                    traduccionError:''      
                 };
 
             
@@ -157,7 +167,8 @@ class Data_Test {
         var salidapruebas = this.data_test_data();
          // se invoca la muestra del resultado de las pruebas
         let marcados =	{
-					pruebastatus: {value:'INCORRECTO', style:'background-color: red'}
+					pruebastatus: {value:'INCORRECTO', style:'background-color: red'},
+                    traduccionError : {value:'sintraduccion', style:'background-color: red'}
         };
         
        this.dom.showData('IU_Test_result_nofile', salidapruebas, marcados);
