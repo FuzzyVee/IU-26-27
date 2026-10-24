@@ -1,5 +1,7 @@
-class funcionalidad_accion extends General_Entity_Class {
+class funcionalidad_accion extends AbstractEntidad {
     constructor(esTest = 'no') {
+        super();
+
         const idRule = { 
             ADD: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, 
             EDIT: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, 
@@ -7,11 +9,18 @@ class funcionalidad_accion extends General_Entity_Class {
         };
 
         const fields = [
-            { name: 'id_funcionalidad', label: 'ID Funcionalidad', type: 'text', rules: idRule },
-            { name: 'id_accion', label: 'ID Acción', type: 'text', rules: idRule }
+            { name: 'id_funcionalidad', label: 'ID Funcionalidad', type: 'select', isFK: true, referenceEntity: 'funcionalidad', optionLabel: 'nombre_funcionalidad', options: [], rules: idRule },
+            { name: 'id_accion', label: 'ID Acción', type: 'select', isFK: true, referenceEntity: 'accion', optionLabel: 'nombre_accion', options: [], rules: idRule }
         ];
 
-        super('funcionalidad_accion', fields, ['id_funcionalidad', 'id_accion'], [], esTest);
+        this.nombreentidad = 'funcionalidad_accion';
+        this.fields = fields;
+        this.columnasamostrar = ['id_funcionalidad', 'id_accion'];
+        this.mostrarespecial = [];
+        this.atributos = fields.map((field) => field.name);
+        this.datos = [];
+        this.helper = new EntityHelper(this);
+
+        if (esTest !== 'test') this.SEARCH();
     }
 }
-

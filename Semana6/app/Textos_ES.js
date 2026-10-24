@@ -5,6 +5,30 @@ var textos_ES = {
 	'text_titulo_menu': 'Opciones  Menú',
 	'text_titulo_pie': 'Pie de página',
     'label_seleccioncolumnas': 'Seleccionar columnas',
+	'entity_persona': 'Gestión de datos personales',
+	'entity_usuario': 'Gestión de usuarios',
+	'entity_rol': 'Gestión de roles',
+	'entity_accion': 'Gestión de acciones',
+	'entity_funcionalidad': 'Gestión de funcionalidades',
+	'entity_funcionalidad_accion': 'Gestión de funcionalidades y acciones',
+	'entity_rolaccionfuncionalidad': 'Gestión de roles, acciones y funcionalidades',
+	'form_action_ADD': 'Guardar',
+	'form_action_EDIT': 'Guardar cambios',
+	'form_action_SEARCH': 'Buscar',
+	'form_action_DELETE': 'Eliminar',
+	'form_action_cancel': 'Cancelar',
+	'matrix_functionality': 'Funcionalidad',
+	'matrix_role': 'Rol',
+	'matrix_functionality_action_help': 'Marca una casilla para asignar una acción a una funcionalidad.',
+	'matrix_role_assignment_help': 'Marca una casilla para asignar la combinación funcionalidad-acción a un rol.',
+	'matrix_assign_action': 'Asignar acción a funcionalidad',
+	'matrix_assign_relation': 'Asignar funcionalidad y acción al rol',
+	'matrix_loading': 'Cargando relaciones...',
+	'matrix_saving': 'Guardando asignación...',
+	'matrix_saved': 'Asignación guardada.',
+	'matrix_save_error': 'No se pudo guardar la asignación',
+	'matrix_empty_matrix': 'No hay funcionalidades, acciones o roles para construir la matriz.',
+	'matrix_matrix_ready': 'Selecciona las casillas para modificar las asignaciones.',
     
     // textos de test
     /*'res_estructura_tests':'Tabla verificacion estructura de test',
@@ -17,6 +41,12 @@ var textos_ES = {
 
     // textos menu
 	'text_menu_persona': 'Gestionar persona',
+    'text_menu_usuario': 'Gestionar usuario',
+    'text_menu_rol': 'Gestionar rol',
+    'text_menu_accion': 'Gestionar acción',
+    'text_menu_funcionalidad': 'Gestionar funcionalidad',
+    'text_menu_funcionalidad_accion': 'Gestionar funcionalidad-acción',
+    'text_menu_rolaccionfuncionalidad': 'Gestionar rol-acción-funcionalidad',
 
     // textos entidad persona
 	'text_titulo_page_persona' : 'Gestión de Datos Personales',

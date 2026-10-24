@@ -1,6 +1,8 @@
 // CORRECTO en rol_Class.js
-class rol extends General_Entity_Class {
+class rol extends AbstractEntidad {
     constructor(esTest = 'no') {
+        super();
+
         const fields = [
             { 
                 name: 'id_rol', 
@@ -35,7 +37,14 @@ class rol extends General_Entity_Class {
             }
         ];
 
-        super('rol', fields, ['id_rol', 'rol_name', 'rol_description'], [], esTest);
+        this.nombreentidad = 'rol';
+        this.fields = fields;
+        this.columnasamostrar = ['id_rol', 'rol_name', 'rol_description'];
+        this.mostrarespecial = [];
+        this.atributos = fields.map((field) => field.name);
+        this.datos = [];
+        this.helper = new EntityHelper(this);
+
+        if (esTest !== 'test') this.SEARCH();
     }
 }
-

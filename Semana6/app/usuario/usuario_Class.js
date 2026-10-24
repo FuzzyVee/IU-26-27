@@ -1,11 +1,13 @@
 
-class usuario extends General_Entity_Class {
+class usuario extends AbstractEntidad {
     constructor(esTest = 'no') {
+        super();
+
         const fields = [
             { 
         name: 'dni', 
         label: 'DNI', 
-        type: 'select', 
+        type: 'text',
         isPK: true,
         rules: { 
             ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
@@ -17,6 +19,9 @@ class usuario extends General_Entity_Class {
         name: 'id_rol', 
         label: 'Rol Asignado', 
         type: 'select', 
+        isFK: true,
+        referenceEntity: 'rol',
+        optionLabel: 'rol_name',
         options: [],
         rules: { 
             ADD: { min_size: 1, max_size: 11, format: '^[0-9]+$' },
@@ -24,9 +29,17 @@ class usuario extends General_Entity_Class {
             SEARCH: { max_size: 11 } 
         } 
     },
-            { name: 'contrasena', label: 'Contraseña', type: 'password', rules: { ADD: { min_size: 8, max_size: 45, format: '^[a-zA-Z]+$' }, EDIT: { min_size: 8, max_size: 45, format: '^[a-zA-Z]+$' } } },
-            { name: 'id_rol', label: 'ID Rol', type: 'select', isFK: true, options: [], rules: { ADD: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, EDIT: { min_size: 1, max_size: 11, format: '^[0-9]+$' }, SEARCH: { max_size: 11, format: '^[0-9]+$' } } }
+            { name: 'contrasena', label: 'Contraseña', type: 'password', rules: { ADD: { min_size: 8, max_size: 45, format: '^[a-zA-Z]+$' }, EDIT: { min_size: 8, max_size: 45, format: '^[a-zA-Z]+$' } } }
         ];
-        super('usuario', fields, ['dni', 'usuario', 'id_rol'], [], esTest);
+
+        this.nombreentidad = 'usuario';
+        this.fields = fields;
+        this.columnasamostrar = ['dni', 'usuario', 'id_rol'];
+        this.mostrarespecial = [];
+        this.atributos = fields.map((field) => field.name);
+        this.datos = [];
+        this.helper = new EntityHelper(this);
+
+        if (esTest !== 'test') this.SEARCH();
     }
 }

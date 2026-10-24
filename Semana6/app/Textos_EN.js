@@ -5,6 +5,30 @@ var textos_EN = {
 	'text_titulo_menu': 'Menu Options',
 	'text_titulo_pie': 'Footer',
     'label_seleccioncolumnas': 'Select columns ',
+	'entity_persona': 'Personal data management',
+	'entity_usuario': 'User management',
+	'entity_rol': 'Role management',
+	'entity_accion': 'Action management',
+	'entity_funcionalidad': 'Functionality management',
+	'entity_funcionalidad_accion': 'Functionality and action management',
+	'entity_rolaccionfuncionalidad': 'Role, action and functionality management',
+	'form_action_ADD': 'Save',
+	'form_action_EDIT': 'Save changes',
+	'form_action_SEARCH': 'Search',
+	'form_action_DELETE': 'Delete',
+	'form_action_cancel': 'Cancel',
+	'matrix_functionality': 'Functionality',
+	'matrix_role': 'Role',
+	'matrix_functionality_action_help': 'Check a box to assign an action to a functionality.',
+	'matrix_role_assignment_help': 'Check a box to assign a functionality-action pair to a role.',
+	'matrix_assign_action': 'Assign action to functionality',
+	'matrix_assign_relation': 'Assign functionality and action to role',
+	'matrix_loading': 'Loading relations...',
+	'matrix_saving': 'Saving assignment...',
+	'matrix_saved': 'Assignment saved.',
+	'matrix_save_error': 'Could not save assignment',
+	'matrix_empty_matrix': 'There are no functionalities, actions, or roles to build the matrix.',
+	'matrix_matrix_ready': 'Select boxes to change assignments.',
     
     // textos de test
     /*'res_estructura_tests':'Tabla verificacion estructura de test',
@@ -17,6 +41,12 @@ var textos_EN = {
 
     // textos menu
 	'text_menu_persona': 'Person Management',
+    'text_menu_usuario': 'User Management',
+    'text_menu_rol': 'Role Management',
+    'text_menu_accion': 'Action Management',
+    'text_menu_funcionalidad': 'Functionality Management',
+    'text_menu_funcionalidad_accion': 'Functionality-Action Management',
+    'text_menu_rolaccionfuncionalidad': 'Role-Action-Functionality Management',
 
     // textos entidad persona
 	'text_titulo_page_persona' : 'Personal Data Management',
