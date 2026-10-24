@@ -30,6 +30,10 @@
   * Link click event to open test runner window for the current entity using `entity_Test_Data` [3, 21].
 * [ ] **Group Hours File (** **app/ET2\_datosgenerales.js** **)**
   * Create `app/ET2_datosgenerales.js` with member roles, student information, and hours logged [3].
+* [ ] **Fix Selects in PK/FK**
+  * Ensure that Existent PK are selectable in `EDIT`, and `ADD` forms, and that FK selects are populated with valid options from existent PKs [3, 9, 15]. 
+* [ ] **Final Submission Archive**
+  * Compress all project files into `ET2_Codigodegrupo.rar` with a single root folder named `ET2_Codigodegrupo` [3].  
 
 ---
 
