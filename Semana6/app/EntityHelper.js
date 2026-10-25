@@ -64,7 +64,8 @@ class EntityHelper {
             'createForm_DELETE',
             'createForm_SHOWCURRENT',
             'cambiarmostrarespecial',
-            'actualizarEnlaceFotoFormulario'
+            'actualizarEnlaceFotoFormulario',
+            'runValidationTests'
         ].forEach((methodName) => {
             this.entidad[methodName] = (...args) => this[methodName](...args);
         });
@@ -215,18 +216,59 @@ class EntityHelper {
         if (entityName === 'funcionalidad_accion') {
             this.renderFunctionalityActionMatrix(tableContainer, functionalities, actions, records, status);
         } else {
-            this.renderRoleAssignmentMatrix(tableContainer, roles, pairs, records, status);
+            this.renderRoleAssignmentSelector(tableContainer, roles, pairs, records, status);
         }
     }
 
     relationKey(firstId, secondId) {
-        return `${String(firstId)}\u0000${String(secondId)}`;
+        return `${this.normalizeRelationId(firstId)}\u0000${this.normalizeRelationId(secondId)}`;
+    }
+
+    normalizeRelationId(value) {
+        if (value === undefined || value === null || typeof value === 'object') return '';
+        return String(value).trim();
+    }
+
+    getRecordValue(record, fieldName) {
+        if (!record || typeof record !== 'object') return undefined;
+        const normalizedFieldName = fieldName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const matchingField = Object.keys(record).find((key) =>
+            key.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedFieldName
+        );
+        if (matchingField !== undefined) {
+            const value = record[matchingField];
+            if (value === null || typeof value !== 'object') {
+                return value;
+            } else {
+                const nestedValue = this.getRecordValue(value, fieldName);
+                if (nestedValue !== undefined) return nestedValue;
+            }
+        }
+
+        for (const [key, value] of Object.entries(record)) {
+            if (key === matchingField) continue;
+            if (value && typeof value === 'object') {
+                const nestedValue = this.getRecordValue(value, fieldName);
+                if (nestedValue !== undefined) return nestedValue;
+            }
+        }
+        return undefined;
     }
 
     renderFunctionalityActionMatrix(container, functionalities, actions, records, status) {
-        const selected = new Set(records.map((record) =>
-            this.relationKey(record.id_funcionalidad, record.id_accion)
-        ));
+        const selected = new Set(records
+            .map((record) => {
+                const functionalityId = this.normalizeRelationId(
+                    this.getRecordValue(record, 'id_funcionalidad')
+                );
+                const actionId = this.normalizeRelationId(
+                    this.getRecordValue(record, 'id_accion')
+                );
+                return functionalityId && actionId
+                    ? this.relationKey(functionalityId, actionId)
+                    : null;
+            })
+            .filter((key) => key !== null));
         const table = document.createElement('table');
         table.className = 'relation-matrix';
         const head = table.createTHead().insertRow();
@@ -253,9 +295,13 @@ class EntityHelper {
 
             actions.forEach((action) => {
                 const cell = row.insertCell();
+                const functionalityId = this.normalizeRelationId(
+                    this.getRecordValue(functionality, 'id_funcionalidad')
+                );
+                const actionId = this.normalizeRelationId(this.getRecordValue(action, 'id_accion'));
                 const selectedBefore = selected.has(this.relationKey(
-                    functionality.id_funcionalidad,
-                    action.id_accion
+                    functionalityId,
+                    actionId
                 ));
                 const checkbox = this.createAssignmentCheckbox(
                     selectedBefore,
@@ -263,8 +309,8 @@ class EntityHelper {
                     status,
                     async (isChecked) => {
                         const request = {
-                            id_funcionalidad: functionality.id_funcionalidad,
-                            id_accion: action.id_accion
+                            id_funcionalidad: functionalityId,
+                            id_accion: actionId
                         };
                         const response = await this.submitRelationChange(
                             'funcionalidad_accion',
@@ -287,9 +333,18 @@ class EntityHelper {
     }
 
     renderRoleAssignmentMatrix(container, roles, pairs, records, status) {
-        const selected = new Set(records.map((record) =>
-            `${String(record.id_rol)}\u0000${this.relationKey(record.id_funcionalidad, record.id_accion)}`
-        ));
+        const selected = new Set(records
+            .map((record) => {
+                const roleId = this.normalizeRelationId(this.getRecordValue(record, 'id_rol'));
+                const functionalityId = this.normalizeRelationId(
+                    this.getRecordValue(record, 'id_funcionalidad')
+                );
+                const actionId = this.normalizeRelationId(this.getRecordValue(record, 'id_accion'));
+                return roleId && functionalityId && actionId
+                    ? `${roleId}\u0000${this.relationKey(functionalityId, actionId)}`
+                    : null;
+            })
+            .filter((key) => key !== null));
         const table = document.createElement('table');
         table.className = 'relation-matrix';
         const head = table.createTHead().insertRow();
@@ -316,8 +371,13 @@ class EntityHelper {
 
             pairs.forEach(({ functionality, action }) => {
                 const cell = row.insertCell();
+                const roleId = this.normalizeRelationId(this.getRecordValue(role, 'id_rol'));
+                const functionalityId = this.normalizeRelationId(
+                    this.getRecordValue(functionality, 'id_funcionalidad')
+                );
+                const actionId = this.normalizeRelationId(this.getRecordValue(action, 'id_accion'));
                 const selectedBefore = selected.has(
-                    `${String(role.id_rol)}\u0000${this.relationKey(functionality.id_funcionalidad, action.id_accion)}`
+                    `${this.normalizeRelationId(roleId)}\u0000${this.relationKey(functionalityId, actionId)}`
                 );
                 const checkbox = this.createAssignmentCheckbox(
                     selectedBefore,
@@ -325,9 +385,9 @@ class EntityHelper {
                     status,
                     async (isChecked) => {
                         const request = {
-                            id_funcionalidad: functionality.id_funcionalidad,
-                            id_accion: action.id_accion,
-                            id_rol: role.id_rol
+                            id_funcionalidad: functionalityId,
+                            id_accion: actionId,
+                            id_rol: roleId
                         };
                         const response = await this.submitRelationChange(
                             'rolaccionfuncionalidad',
@@ -337,12 +397,23 @@ class EntityHelper {
                         if (!response.ok) {
                             throw new Error(response.code || 'No se pudo guardar la relación.');
                         }
-                        const key = `${String(request.id_rol)}\u0000${this.relationKey(
+                        const key = `${this.normalizeRelationId(request.id_rol)}\u0000${this.relationKey(
                             request.id_funcionalidad,
                             request.id_accion
                         )}`;
-                        if (isChecked) selected.add(key);
-                        else selected.delete(key);
+                        const relationIndex = records.findIndex((record) =>
+                            `${this.normalizeRelationId(this.getRecordValue(record, 'id_rol'))}\u0000${this.relationKey(
+                                this.getRecordValue(record, 'id_funcionalidad'),
+                                this.getRecordValue(record, 'id_accion')
+                            )}` === key
+                        );
+                        if (isChecked) {
+                            selected.add(key);
+                            if (relationIndex === -1) records.push({ ...request });
+                        } else {
+                            selected.delete(key);
+                            if (relationIndex !== -1) records.splice(relationIndex, 1);
+                        }
                     }
                 );
                 cell.appendChild(checkbox);
@@ -352,9 +423,79 @@ class EntityHelper {
         this.finishMatrix(container, table, roles.length, pairs.length, status);
     }
 
+    renderRoleAssignmentSelector(container, roles, pairs, records, status) {
+        const functionalities = [];
+        const actionsByFunctionality = new Map();
+        pairs.forEach(({ functionality, action }) => {
+            const functionalityId = this.normalizeRelationId(
+                this.getRecordValue(functionality, 'id_funcionalidad')
+            );
+            if (!actionsByFunctionality.has(functionalityId)) {
+                functionalities.push(functionality);
+                actionsByFunctionality.set(functionalityId, []);
+            }
+            actionsByFunctionality.get(functionalityId).push(action);
+        });
+
+        if (functionalities.length === 0) {
+            this.renderRoleAssignmentMatrix(container, roles, [], records, status);
+            return;
+        }
+
+        const selectorGroup = document.createElement('div');
+        selectorGroup.className = 'relation-combination-selector';
+
+        const label = document.createElement('label');
+        label.htmlFor = 'relation-combination-select';
+        label.textContent = this.getRelationLabel(
+            'select_combination',
+            'Selecciona una funcionalidad:'
+        );
+        selectorGroup.appendChild(label);
+
+        const selector = document.createElement('select');
+        selector.id = 'relation-combination-select';
+        selector.setAttribute('aria-label', label.textContent);
+        functionalities.forEach((functionality, index) => {
+            const option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = this.describeRecord(
+                functionality,
+                'nombre_funcionalidad',
+                'id_funcionalidad'
+            );
+            selector.appendChild(option);
+        });
+        selectorGroup.appendChild(selector);
+
+        const matrixContainer = document.createElement('div');
+        matrixContainer.className = 'relation-assignment-table';
+        container.appendChild(selectorGroup);
+        container.appendChild(matrixContainer);
+
+        const renderSelectedCombination = () => {
+            const selectedFunctionality = functionalities[Number(selector.value)];
+            matrixContainer.replaceChildren();
+            if (!selectedFunctionality) {
+                return;
+            }
+            const functionalityId = this.normalizeRelationId(
+                this.getRecordValue(selectedFunctionality, 'id_funcionalidad')
+            );
+            const selectedPairs = (actionsByFunctionality.get(functionalityId) || [])
+                .map((action) => ({ functionality: selectedFunctionality, action }));
+            this.renderRoleAssignmentMatrix(matrixContainer, roles, selectedPairs, records, status);
+        };
+
+        selector.addEventListener('change', renderSelectedCombination);
+        selector.value = '0';
+        renderSelectedCombination();
+    }
+
     describeRecord(record, labelField, idField) {
-        const label = record[labelField];
-        return label ? `${label} (${record[idField]})` : String(record[idField] ?? '');
+        const label = this.getRecordValue(record, labelField);
+        const id = this.getRecordValue(record, idField);
+        return label ? `${label} (${id ?? ''})` : String(id ?? '');
     }
 
     createAssignmentCheckbox(checked, label, status, onChange) {
@@ -517,6 +658,144 @@ class EntityHelper {
                 return Object.values(results).every((result) => result === true);
             };
         });
+    }
+
+    runValidationTests(testCases) {
+        const resultsContainer = document.getElementById('IU_Test_result_nofile');
+        if (!resultsContainer) throw new Error('No se encontró el contenedor de resultados de tests.');
+        if (!Array.isArray(testCases) || testCases.length === 0) {
+            throw new Error(`No hay tests de validación definidos para ${this.entidad.nombreentidad}.`);
+        }
+
+        let fixture = document.getElementById('validation-test-fixture');
+        if (!fixture) {
+            fixture = document.createElement('div');
+            fixture.id = 'validation-test-fixture';
+            fixture.hidden = true;
+            document.body.appendChild(fixture);
+        }
+        document.body.prepend(fixture);
+
+        const table = document.createElement('table');
+        table.id = 'tablaresultadostest';
+        const header = table.createTHead().insertRow();
+        [
+            this.getTestLabel('test_number', 'Test'),
+            this.getTestLabel('test_field', 'Campo'),
+            this.getTestLabel('test_action', 'Acción'),
+            this.getTestLabel('test_value', 'Valor'),
+            this.getTestLabel('test_expected', 'Esperado'),
+            this.getTestLabel('test_actual', 'Obtenido'),
+            this.getTestLabel('test_status', 'Resultado')
+        ].forEach((label) => {
+            const cell = document.createElement('th');
+            cell.textContent = label;
+            header.appendChild(cell);
+        });
+
+        const body = table.createTBody();
+        let passed = 0;
+
+        testCases.forEach((testCase) => {
+            const [entityName, fieldName, definitionNumber, testNumber, action, testValues, expected] = testCase;
+            let actual = this.getTestLabel('test_method_missing', 'MÉTODO NO ENCONTRADO');
+            let errorMessage = '';
+
+            try {
+                fixture.innerHTML = this.manual_form_creation(action);
+                const form = fixture.querySelector('form');
+                if (!form) throw new Error(`No se pudo crear el formulario para ${action}.`);
+                const getField = (name) => form &&
+                    Array.from(form.elements).find((element) => element.name === name);
+                const target = getField(fieldName);
+                if (!target) throw new Error(`No se encontró el campo ${fieldName} en el formulario ${action}.`);
+                const submitButton = document.createElement('button');
+                submitButton.id = 'submit_button';
+                submitButton.type = 'button';
+                form.appendChild(submitButton);
+
+                if (target.type === 'file') {
+                    this.setTestFile(target, testValues && testValues[fieldName]);
+                } else {
+                    Object.entries(testValues || {}).forEach(([name, value]) => {
+                        const input = getField(name);
+                        if (!input) return;
+                        const stringValue = value === undefined || value === null ? '' : String(value);
+                        if (input.tagName === 'SELECT' &&
+                            !Array.from(input.options).some((option) => option.value === stringValue)) {
+                            const option = document.createElement('option');
+                            option.value = stringValue;
+                            option.textContent = stringValue;
+                            input.appendChild(option);
+                        }
+                        input.value = stringValue;
+                    });
+                }
+
+                const methodName = `${action}_${fieldName}_validation`;
+                if (typeof this.entidad[methodName] === 'function') {
+                    actual = this.entidad[methodName]();
+                }
+            } catch (error) {
+                actual = `ERROR: ${error.message}`;
+                errorMessage = error.message;
+            }
+
+            const isPassed = !errorMessage && JSON.stringify(actual) === JSON.stringify(expected);
+            if (isPassed) passed += 1;
+
+            const row = body.insertRow();
+            [
+                `${testNumber} (${definitionNumber})`,
+                `${entityName}.${fieldName}`,
+                action,
+                JSON.stringify(testValues),
+                JSON.stringify(expected),
+                JSON.stringify(actual),
+                isPassed
+                    ? this.getTestLabel('test_passed', 'CORRECTO')
+                    : `${this.getTestLabel('test_failed', 'FALLIDO')}${errorMessage ? `: ${errorMessage}` : ''}`
+            ].forEach((value, index) => {
+                const cell = row.insertCell();
+                cell.textContent = value === undefined ? '' : String(value);
+                if (index === 6) cell.className = isPassed ? 'test-passed' : 'test-failed';
+            });
+        });
+
+        const summary = document.createElement('p');
+        summary.className = 'test-results-summary';
+        summary.textContent = this.getTestLabel('test_summary', 'Tests completados') +
+            `: ${passed}/${testCases.length}`;
+        resultsContainer.replaceChildren(summary, table);
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        fixture.replaceChildren();
+
+        return { passed, failed: testCases.length - passed, total: testCases.length };
+    }
+
+    setTestFile(input, fileName) {
+        if (!fileName) {
+            input.files = new DataTransfer().files;
+            return;
+        }
+
+        if (typeof File !== 'function' || typeof DataTransfer !== 'function') {
+            throw new Error('Este navegador no permite simular archivos para los tests.');
+        }
+
+        const extension = String(fileName).split('.').pop().toLowerCase();
+        const mimeType = ['jpg', 'jpeg'].includes(extension) ? 'image/jpeg' : 'application/octet-stream';
+        const file = new File(['test file'], String(fileName), { type: mimeType });
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        input.files = transfer.files;
+    }
+
+    getTestLabel(key, fallback) {
+        const translationKey = key.startsWith('test_') ? key : `test_${key}`;
+        return window.traduccion && window.traduccion[translationKey]
+            ? window.traduccion[translationKey]
+            : fallback;
     }
 
     manual_form_creation(action = 'ADD') {

@@ -18,11 +18,11 @@
 
 ### **Pending Tasks for ET2**
 
-* [ ] **File Input Visibility Rules (** **xxxx** **vs** **nuevo\_xxxx** **)**
+* [x] **File Input Visibility Rules (** **xxxx** **vs** **nuevo\_xxxx** **)**
   * Ensure `foto_persona` (text) is hidden in `ADD`, set to `readonly` in `EDIT`/`DELETE`/`SHOWCURRENT`, and editable in `SEARCH` [3, 9, 15].
   * Ensure `nuevo_foto_persona` (file input) is visible in `ADD`/`EDIT`, and hidden in `SEARCH`/`DELETE`/`SHOWCURRENT` [3, 9, 15].
   * Verify `link_foto_persona` connects to `http://193.147.87.202/ET2/filesuploaded/files_foto_persona/filename` [3, 9, 15].
-* [ ] **Multilingual System (** **locale/** **)**
+* [x] **Multilingual System (** **locale/** **)**
   * Create `locale/Textos_ES.js` (defining `textos_ES`) and `locale/Textos_EN.js` (defining `textos_EN`) [3, 16].
   * Assign CSS classes to all HTML text elements matching translation keys and verify `setLang()` toggles language via cookies [3, 16].
 * [ ] **Header** **TEST** **Execution Launcher**

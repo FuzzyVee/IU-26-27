@@ -11,15 +11,14 @@
 function setLang(lang=''){
 
     if (lang=='') {
-        if (getCookie('lang') != '') {
-          lang = getCookie('lang');
-        } else {    
-            lang= 'ES';
-        }
-
+        lang = getCookie('lang') || 'ES';
     }
 
-    setCookie('lang', lang, 1);
+    if (lang !== 'ES' && lang !== 'EN') {
+        lang = 'ES';
+    }
+
+    setCookie('lang', lang, 365);
     
     var traduccion;
 
@@ -90,7 +89,7 @@ function setLang(lang=''){
 /**Función para cambiar el idioma*/
 function cambiarLang(lang) {
 
-    setCookie('lang',lang,5);
+    setCookie('lang',lang,365);
     window.location.reload(true);
 
 }
@@ -106,8 +105,9 @@ function setCookie(name, value, days) {
         expires = "; expires=" + date.toUTCString();
     }
 
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-    document.cookie += "; Secure; SameSite=none; path=/";
+    var secure = window.location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = name + "=" + encodeURIComponent(value || "") +
+        expires + "; path=/; SameSite=Lax" + secure;
 }
 
 /*Función para obtener el valor de la cookie*/
@@ -122,6 +122,6 @@ function getCookie(name) {
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
     }
 
-    return null;
+    return "";
 
 }

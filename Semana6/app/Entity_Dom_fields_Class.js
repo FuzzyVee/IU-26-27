@@ -192,6 +192,27 @@ class entity_dom_fields extends dom_fields {
                 color: var(--muted);
                 line-height: 1.5;
             }
+            .relation-combination-selector {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                max-width: 560px;
+                margin: 0 0 16px;
+            }
+            .relation-combination-selector label {
+                color: var(--text);
+                font-weight: 600;
+            }
+            .relation-combination-selector select {
+                width: 100%;
+                min-height: 42px;
+                padding: 8px 12px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                color: var(--text);
+                background: #111820;
+                font: inherit;
+            }
             .relation-matrix-scroll {
                 max-width: 100%;
                 overflow: auto;
@@ -239,20 +260,42 @@ class entity_dom_fields extends dom_fields {
             .relation-matrix input[type="checkbox"]:disabled { cursor: progress; }
             .relation-matrix-status { margin: 12px 2px 2px; color: var(--muted); }
             .relation-matrix-status.is-error { color: #ff7b72; }
+            .test-results-summary {
+                margin: 0 0 8px;
+                color: var(--text);
+                font-weight: 700;
+            }
+            #tablaresultadostest .test-passed { color: #3fb950; font-weight: 700; }
+            #tablaresultadostest .test-failed { color: #ff7b72; font-weight: 700; }
             #tablaresultadostest {
                 width: 100%;
                 border-collapse: collapse;
+                table-layout: fixed;
                 text-align: left;
+                font-size: 1rem;
             }
             #tablaresultadostest th, #tablaresultadostest td {
-                min-width: 90px;
-                padding: 12px 14px;
+                padding: 10px 12px;
                 border-bottom: 1px solid var(--line) !important;
-                vertical-align: middle;
+                vertical-align: top;
+                overflow-wrap: anywhere;
+                line-height: 1.45;
+            }
+            #tablaresultadostest th:nth-child(1) { width: 8%; }
+            #tablaresultadostest th:nth-child(2) { width: 17%; }
+            #tablaresultadostest th:nth-child(3) { width: 10%; }
+            #tablaresultadostest th:nth-child(4) { width: 22%; }
+            #tablaresultadostest th:nth-child(5) { width: 18%; }
+            #tablaresultadostest th:nth-child(6) { width: 14%; }
+            #tablaresultadostest th:nth-child(7) { width: 11%; }
+            #tablaresultadostest td:nth-child(1),
+            #tablaresultadostest td:nth-child(3) {
+                white-space: nowrap;
             }
             #tablaresultadostest th {
                 position: sticky;
                 top: 0;
+                z-index: 1;
                 color: var(--muted);
                 background: #171e27;
                 font-size: .82rem;
@@ -404,7 +447,12 @@ class entity_dom_fields extends dom_fields {
                 transform: translate(-50%, -50%);
             }
             #error_action_modal .modal-close { float: right; }
-            #IU_Test_result_nofile { margin-top: 16px; overflow-x: auto; }
+            #IU_Test_result_nofile {
+                max-height: min(80vh, 900px);
+                margin-top: 10px;
+                overflow: auto;
+                overscroll-behavior: contain;
+            }
             footer { margin-top: 24px; padding: 12px 0; color: var(--muted); text-align: center; }
             @media (max-width: 640px) {
                 body { padding: 16px 12px; }
@@ -412,7 +460,14 @@ class entity_dom_fields extends dom_fields {
                 #header_page h1 { max-width: 70%; }
                 #label_seleccioncolumnas { margin-left: 0; }
                 #seleccioncolumnas { flex: 1 1 100%; max-width: 100%; }
-                #tablaresultadostest th, #tablaresultadostest td { padding: 9px; }
+                #tablaresultadostest th, #tablaresultadostest td { padding: 8px; }
+                #tablaresultadostest th:nth-child(1) { width: 12%; }
+                #tablaresultadostest th:nth-child(2) { width: 18%; }
+                #tablaresultadostest th:nth-child(3) { width: 12%; }
+                #tablaresultadostest th:nth-child(4) { width: 20%; }
+                #tablaresultadostest th:nth-child(5) { width: 15%; }
+                #tablaresultadostest th:nth-child(6) { width: 13%; }
+                #tablaresultadostest th:nth-child(7) { width: 10%; }
             }
                 :root {
   --bg: #0d1117;
@@ -955,7 +1010,7 @@ footer {
                     <div id="add_search_columns">
                          <img id="botonADD" src="./iconos/ADD.png" alt="ADD" onclick="entidad.createForm_ADD();" />
                         <img id="botonSEARCH" src="./iconos/SEARCH.png" alt="SEARCH" onclick="entidad.createForm_SEARCH();"/>
-                        <img id="botonTEST_DATA" src="./iconos/TEST.png" alt="Pruebas de datos" onclick="test = new entity_Test_Data(eval(entidad.nombreentidad))">
+                        <img id="botonTEST_DATA" src="./iconos/TEST.png" alt="Ejecutar tests de validación" title="Ejecutar tests para la entidad seleccionada" role="button" tabindex="0" onclick="runSelectedEntityTests()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();runSelectedEntityTests()}">
 
                         <label id="label_seleccioncolumnas" class="label_seleccioncolumnas" for="seleccioncolumnas">Seleccionar columnas</label>
                         <select id="seleccioncolumnas" multiple aria-label="Seleccionar columnas"></select>
@@ -1012,6 +1067,42 @@ footer {
                     ? key
                     : name.replaceAll('_', ' ');
                 window.setLang();
+            }
+        };
+
+        window.runSelectedEntityTests = function() {
+            const selectedEntity = window.entidad;
+            const results = document.getElementById('IU_Test_result_nofile');
+            if (!selectedEntity || !results) return;
+
+            const testSuites = {
+                persona: typeof persona_pruebas === 'undefined' ? null : persona_pruebas,
+                usuario: typeof usuario_pruebas === 'undefined' ? null : usuario_pruebas,
+                rol: typeof rol_pruebas === 'undefined' ? null : rol_pruebas,
+                accion: typeof accion_pruebas === 'undefined' ? null : accion_pruebas,
+                funcionalidad: typeof funcionalidad_pruebas === 'undefined' ? null : funcionalidad_pruebas,
+                funcionalidad_accion: typeof funcionalidad_accion_pruebas === 'undefined' ? null : funcionalidad_accion_pruebas,
+                rolaccionfuncionalidad: typeof rolaccionfuncionalidad_pruebas === 'undefined' ? null : rolaccionfuncionalidad_pruebas
+            };
+            const testCases = testSuites[selectedEntity.nombreentidad];
+            if (!Array.isArray(testCases) || testCases.length === 0) {
+                const message = document.createElement('p');
+                message.className = 'test-failed';
+                message.textContent = window.traduccion && window.traduccion.test_suite_missing
+                    ? window.traduccion.test_suite_missing
+                    : `No hay tests de validación cargados para ${selectedEntity.nombreentidad}.`;
+                results.replaceChildren(message);
+                return;
+            }
+
+            try {
+                selectedEntity.runValidationTests(testCases);
+            } catch (error) {
+                console.error(`No se pudieron ejecutar los tests de ${selectedEntity.nombreentidad}.`, error);
+                const message = document.createElement('p');
+                message.className = 'test-failed';
+                message.textContent = error.message || 'No se pudieron ejecutar los tests.';
+                results.replaceChildren(message);
             }
         };
 
