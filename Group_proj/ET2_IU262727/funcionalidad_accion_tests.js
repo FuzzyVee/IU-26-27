@@ -1,20 +1,20 @@
 let funcionalidad_accion_def_tests = Array(
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 1, "cumple tamaño numerico minimo id_funcionalidad en ADD", "min_size", "ADD", "id_funcionalidad_min_size_ko", "Minimo 1"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 2, "cumple tamaño numerico minimo id_funcionalidad en EDIT", "min_size", "EDIT", "id_funcionalidad_min_size_ko", "Minimo 1"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 3, "cumple tamaño numerico maximo id_funcionalidad en ADD", "max_size", "ADD", "id_funcionalidad_max_size_ko", "Maximo 11"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 4, "cumple tamaño numerico maximo id_funcionalidad en EDIT", "max_size", "EDIT", "id_funcionalidad_max_size_ko", "Maximo 11"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 5, "cumple tamaño numerico maximo id_funcionalidad en SEARCH", "max_size", "SEARCH", "id_funcionalidad_max_size_ko", "Maximo 11"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 6, "es correcto id_funcionalidad en ADD", "valid", "ADD", true, "ID funcionalidad correcto"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 7, "es correcto id_funcionalidad en EDIT", "valid", "EDIT", true, "ID funcionalidad correcto"),
-   Array("funcionalidad_accion", "id_funcionalidad", "input", 8, "es correcto id_funcionalidad en SEARCH", "valid", "SEARCH", true, "ID funcionalidad correcto"),
-   Array("funcionalidad_accion", "id_accion", "input", 9, "cumple tamaño numerico minimo id_accion en ADD", "min_size", "ADD", "id_accion_min_size_ko", "Minimo 1"),
-   Array("funcionalidad_accion", "id_accion", "input", 10, "cumple tamaño numerico minimo id_accion en EDIT", "min_size", "EDIT", "id_accion_min_size_ko", "Minimo 1"),
-   Array("funcionalidad_accion", "id_accion", "input", 11, "cumple tamaño numerico maximo id_accion en ADD", "max_size", "ADD", "id_accion_max_size_ko", "Maximo 11"),
-   Array("funcionalidad_accion", "id_accion", "input", 12, "cumple tamaño numerico maximo id_accion en EDIT", "max_size", "EDIT", "id_accion_max_size_ko", "Maximo 11"),
-   Array("funcionalidad_accion", "id_accion", "input", 13, "cumple tamaño numerico maximo id_accion en SEARCH", "max_size", "SEARCH", "id_accion_max_size_ko", "Maximo 11"),
-   Array("funcionalidad_accion", "id_accion", "input", 14, "es correcto id_accion en ADD", "valid", "ADD", true, "ID accion correcto"),
-   Array("funcionalidad_accion", "id_accion", "input", 15, "es correcto id_accion en EDIT", "valid", "EDIT", true, "ID accion correcto"),
-   Array("funcionalidad_accion", "id_accion", "input", 16, "es correcto id_accion en SEARCH", "valid", "SEARCH", true, "ID accion correcto")
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 1, "cumple tamaño numerico minimo id_funcionalidad en ADD", "min_size", "ADD", "id_funcionalidad_min_size_ko", "Minimo 1"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 2, "cumple tamaño numerico minimo id_funcionalidad en EDIT", "min_size", "EDIT", "id_funcionalidad_min_size_ko", "Minimo 1"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 3, "cumple tamaño numerico maximo id_funcionalidad en ADD", "max_size", "ADD", "id_funcionalidad_max_size_ko", "Maximo 11"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 4, "cumple tamaño numerico maximo id_funcionalidad en EDIT", "max_size", "EDIT", "id_funcionalidad_max_size_ko", "Maximo 11"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 5, "cumple tamaño numerico maximo id_funcionalidad en SEARCH", "max_size", "SEARCH", "id_funcionalidad_max_size_ko", "Maximo 11"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 6, "es correcto id_funcionalidad en ADD", "valid", "ADD", true, "ID funcionalidad correcto"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 7, "es correcto id_funcionalidad en EDIT", "valid", "EDIT", true, "ID funcionalidad correcto"),
+   Array("funcionalidad_accion", "id_funcionalidad", "select", 8, "es correcto id_funcionalidad en SEARCH", "valid", "SEARCH", true, "ID funcionalidad correcto"),
+   Array("funcionalidad_accion", "id_accion", "select", 9, "cumple tamaño numerico minimo id_accion en ADD", "min_size", "ADD", "id_accion_min_size_ko", "Minimo 1"),
+   Array("funcionalidad_accion", "id_accion", "select", 10, "cumple tamaño numerico minimo id_accion en EDIT", "min_size", "EDIT", "id_accion_min_size_ko", "Minimo 1"),
+   Array("funcionalidad_accion", "id_accion", "select", 11, "cumple tamaño numerico maximo id_accion en ADD", "max_size", "ADD", "id_accion_max_size_ko", "Maximo 11"),
+   Array("funcionalidad_accion", "id_accion", "select", 12, "cumple tamaño numerico maximo id_accion en EDIT", "max_size", "EDIT", "id_accion_max_size_ko", "Maximo 11"),
+   Array("funcionalidad_accion", "id_accion", "select", 13, "cumple tamaño numerico maximo id_accion en SEARCH", "max_size", "SEARCH", "id_accion_max_size_ko", "Maximo 11"),
+   Array("funcionalidad_accion", "id_accion", "select", 14, "es correcto id_accion en ADD", "valid", "ADD", true, "ID accion correcto"),
+   Array("funcionalidad_accion", "id_accion", "select", 15, "es correcto id_accion en EDIT", "valid", "EDIT", true, "ID accion correcto"),
+   Array("funcionalidad_accion", "id_accion", "select", 16, "es correcto id_accion en SEARCH", "valid", "SEARCH", true, "ID accion correcto")
 );
 
 let funcionalidad_accion_pruebas = Array(
