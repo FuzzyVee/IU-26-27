@@ -143,8 +143,8 @@ body {
     &:active {
         width: 28pt; /* Ancho de las banderas */
         height: 28pt; /* Alto de las banderas */
-        padding-left: 5pt; /* Relleno izquierdo de las banderas */
-        padding-right: 5pt; /* Relleno derecho de las banderas */
+        padding-left: 6pt; /* Relleno izquierdo de las banderas */
+        padding-right: 6pt; /* Relleno derecho de las banderas */
     }
 }
 
