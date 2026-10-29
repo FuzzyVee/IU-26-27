@@ -673,6 +673,9 @@ select#seleccioncolumnas option:hover {
   border-bottom: 1px solid var(--border-color);
   font-size: 0.9rem;
   vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #IU_manage_table td a img,
@@ -685,6 +688,12 @@ select#seleccioncolumnas option:hover {
   border: 1px solid var(--border-color);
   vertical-align: middle;
   background: var(--input-bg);
+}
+
+#IU_manage_table th:nth-last-child(-n+3),
+#IU_manage_table td:nth-last-child(-n+3) {
+    text-align: right;
+    white-space: nowrap;
 }
 
 #Div_IU_form {

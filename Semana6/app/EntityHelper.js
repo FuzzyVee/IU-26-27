@@ -58,6 +58,7 @@ class EntityHelper {
             'ADD',
             'EDIT',
             'DELETE',
+            'crearTablaDatos',
             'createForm_ADD',
             'createForm_SEARCH',
             'createForm_EDIT',
@@ -70,7 +71,7 @@ class EntityHelper {
             this.entidad[methodName] = (...args) => this[methodName](...args);
         });
     }
-
+    
     async SEARCH() {
         const entity = this.entidad;
         const form = document.getElementById('form_iu');
@@ -102,6 +103,52 @@ class EntityHelper {
         }
     }
 
+    /**
+     * Limpia caracteres de salto de línea codificados (&#13;&#10;) antes de rellenar el formulario
+     */
+    cleanRowData(row) {
+        if (!row) return row;
+        const clean = { ...row };
+        for (let key in clean) {
+            if (typeof clean[key] === 'string') {
+                clean[key] = clean[key]
+                    .replace(/&#13;&#10;/g, '\n')
+                    .replace(/&#10;/g, '\n')
+                    .replace(/&#13;/g, '\n');
+            }
+        }
+        return clean;
+    }
+    
+    /**
+     * Sobrescribe la creación de tabla usando índices en lugar de JSON.stringify
+     */
+    crearTablaDatos(datos, mostrarespecial) {
+        var misdatos = datos;
+    
+        for (var i = 0; i < misdatos.length; i++) {
+            misdatos[i]['EDIT'] = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(entidad.datos[${i}]);'>`;
+            misdatos[i]['DELETE'] = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(entidad.datos[${i}]);'>`;
+            misdatos[i]['SHOWCURRENT'] = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(entidad.datos[${i}]);'>`;
+        }
+    
+        if (mostrarespecial && mostrarespecial.length > 0) {
+            for (var i = 0; i < misdatos.length; i++) {
+                for (var clave in misdatos[i]) {
+                    if (mostrarespecial.includes(clave)) {
+                        misdatos[i][clave] = this.entidad.cambiarmostrarespecial(clave, misdatos[i][clave]);
+                    }
+                }
+            }
+        }
+    
+        this.entidad.dom.showData('IU_manage_table', misdatos);
+        this.entidad.dom.crearSeleccionablecolumnas(this.entidad.columnasamostrar, this.entidad.atributos);
+        this.entidad.dom.mostrarocultarcolumnas(this.entidad.columnasamostrar, this.entidad.atributos);
+    
+        if (typeof setLang === 'function') setLang();
+    }
+    
     async fetchEntityRows(entityName) {
         const response = await this.entidad.access_functions.peticionBackGeneral(
             '',
@@ -798,49 +845,58 @@ class EntityHelper {
             : fallback;
     }
 
-    manual_form_creation(action = 'ADD') {
-        const entity = this.entidad;
-        let html = '<form id="form_iu" action="" method="POST" enctype="multipart/form-data" class="formulario">\n';
-
-        (entity.fields || []).forEach((field) => {
-            if (field.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(action)) return;
-
-            html += `  <label class="label_${field.name}" for="${field.name}">${field.label}</label>\n`;
-            const isLockedKey = field.isPK || field.isFK || field.name === entity.fields[0]?.name;
-            const isReadOnlyView = ['DELETE', 'SHOWCURRENT'].includes(action);
-            const isSelectField = field.isFK || field.type === 'select';
-
-            if (isSelectField && (isReadOnlyView || (action === 'EDIT' && isLockedKey))) {
-                html += `  <input type="text" id="${field.name}" name="${field.name}">\n`;
-            } else if (isSelectField) {
-                const required = field.isFK && action === 'ADD' ? ' required' : '';
-                html += `  <select id="${field.name}" name="${field.name}"${required}>\n`;
-                html += '    <option value="">-- Seleccionar --</option>\n';
-                if (Array.isArray(field.options)) {
-                    field.options.forEach((option) => {
-                        const value = typeof option === 'object' ? option.value : option;
-                        const label = typeof option === 'object' ? option.label : option;
-                        html += `    <option value="${this.escapeHTML(value)}">${this.escapeHTML(label)}</option>\n`;
+    manual_form_creation(accion = 'ADD') {
+        let html = `<form id="form_iu" action="" method="POST" enctype="multipart/form-data" class="formulario">\n`;
+    
+        (this.entidad.fields || []).forEach((f) => {
+            // Ocultar campos de archivo en búsquedas y borrados
+            if (f.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(accion)) return;
+            if (f.name.startsWith('foto_') && accion === 'ADD') return;
+    
+            html += `  <label class="label_${f.name}">${f.label}</label>\n`;
+    
+            const esClaveEspecial = (f.isPK || f.isFK || f.name === this.entidad.fields[0]?.name);
+            const esVistaSoloLectura = ['DELETE', 'SHOWCURRENT'].includes(accion);
+            const debeSerReadonly = esVistaSoloLectura || (accion === 'EDIT' && esClaveEspecial);
+            const readonlyAttr = debeSerReadonly ? ' readonly style="background-color: #2a313d; cursor: not-allowed; color: #8b949e;"' : '';
+    
+            // --- Siguiente ID automático en la vista ADD ---
+            if (accion === 'ADD' && f.isPK && f.name.startsWith('id_')) {
+                let siguienteId = 1;
+                if (this.entidad.datos && Array.isArray(this.entidad.datos) && this.entidad.datos.length > 0) {
+                    const maxId = Math.max(...this.entidad.datos.map(row => Number(row[f.name]) || 0));
+                    siguienteId = (isNaN(maxId) || maxId < 1) ? 1 : maxId + 1;
+                }
+                html += `  <input type="text" id="${f.name}" name="${f.name}" value="${siguienteId}" readonly style="background-color: #2a313d; cursor: not-allowed; color: #8b949e;">\n`;
+            }
+            else if (f.type === 'select' && debeSerReadonly) {
+                html += `  <input type="text" id="${f.name}" name="${f.name}"${readonlyAttr}>\n`;
+            } else if (f.type === 'select') {
+                html += `  <select id="${f.name}" name="${f.name}">\n`;
+                html += `    <option value="">-- Seleccionar --</option>\n`;
+                if (f.options && Array.isArray(f.options)) {
+                    f.options.forEach(opt => {
+                        const val = (typeof opt === 'object') ? opt.value : opt;
+                        const lbl = (typeof opt === 'object') ? opt.label : opt;
+                        html += `    <option value="${val}">${lbl}</option>\n`;
                     });
                 }
-                html += '  </select>\n';
-            } else if (field.type === 'file') {
-                const acceptedTypes = field.rules && field.rules.ADD && field.rules.ADD.type_file;
-                const accept = Array.isArray(acceptedTypes)
-                    ? acceptedTypes.includes('image/jpeg') ? ' accept="image/jpeg,.jpg,.jpeg"' : ''
-                    : '';
-                html += `  <input type="file" id="${field.name}" name="${field.name}"${accept}>\n`;
-            } else if (field.type === 'textarea') {
-                html += `  <textarea id="${field.name}" name="${field.name}"></textarea>\n`;
+                html += `  </select>\n`;
+            } else if (f.type === 'file') {
+                html += `  <input type="file" id="${f.name}" name="${f.name}">\n`;
+            } else if (f.type === 'textarea') {
+                html += `  <textarea id="${f.name}" name="${f.name}"${readonlyAttr}></textarea>\n`;
             } else {
-                html += `  <input type="${field.type || 'text'}" id="${field.name}" name="${field.name}">\n`;
+                html += `  <input type="${f.type || 'text'}" id="${f.name}" name="${f.name}"${readonlyAttr}>\n`;
             }
-            html += `  <span id="span_error_${field.name}"><a id="error_${field.name}"></a></span>\n  <br>\n`;
+    
+            html += `  <span id="span_error_${f.name}"><a id="error_${f.name}"></a></span>\n  <br>\n`;
         });
-
-        return `${html}</form>`;
+    
+        html += `</form>`;
+        return html;
     }
-
+    
     baseCreateForm(action) {
         const modal = document.getElementById('Div_IU_form');
         if (modal && modal.closest && modal.closest('form')) {
