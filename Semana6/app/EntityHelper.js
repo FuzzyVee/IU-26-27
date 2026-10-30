@@ -18,6 +18,8 @@ class EntityHelper {
         }
 
         entidad.dom = new entity_dom_fields();
+
+        
         entidad.validations = new Validations();
         entidad.access_functions = new ExternalAccess();
 
@@ -70,39 +72,71 @@ class EntityHelper {
         ].forEach((methodName) => {
             this.entidad[methodName] = (...args) => this[methodName](...args);
         });
+        this.entidad.dom.abrirModalError = (errorMsg) => this.abrirModalError(errorMsg);
     }
+
+    // Sobrescribir abrirModalError en la instancia de dom
+    abrirModalError(errorMsg) {
+        // Buscar los elementos compatibles con el HTML de la aplicación
+        const modal = document.getElementById('error_action_modal') || document.getElementById('modalError');
+        const overlay = document.getElementById('modal_action_overlay');
+        const msgElem = document.getElementById('error_action_msg') || document.getElementById('mensajeErrorModal');
+
+        if (modal) modal.style.display = 'block';
+        if (overlay) overlay.style.display = 'block';
+
+        if (msgElem) {
+            msgElem.className = errorMsg;
+
+            const textoTraducido = (window.traduccion && window.traduccion[errorMsg])
+                ? window.traduccion[errorMsg]
+                : errorMsg;
+
+            msgElem.textContent = textoTraducido;
+        }
+
+        if (typeof setLang === 'function') {
+            setLang();
+        }
+    };
+
     
-    async SEARCH() {
-        const entity = this.entidad;
-        const form = document.getElementById('form_iu');
-        const formId = form && form.tagName === 'FORM' ? 'form_iu' : '';
-        const response = await entity.access_functions.peticionBackGeneral(
-            formId,
-            entity.nombreentidad,
-            'SEARCH'
-        );
-
-        entity.dom.hide_element('Div_IU_form');
-        entity.datos = response.code === 'RECORDSET_DATOS' ? response.resource : [];
-        if (entity.datos.length > 0) {
-            entity.atributos = Object.keys(entity.datos[0]);
+    async SEARCH(clearFilter = false) {
+        const formElem = document.getElementById('form_iu');
+    
+        // If clearFilter is true, reset the form and send '' so no filters are applied
+        if (clearFilter && formElem) {
+            formElem.reset();
+            // Also clear inner HTML to avoid leftover input values
+            const container = document.getElementById('contenedor_IU_form');
+            if (container) container.innerHTML = '';
         }
-        entity.dom.show_element('IU_manage_entity');
-
-        if (['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(entity.nombreentidad)) {
-            await this.renderRelationMatrix();
-        } else if (entity.datos.length > 0) {
-            entity.crearTablaDatos(entity.datos, entity.mostrarespecial);
-        } else {
-            const table = document.getElementById('IU_manage_table');
-            if (table) {
-                table.style.display = 'block';
-                table.innerHTML = 'No se han encontrado elementos que coincidan con la busqueda';
-                table.className = 'RECORDSET_VACIO';
-            }
-        }
+    
+        const idForm = (clearFilter || !formElem || formElem.tagName !== 'FORM') ? '' : 'form_iu';
+    
+        await this.entidad.access_functions.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
+            .then((respuesta) => {
+                this.entidad.dom.hide_element('Div_IU_form');
+    
+                if (respuesta['code'] === 'RECORDSET_DATOS') {
+                    this.entidad.datos = respuesta['resource'];
+                    if (this.entidad.datos && this.entidad.datos.length > 0) {
+                        this.entidad.atributos = Object.keys(this.entidad.datos[0]);
+                    }
+                    this.entidad.dom.show_element('IU_manage_entity');
+                    this.entidad.crearTablaDatos(this.entidad.datos, this.entidad.mostrarespecial);
+                } else {
+                    const tableElem = document.getElementById("IU_manage_table");
+                    if (tableElem) {
+                        tableElem.style.display = 'block';
+                        tableElem.innerHTML = 'No se han encontrado elementos que coincidan con la búsqueda';
+                        tableElem.className = 'RECORDSET_VACIO';
+                    }
+                }
+            });
     }
 
+    
     /**
      * Limpia caracteres de salto de línea codificados (&#13;&#10;) antes de rellenar el formulario
      */
@@ -118,6 +152,23 @@ class EntityHelper {
             }
         }
         return clean;
+    }
+
+    /**
+     * Cleans newlines, carriage returns, and leading/trailing whitespace 
+     * from all text/textarea inputs in form_iu before submission.
+     */
+    sanitizeFormInputs() {
+        const form = document.getElementById('form_iu');
+        if (!form) return;
+    
+        const inputs = form.querySelectorAll('input[type="text"], textarea');
+        inputs.forEach(input => {
+            if (input.value) {
+                // Replace newlines/carriage returns with a single space and trim
+                input.value = input.value.replace(/[\r\n]+/g, ' ').trim();
+            }
+        });
     }
     
     /**
@@ -943,11 +994,46 @@ class EntityHelper {
     }
 
     async ADD() {
-        await this.submitEntityAction('ADD');
-    }
+    this.sanitizeFormInputs();
 
+    await this.entidad.access_functions.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'ADD')
+        .then((respuesta) => {
+            if (respuesta['ok']) {
+                this.entidad.dom.hide_element("Div_IU_form");
+                // Pass true to reset filters and fetch ALL records
+                this.SEARCH(true);
+            } else {
+                this.entidad.dom.abrirModalError(respuesta['code']);
+            }
+        });
+    }
+    
     async EDIT() {
-        await this.submitEntityAction('EDIT');
+        this.sanitizeFormInputs();
+    
+        await this.entidad.access_functions.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'EDIT')
+            .then((respuesta) => {
+                if (respuesta['ok']) {
+                    this.entidad.dom.hide_element("Div_IU_form");
+                    // Pass true to reset filters and fetch ALL records
+                    this.SEARCH(true);
+                } else {
+                    this.entidad.dom.abrirModalError(respuesta['code']);
+                }
+            });
+    }
+    
+    async DELETE() {
+        await this.entidad.access_functions.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'DELETE')
+            .then((respuesta) => {
+                if (respuesta['ok']) {
+                    this.entidad.dom.hide_element("Div_IU_form");
+                    // Pass true to reset filters and fetch ALL records
+                    this.SEARCH(true);
+                } else {
+                    this.entidad.dom.abrirModalError(respuesta['code']);
+                }
+            });
     }
 
     async DELETE() {
