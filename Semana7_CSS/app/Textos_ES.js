@@ -1,18 +1,18 @@
 var textos_ES = {
-
 	// textos titulos generales
 	'text_titulo_app': 'Interfaz ET2 IU',
-	'text_titulo_menu': 'Opciones  Menú',
+	'text_titulo_menu': 'Opciones Menú',
 	'text_titulo_pie': 'Pie de página',
     'label_seleccioncolumnas': 'Seleccionar columnas',
-    
+
     // textos de test
-    /*'res_estructura_tests':'Tabla verificacion estructura de test',
-	'resultadodef':'formato correcto estructura definicion tests',
-	'res_estructura_pruebas':'Tabla verificacion estructura de pruebas',
-	'resultadoprueba':'formato correcto estructura pruebas',
-	'res_pruebas':'Tabla ejecución de pruebas',
-	'resultadotest':'Resultado ejecucion pruebas',
+    /*
+	'res_estructura_tests': 'Tabla verificacion estructura de test',
+	'resultadodef': 'formato correcto estructura definicion tests',
+	'res_estructura_pruebas': 'Tabla verificacion estructura de pruebas',
+	'resultadoprueba': 'formato correcto estructura pruebas',
+	'res_pruebas': 'Tabla ejecución de pruebas',
+	'resultadotest': 'Resultado ejecucion pruebas',
     */
 
     // textos menu
@@ -51,13 +51,13 @@ var textos_ES = {
 	// ADD/EDIT
 
 	// dni
-	'dni_min_size_KO':'Dni demasiado corto. Debe tener 8 números y 1 caracter alfabético',
-	'dni_max_size_KO':'DNI demasiado largo. Debe tener 8 números y 1 caracter alfabético',
-	'dni_format_KO':'Formato dni/nie no correcto. DNI 8digitos1letra, NIE 1letra7digitos1letra',
+	'dni_min_size_KO': 'DNI demasiado corto. Debe tener 8 números y 1 caracter alfabético',
+	'dni_max_size_KO': 'DNI demasiado largo. Debe tener 8 números y 1 caracter alfabético',
+	'dni_format_KO': 'Formato DNI/NIE no correcto. DNI 8digitos1letra, NIE 1letra7digitos1letra',
 	// nombre_persona
-	'nombre_persona_min_size_KO':'Nombre demasiado corto. Debe tener mas de 4 caracteres alfabéticos',
-	'nombre_persona_max_size_KO':'Nombre demasiado largo. Debe tener menos de 15 caracteres alfabéticos',
-	'nombre_persona_format_KO':'Nombre no correcto. Solo se permiten alfabéticos',
+	'nombre_persona_min_size_KO': 'Nombre demasiado corto. Debe tener mas de 4 caracteres alfabéticos',
+	'nombre_persona_max_size_KO': 'Nombre demasiado largo. Debe tener menos de 15 caracteres alfabéticos',
+	'nombre_persona_format_KO': 'Nombre no correcto. Solo se permiten alfabéticos',
 
 	// apellidos persona
 	'apellidos_persona_min_size_KO': 'Apellidos demasiado corto. Debe tener mas de 4 caracteres alfabéticos o espacios',
@@ -69,28 +69,26 @@ var textos_ES = {
 	'fechaNacimiento_persona_valid_KO': 'Fecha no válida. La fecha debe existir',
 
 	// email persona
-	'email_persona_min_size_KO': '',
-	'email_persona_max_size_KO':'',
-	'email_persona_format_KO':'',
+	'email_persona_min_size_KO': 'Email demasido corto. Debe tener mas de 3 caracteres.',
+	'email_persona_max_size_KO': 'Email demasido largo. Debe tener menos de 46 caracteres.',
+	'email_persona_format_KO': 'Email no válido. Compruebe el formato.',
 
-	// nuevo foto persona	
-	'nuevo_foto_persona_not_exist_file_KO':'El fichero no existe. Debe subir una foto',
-	'nuevo_foto_persona_max_size_file_KO':'',
-	'nuevo_foto_persona_type_file_KO':'',
-	'nuevo_foto_persona_format_name_file_KO':'',
-	'nuevo_foto_persona_min_size_KO':'',
-	'nuevo_foto_persona_max_size_KO':'',
+	// nuevo foto persona
+	'nuevo_foto_persona_not_exist_file_KO': 'El fichero no existe. Debe subir una foto.',
+	'nuevo_foto_persona_max_size_file_KO': 'El fichero es demasiado grande. Debe de tener un tamaño menor de 2MB.',
+	'nuevo_foto_persona_type_file_KO': 'El fichero es de un tipo incorrecto. Debe de ser un archivo \'.jpg\' o \'.jpeg\'.',
+	'nuevo_foto_persona_format_name_file_KO': 'El fichero tiene un nombre inválido.',
+	'nuevo_foto_persona_min_size_KO': 'El nombre del fichero es demasiado corto. Debe tener mas de 2 caracteres.',
+	'nuevo_foto_persona_max_size_KO': 'El nombre del fichero es demasiado largo. Debe tener menos de 16 caracteres.',
 
 	//SEARCH
 	// foto persona
-	'foto_persona_max_size_KO':'',
-	'foto_persona_format_KO':'',
-	
+	'foto_persona_max_size_KO': 'El nombre del fichero es demasiado largo. Debe tener menos de 16 caracteres.',
+	'foto_persona_format_KO': 'El nombre del fichero no cumple el formato.',
 
 	//errores acciones
 	'RECORDSET_VACIO' : 'No hay coincidencias para la búsqueda',
-	'dni_es_nulo_KO':'El dni no puede ser vacio',
+	'dni_es_nulo_KO': 'El dni no puede ser vacio',
 
-	'admin_no_se_puede_modificar_KO':'El admin no se puede modificar',
-
+	'admin_no_se_puede_modificar_KO': 'El admin no se puede modificar',
 }

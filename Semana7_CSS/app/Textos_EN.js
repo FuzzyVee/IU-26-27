@@ -5,14 +5,15 @@ var textos_EN = {
 	'text_titulo_menu': 'Menu Options',
 	'text_titulo_pie': 'Footer',
     'label_seleccioncolumnas': 'Select columns ',
-    
+
     // textos de test
-    /*'res_estructura_tests':'Tabla verificacion estructura de test',
-	'resultadodef':'formato correcto estructura definicion tests',
-	'res_estructura_pruebas':'Tabla verificacion estructura de pruebas',
-	'resultadoprueba':'formato correcto estructura pruebas',
-	'res_pruebas':'Tabla ejecución de pruebas',
-	'resultadotest':'Resultado ejecucion pruebas',
+    /*
+	'res_estructura_tests': 'Tabla verificacion estructura de test',
+	'resultadodef': 'formato correcto estructura definicion tests',
+	'res_estructura_pruebas': 'Tabla verificacion estructura de pruebas',
+	'resultadoprueba': 'formato correcto estructura pruebas',
+	'res_pruebas': 'Tabla ejecución de pruebas',
+	'resultadotest': 'Resultado ejecucion pruebas',
     */
 
     // textos menu
@@ -51,13 +52,13 @@ var textos_EN = {
 	// ADD/EDIT
 
 	// dni
-	'dni_min_size_KO':'ID number too short. Must have 8 numbers and 1 alphabetical character',
-    'dni_max_size_KO':'ID number too long. Must have 8 numbers and 1 alphabetical character',
-    'dni_format_KO':'Incorrect ID/foreign ID format. ID number 8 digits 1 letter, foreign ID number 1 letter 7 digits 1 letter',
+	'dni_min_size_KO': 'ID number too short. Must have 8 numbers and 1 alphabetical character',
+    'dni_max_size_KO': 'ID number too long. Must have 8 numbers and 1 alphabetical character',
+    'dni_format_KO': 'Incorrect ID/foreign ID format. ID number 8 digits 1 letter, foreign ID number 1 letter 7 digits 1 letter',
     // nombre_persona
-    'nombre_persona_min_size_KO':'Name too short. Must have more than 4 alphabetical characters',
-    'nombre_persona_max_size_KO':'Name too long. Must have less than 15 alphabetic characters',
-    'nombre_persona_format_KO':'Incorrect name. Only alphabetic characters are allowed',
+    'nombre_persona_min_size_KO': 'Name too short. Must have more than 4 alphabetical characters',
+    'nombre_persona_max_size_KO': 'Name too long. Must have less than 15 alphabetic characters',
+    'nombre_persona_format_KO': 'Incorrect name. Only alphabetic characters are allowed',
 
     // apellidos_persona
     'apellidos_persona_min_size_KO': 'Last name too short. Must have more than 4 alphabetic characters or spaces',
@@ -70,28 +71,26 @@ var textos_EN = {
 
 
 	// email persona
-	'email_persona_min_size_KO': '',
-	'email_persona_max_size_KO':'',
-	'email_persona_format_KO':'',
+	'email_persona_min_size_KO': 'Email too short. It has to be at least 4 characters.',
+	'email_persona_max_size_KO': 'Email too long. It has to be at most 45 characters.',
+	'email_persona_format_KO': 'Invalid email. Check the format.',
 
-	// nuevo foto persona	
-	'nuevo_foto_persona_not_exist_file_KO':'The file does not exist. A photo in jpg format must be uploaded.',
-	'nuevo_foto_persona_max_size_file_KO':'',
-	'nuevo_foto_persona_type_file_KO':'',
-	'nuevo_foto_persona_format_name_file_KO':'',
-	'nuevo_foto_persona_min_size_KO':'',
-	'nuevo_foto_persona_max_size_KO':'',
+	// nuevo foto persona
+	'nuevo_foto_persona_not_exist_file_KO': 'The file does not exist. A photo in \'.jpg\' or \'.jpeg\' format must be uploaded.',
+	'nuevo_foto_persona_max_size_file_KO': 'The file is too big. It has to be smaller than 2MB.',
+	'nuevo_foto_persona_type_file_KO': 'The file is of an incorrect type. It has to have a \'.jpg\' or a \'.jpeg\' extension.',
+	'nuevo_foto_persona_format_name_file_KO': 'The file has an invalid name.',
+	'nuevo_foto_persona_min_size_KO': 'The name of the file is too short. It has to be at least 3 characters.',
+	'nuevo_foto_persona_max_size_KO': 'The name of the file is too long. It has to be at most 15 characters.',
 
 	//SEARCH
 	// foto persona
-	'foto_persona_max_size_KO':'',
-	'foto_persona_format_KO':'',
-	
+	'foto_persona_max_size_KO': 'The name of the file is too long. It has to be at most 15 characters.',
+	'foto_persona_format_KO': 'The name of the file is invalid. Check the format.',
 
 	//errores acciones
 	'RECORDSET_VACIO' : 'There are not results for your search',
-	'dni_es_nulo_KO':'DNI can not be empty',
+	'dni_es_nulo_KO': 'DNI can not be empty',
 
-	'admin_no_se_puede_modificar_KO':'El admin no se puede modificar',
-
+	'admin_no_se_puede_modificar_KO': 'El admin no se puede modificar',
 }
