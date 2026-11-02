@@ -124,7 +124,13 @@ class EntityHelper {
                         this.entidad.atributos = Object.keys(this.entidad.datos[0]);
                     }
                     this.entidad.dom.show_element('IU_manage_entity');
-                    this.entidad.crearTablaDatos(this.entidad.datos, this.entidad.mostrarespecial);
+                    if (['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(this.entidad.nombreentidad)) 
+                    {
+                        await this.renderRelationMatrix(); 
+                    } else 
+                    {
+                        this.entidad.crearTablaDatos(this.entidad.datos, this.entidad.mostrarespecial); 
+                    }
                 } else {
                     const tableElem = document.getElementById("IU_manage_table");
                     if (tableElem) {
