@@ -115,7 +115,7 @@ class EntityHelper {
         const idForm = (clearFilter || !formElem || formElem.tagName !== 'FORM') ? '' : 'form_iu';
     
         await this.entidad.access_functions.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
-            .then((respuesta) => {
+            .then(async (respuesta) => {
                 this.entidad.dom.hide_element('Div_IU_form');
     
                 if (respuesta['code'] === 'RECORDSET_DATOS') {
