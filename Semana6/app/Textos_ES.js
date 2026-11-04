@@ -96,7 +96,7 @@ var textos_ES = {
 	// dni
 	'dni_min_size_ko': 'Dni demasiado corto. Debe tener 8 números y 1 caracter alfabético',
 	'dni_max_size_ko': 'DNI demasiado largo. Debe tener 8 números y 1 caracter alfabético',
-	'dni_format_ko': 'Formato dni/nie no correcto. DNI 8digitos1letra, NIE 1letra7digitos1letra',
+	'dni_format_ko': 'Formato dni/nie no correcto. DNI 8 digitos 1 letra, NIE 1 letra 7 digitos 1 letra',
 	// nombre_persona
 	'nombre_persona_min_size_ko': 'Nombre demasiado corto. Debe tener mas de 4 caracteres alfabéticos',
 	'nombre_persona_max_size_ko': 'Nombre demasiado largo. Debe tener menos de 15 caracteres alfabéticos',

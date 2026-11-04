@@ -1,8 +1,11 @@
+
 class persona extends AbstractEntidad {
     constructor(esTest = 'no') {
         super(); // Llama al constructor de AbstractEntidad
 
         const fechaNacimientoFormat = '^(?:(?:0?[1-9]|[12][0-9]|3[01])[/\\-](?:0?[1-9]|1[0-2])[/\\-](?:19|20)\\d{2}|(?:19|20)\\d{2}-(?:0?|1)-(?:0?||3))$';
+
+            
         
         this.nombreentidad = 'persona';
         this.fields = [
@@ -102,3 +105,25 @@ class persona extends AbstractEntidad {
         if (esTest !== 'test') this.SEARCH();
     }
 }
+
+
+persona.prototype.personalize_dni = function() {
+    const input = document.getElementById('dni');
+    if (!input || !input.value) return true;
+
+    const valor = input.value.trim().toUpperCase();
+
+    if (!/^[0-9]{8}[A-Z]$/.test(valor)) {
+        return 'dni_format_ko';
+    }
+
+    const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+    const numero = parseInt(valor.substring(0, 8), 10);
+    const letraCalculada = letras.charAt(numero % 23);
+
+    if (valor.charAt(8) !== letraCalculada) {
+        return 'dni_format_ko';
+    }
+
+    return true;
+};

@@ -735,6 +735,25 @@ class EntityHelper {
                         }
                     }
 
+                    const customFnName = (rules && rules.personalized) 
+                        ? rules.personalized 
+                        : `personalize_${field.name}`;
+                    
+                    if (action !== 'SEARCH' && typeof this.entidad[customFnName] === 'function') {
+                        const resultado = this.entidad[customFnName]();
+                    
+                        // Si devuelve algo distinto de true (un string de error o false)
+                        if (resultado !== true) {
+                            // Si devolvió un string, ese código de error; si devolvió false, el genérico
+                            const codigoError = (typeof resultado === 'string') 
+                                ? resultado 
+                                : `${field.name}_personalized_ko`;
+                    
+                            this.entidad.dom.mostrar_error_campo(field.name, codigoError);
+                            return codigoError; // Devuelve el código de error exigido por la especificación
+                        }
+                    }
+
                     this.entidad.dom.mostrar_exito_campo(field.name);
                     return true;
                 };
