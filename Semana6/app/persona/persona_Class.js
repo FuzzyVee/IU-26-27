@@ -5,8 +5,6 @@ class persona extends AbstractEntidad {
 
         const fechaNacimientoFormat = '^(?:(?:0?[1-9]|[12][0-9]|3[01])[/\\-](?:0?[1-9]|1[0-2])[/\\-](?:19|20)\\d{2}|(?:19|20)\\d{2}-(?:0?|1)-(?:0?||3))$';
 
-            
-        
         this.nombreentidad = 'persona';
         this.fields = [
             {
@@ -20,7 +18,7 @@ class persona extends AbstractEntidad {
                 rules: {
                     ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
                     EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
-                    SEARCH: { max_size: 9 }
+                    SEARCH: { max_size: 9, format: '^[0-9]{0,8}[A-Za-z]?$' },
                 }
             },
             {
@@ -68,9 +66,9 @@ class persona extends AbstractEntidad {
                 label: 'Telefono',
                 type: 'text',
                 rules: {
-                    ADD: { min_size: 9, max_size: 9, format: '^{9}$' },
-                    EDIT: { min_size: 9, max_size: 9, format: '^{9}$' },
-                    SEARCH: { max_size: 9, format: '^+$' }
+                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{9}$' },
+                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{9}$' },
+                    SEARCH: { max_size: 9, format: '^[0-9]*$' },
                 }
             },
             {

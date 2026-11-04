@@ -3,9 +3,48 @@ class rolaccionfuncionalidad extends AbstractEntidad {
         super();
 
         const fields = [
-            { name: 'id_funcionalidad', label: 'ID Funcionalidad', type: 'select', isFK: true, referenceEntity: 'funcionalidad', optionLabel: 'nombre_funcionalidad', options: [] },
-            { name: 'id_accion', label: 'ID Accion', type: 'select', isFK: true, referenceEntity: 'accion', optionLabel: 'nombre_accion', options: [] },
-            { name: 'id_rol', label: 'ID Rol', type: 'select', isFK: true, referenceEntity: 'rol', optionLabel: 'rol_name', options: [] }
+            {
+                name: 'id_funcionalidad',
+                label: 'ID Funcionalidad',
+                type: 'select',
+                isFK: true,
+                referenceEntity: 'funcionalidad',
+                optionLabel: 'nombre_funcionalidad',
+                options: [],
+                rules: {
+                    ADD: { min_size: 1, max_size: 9 },
+                    EDIT: { min_size: 1, max_size: 9 },
+                    SEARCH: { max_size: 9 },
+                }
+            },
+            {
+                name: 'id_accion',
+                label: 'ID Accion',
+                type: 'select',
+                isFK: true,
+                referenceEntity: 'accion',
+                optionLabel: 'nombre_accion',
+                options: [],
+                rules: {
+                    ADD: { min_size: 1, max_size: 9 },
+                    EDIT: { min_size: 1, max_size: 9 },
+                    SEARCH: { max_size: 9 },
+                }
+            },
+            {
+                name: 'id_rol',
+                label: 'ID Rol',
+                type: 'select',
+                isFK: true,
+                referenceEntity: 'rol',
+                optionLabel: 'rol_name',
+                options: [],
+                rules: {
+                    ADD: { min_size: 1, max_size: 9 },
+                    EDIT: { min_size: 1, max_size: 9 },
+                    SEARCH: { max_size: 9 },
+                }
+            }
         ];
 
         this.nombreentidad = 'rolaccionfuncionalidad';

@@ -58,7 +58,8 @@ const esquemasET1 = {
         campo: "telefono_persona",
         elemento: "input",
         reglas: [
-          { tipo: "min_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "telefono_persona_min_size_ko", desc: "cumple tamaño minimo telefono_persona", msgError: "Telefono muy corto (min 9)", valorInvalido: { "telefono_persona": "6001122" } },
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "telefono_persona_min_size_ko", desc: "cumple tamaño minimo telefono_persona", msgError: "Telefono muy corto (min 9)", valorInvalido: { "telefono_persona": "6001122" } },
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "telefono_persona_max_size_ko", desc: "cumple tamaño maximo telefono_persona", msgError: "Telefono muy largo (max 9)", valorInvalido: { "telefono_persona": "6001122334455" } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "telefono_persona_format_ko", desc: "cumple formato telefono valido", msgError: "Formato telefono invalido", valorInvalido: { "telefono_persona": "98612345A" } }
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto telefono_persona", msgExito: "Telefono correcto", valorValido: { "telefono_persona": "988112233" } }
