@@ -8,6 +8,7 @@ class entity_dom_fields extends dom_fields {
     if (window.__BODY_OVERRIDDEN__) return;
     window.__BODY_OVERRIDDEN__ = true;
 
+
     function loadScript(src) {
         return new Promise((resolve, reject) => {
             if (document.querySelector(`script[src="${src}"]`)) {
@@ -25,7 +26,7 @@ class entity_dom_fields extends dom_fields {
     const helperReady = loadScript('./app/EntityHelper.js');
 
     function repairTranslationText(value) {
-        if (typeof value !== 'string' || !/[ÃÂâ]/.test(value)) return value;
+        if (typeof value !== 'string') return value;
         try {
             return decodeURIComponent(escape(value));
         } catch (error) {
@@ -69,7 +70,7 @@ class entity_dom_fields extends dom_fields {
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 background:
                     linear-gradient(rgba(13, 17, 23, 0.76), rgba(13, 17, 23, 0.82)),
-                    url('https://f2.toyhou.se/file/f2-toyhou-se/images/116329354_1XMc1olgmXT12cp.png')
+                    url('https://f2.toyhou.se/file/f2-toyhou-se/images/111423519_AvzdA9PFgJHm4Aa.png?1765120139')
                     center / cover fixed no-repeat,
                     var(--page-bg);
             }
@@ -495,7 +496,7 @@ body {
 body {
   background:
     linear-gradient(rgba(13, 17, 23, 0.72), rgba(13, 17, 23, 0.72)),
-    url('https://f2.toyhou.se/file/f2-toyhou-se/images/116329354_1XMc1olgmXT12cp.png') no-repeat center center fixed;
+    url('https://f2.toyhou.se/file/f2-toyhou-se/images/111423519_AvzdA9PFgJHm4Aa.png?1765120139') no-repeat center center fixed;
   background-size: cover;
   background-color: var(--bg);
   color: var(--text-primary);
@@ -980,6 +981,15 @@ footer {
         document.head.appendChild(style);
     }
 
+    function addCharset() {
+      const head = document.head || document.getElementsByTagName('head')[0];
+      if (!head) return;
+      if (head.querySelector('meta[charset]')) return;
+      const meta = document.createElement('meta');
+      meta.setAttribute('charset', 'UTF-8');
+      head.insertBefore(meta, head.firstChild);
+    }
+
     function replaceBody() {
         const body = document.getElementById('body') || document.body;
         if (!body) return;
@@ -1122,9 +1132,11 @@ footer {
 
     helperReady.then(() => {
         if (document.readyState === 'complete') {
-            replaceBody();
+          addCharset();  
+          replaceBody();
         } else {
-            window.addEventListener('load', replaceBody);
+            window.addEventListener('load', addCharset);
+          window.addEventListener('load', replaceBody);
         }
     }).catch((error) => console.error(error));
 })();

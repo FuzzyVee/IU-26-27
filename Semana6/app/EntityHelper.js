@@ -27,6 +27,7 @@ class EntityHelper {
         this.generateValidationMethods();
         this.generateSubmitHandlers();
         this.bindEntityMethods();
+        this.setupEscKeyListener();
     }
 
     injectStyles() {
@@ -56,6 +57,8 @@ class EntityHelper {
     bindEntityMethods() {
         [
             'manual_form_creation',
+            'mostrar_error_campo',
+            'mostrar_error_campo',
             'SEARCH',
             'ADD',
             'EDIT',
@@ -68,13 +71,58 @@ class EntityHelper {
             'createForm_SHOWCURRENT',
             'cambiarmostrarespecial',
             'actualizarEnlaceFotoFormulario',
-            'runValidationTests'
+            'runValidationTests',
+            'rellenarvaloresform'
         ].forEach((methodName) => {
             this.entidad[methodName] = (...args) => this[methodName](...args);
         });
         this.entidad.dom.abrirModalError = (errorMsg) => this.abrirModalError(errorMsg);
     }
 
+    setupEscKeyListener() {
+        // Evita registrar múltiples listeners si se instancian varias entidades
+        if (EntityHelper.escapeListenerRegistered) return;
+        EntityHelper.escapeListenerRegistered = true;
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' || event.keyCode === 27) {
+                // Cerrar formulario principal
+                const formContainer = document.getElementById('Div_IU_form');
+                if (formContainer && formContainer.style.display !== 'none') {
+                    this.entidad.dom.hide_element('Div_IU_form');
+                }
+
+                // Cerrar modal de error si está visible
+                const errorModal = document.getElementById('error_action_modal') || document.getElementById('modalError');
+                const overlay = document.getElementById('modal_action_overlay');
+                if (errorModal) errorModal.style.display = 'none';
+                if (overlay) overlay.style.display = 'none';
+            }
+        });
+    }
+
+    rellenarvaloresform(row) {
+        const cleanRow = this.cleanRowData(row);
+        this.dom.rellenarvaloresform(cleanRow);
+    }
+
+    mostrar_error_campo(id, codigoerror) {
+        const aError = document.getElementById('error_' + id);
+        if (aError) {
+            aError.className = codigoerror; // Updates class name so setLang() knows the active error
+        }
+        originalMostrarError(id, codigoerror);
+        if (typeof window.setLang === 'function') window.setLang();
+    };
+    
+    mostrar_exito_campo(id) {
+        const aError = document.getElementById('error_' + id);
+        if (aError) {
+            aError.className = '';
+        }
+        originalMostrarExito(id);
+    };
+    
     // Sobrescribir abrirModalError en la instancia de dom
     abrirModalError(errorMsg) {
         // Buscar los elementos compatibles con el HTML de la aplicación
@@ -101,46 +149,7 @@ class EntityHelper {
     };
 
     
-    async SEARCH(clearFilter = false) {
-        const formElem = document.getElementById('form_iu');
     
-        // If clearFilter is true, reset the form and send '' so no filters are applied
-        if (clearFilter && formElem) {
-            formElem.reset();
-            // Also clear inner HTML to avoid leftover input values
-            const container = document.getElementById('contenedor_IU_form');
-            if (container) container.innerHTML = '';
-        }
-    
-        const idForm = (clearFilter || !formElem || formElem.tagName !== 'FORM') ? '' : 'form_iu';
-    
-        await this.entidad.access_functions.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
-            .then(async (respuesta) => {
-                this.entidad.dom.hide_element('Div_IU_form');
-    
-                if (respuesta['code'] === 'RECORDSET_DATOS') {
-                    this.entidad.datos = respuesta['resource'];
-                    if (this.entidad.datos && this.entidad.datos.length > 0) {
-                        this.entidad.atributos = Object.keys(this.entidad.datos[0]);
-                    }
-                    this.entidad.dom.show_element('IU_manage_entity');
-                    if (['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(this.entidad.nombreentidad)) 
-                    {
-                        await this.renderRelationMatrix(); 
-                    } else 
-                    {
-                        this.entidad.crearTablaDatos(this.entidad.datos, this.entidad.mostrarespecial); 
-                    }
-                } else {
-                    const tableElem = document.getElementById("IU_manage_table");
-                    if (tableElem) {
-                        tableElem.style.display = 'block';
-                        tableElem.innerHTML = 'No se han encontrado elementos que coincidan con la búsqueda';
-                        tableElem.className = 'RECORDSET_VACIO';
-                    }
-                }
-            });
-    }
 
     
     /**
@@ -181,6 +190,7 @@ class EntityHelper {
      * Sobrescribe la creación de tabla usando índices en lugar de JSON.stringify
      */
     crearTablaDatos(datos, mostrarespecial) {
+
         var misdatos = datos;
     
         for (var i = 0; i < misdatos.length; i++) {
@@ -282,6 +292,7 @@ class EntityHelper {
     }
 
     async renderRelationMatrix() {
+
         const entityName = this.entidad.nombreentidad;
         const tableContainer = document.getElementById('IU_manage_table');
         if (!tableContainer) return;
@@ -331,6 +342,70 @@ class EntityHelper {
     normalizeRelationId(value) {
         if (value === undefined || value === null || typeof value === 'object') return '';
         return String(value).trim();
+    }
+
+    normalizeRowData(row) {
+        if (!row || typeof row !== 'object') return row;
+        const clean = Array.isArray(row) ? [] : {};
+
+        for (const [key, value] of Object.entries(row)) {
+            // Leave primitives, nulls, undefined, and File objects untouched
+            if (value === null || value === undefined || typeof value !== 'object' || value instanceof File) {
+                clean[key] = value;
+                continue;
+            }
+
+            // Handle Arrays of objects or values (e.g., tags or multi-select lists)
+            if (Array.isArray(value)) {
+                clean[key] = value.map((item) => {
+                    if (typeof item === 'object' && item !== null) {
+                        return item[key] || item.id || Object.values(item).find(v => typeof v !== 'object') || '';
+                    }
+                    return String(item);
+                }).filter(Boolean).join(',');
+                continue;
+            }
+
+            // Handle Nested Objects — Multi-Tier Resolution Hierarchy:
+
+            //  Exact key match (e.g., row['id_rol'] = { id_rol: "13999", ... })
+            if (value[key] !== undefined && value[key] !== null) {
+                clean[key] = String(value[key]);
+                continue;
+            }
+
+            //  Common identification keys ('id', 'code', 'uuid', 'pk', 'key', 'value')
+            const idKeyCandidates = ['id', 'code', 'uuid', 'pk', 'key', 'value'];
+            const foundIdKey = idKeyCandidates.find(k => value[k] !== undefined && value[k] !== null);
+            if (foundIdKey) {
+                clean[key] = String(value[foundIdKey]);
+                continue;
+            }
+
+            //  Any property starting with 'id_' or ending with '_id', '_key', '_code'
+            const regexKey = Object.keys(value).find(k => 
+                /^id_/i.test(k) || /_id$/i.test(k) || /_key$/i.test(k) || /_code$/i.test(k)
+            );
+            if (regexKey && value[regexKey] !== undefined && value[regexKey] !== null) {
+                clean[key] = String(value[regexKey]);
+                continue;
+            }
+
+            //  First available primitive value (string, number, boolean)
+            // (For objects like { rol_name: "Admin", description: "All permissions" } with no ID field)
+            const firstPrimitive = Object.values(value).find(v => 
+                v !== null && v !== undefined && typeof v !== 'object' && String(v).trim() !== ''
+            );
+            if (firstPrimitive !== undefined) {
+                clean[key] = String(firstPrimitive);
+                continue;
+            }
+
+            // Safety net — fallback to empty string (prevents "[object Object]" in DOM inputs)
+            clean[key] = '';
+        }
+
+        return clean;
     }
 
     getRecordValue(record, fieldName) {
@@ -1060,9 +1135,46 @@ class EntityHelper {
                 }
             });
     }
-
-    async DELETE() {
-        await this.submitEntityAction('DELETE');
+    
+    async SEARCH(clearFilter = false) {
+        const formElem = document.getElementById('form_iu');
+    
+        // If clearFilter is true, reset the form and send '' so no filters are applied
+        if (clearFilter && formElem) {
+            formElem.reset();
+            // Also clear inner HTML to avoid leftover input values
+            const container = document.getElementById('contenedor_IU_form');
+            if (container) container.innerHTML = '';
+        }
+    
+        const idForm = (clearFilter || !formElem || formElem.tagName !== 'FORM') ? '' : 'form_iu';
+    
+        await this.entidad.access_functions.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
+            .then(async (respuesta) => {
+                this.entidad.dom.hide_element('Div_IU_form');
+    
+                if (respuesta['code'] === 'RECORDSET_DATOS') {
+                    this.entidad.datos = (respuesta['resource'] || []).map(row => this.normalizeRowData(row));
+                    if (this.entidad.datos && this.entidad.datos.length > 0) {
+                        this.entidad.atributos = Object.keys(this.entidad.datos[0]);
+                    }
+                    this.entidad.dom.show_element('IU_manage_entity');
+                    if (['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(this.entidad.nombreentidad)) 
+                    {
+                        await this.renderRelationMatrix(); 
+                    } else 
+                    {
+                        this.entidad.crearTablaDatos(this.entidad.datos, this.entidad.mostrarespecial); 
+                    }
+                } else {
+                    const tableElem = document.getElementById("IU_manage_table");
+                    if (tableElem) {
+                        tableElem.style.display = 'block';
+                        tableElem.innerHTML = 'No se han encontrado elementos que coincidan con la búsqueda';
+                        tableElem.className = 'RECORDSET_VACIO';
+                    }
+                }
+            });
     }
 
     async submitEntityAction(action) {
@@ -1145,6 +1257,8 @@ class EntityHelper {
         const form = document.getElementById('form_iu');
         if (form) this.appendFormActions('SHOWCURRENT');
     }
+
+    
 
     appendFormActions(action) {
         const form = document.getElementById('form_iu');
@@ -1238,4 +1352,5 @@ class EntityHelper {
                 onerror="this.onerror=null; this.src='./iconos/FILE.png';" />`;
         }
     }
+    
 }

@@ -8,8 +8,13 @@ class usuario extends AbstractEntidad {
                 type: 'text',
                 isPK: true,
                 rules: { 
+<<<<<<< Updated upstream
                     ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$', personalized: 'validarLetraDNI' },
                     EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$', personalized: 'validarLetraDNI' },
+=======
+                    ADD: { min_size: 9, max_size: 9, format: '^([0-9]{8}[A-Za-z]|[XYZxyz][0-9]{7}[A-Za-z])$', personalized: 'validarLetraDNI' },
+                    EDIT: { min_size: 9, max_size: 9, format: '^([0-9]{8}[A-Za-z]|[XYZxyz][0-9]{7}[A-Za-z])$', personalized: 'validarLetraDNI' },
+>>>>>>> Stashed changes
                     SEARCH: { max_size: 9 } 
                 },
                
@@ -67,6 +72,13 @@ usuario.prototype.validarLetraDNI = function() {
 
     const valor = input.value.trim().toUpperCase();
 
+<<<<<<< Updated upstream
+=======
+    if (valor.length !== 9) {
+        return true;
+    }
+
+>>>>>>> Stashed changes
     // Validar estructura: DNI NIE
     const regexNIF =/^([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z])$/;
     if (!regexNIF.test(valor)) {
@@ -86,7 +98,11 @@ usuario.prototype.validarLetraDNI = function() {
 
     // Comprobar si la letra final coincide
     if (valor.charAt(8) !== letraCalculada) {
+<<<<<<< Updated upstream
         return 'dni_format_ko';
+=======
+        return 'dni_personalized_ko';
+>>>>>>> Stashed changes
     }
 
     return true;
