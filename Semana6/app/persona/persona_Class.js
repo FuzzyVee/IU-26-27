@@ -15,8 +15,8 @@ class persona extends AbstractEntidad {
                 referenceEntity: 'usuario',
                 referenceKey: 'dni',
                 rules: {
-                    ADD: { min_size: 9, max_size: 9, format: '^{8}[A-Za-z]$' },
-                    EDIT: { min_size: 9, max_size: 9, format: '^{8}[A-Za-z]$' },
+                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
+                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
                     SEARCH: { max_size: 9 }
                 }
             },
@@ -25,9 +25,9 @@ class persona extends AbstractEntidad {
                 label: 'Nombre',
                 type: 'text',
                 rules: {
-                    ADD: { min_size: 2, max_size: 45, format: '^[a-zA-ZnNaeiouAEIOU\\s\\.\\-]+$' },
-                    EDIT: { min_size: 2, max_size: 45, format: '^[a-zA-ZnNaeiouAEIOU\\s\\.\\-]+$' },
-                    SEARCH: { max_size: 45, format: '^[a-zA-ZnNaeiouAEIOU\\s\\.\\-]+$' }
+                    ADD: { min_size: 2, max_size: 45, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.\\-]+$' },
+                    EDIT: { min_size: 2, max_size: 45, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.\\-]+$' },
+                    SEARCH: { max_size: 45, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.\\-]+$' }
                 }
             },
             {
@@ -35,9 +35,9 @@ class persona extends AbstractEntidad {
                 label: 'Apellidos',
                 type: 'text',
                 rules: {
-                    ADD: { min_size: 3, max_size: 100, format: '^[a-zA-ZnNaeiouAEIOU\\s\\.\\-]+$' },
-                    EDIT: { min_size: 3, max_size: 100, format: '^[a-zA-ZnNaeiouAEIOU\\s\\.\\-]+$' },
-                    SEARCH: { max_size: 100, format: '^[a-zA-ZnNaeiouAEIOU\\s\\.\\-]+$' }
+                    ADD: { min_size: 3, max_size: 100, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.\\-]+$' },
+                    EDIT: { min_size: 3, max_size: 100, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.\\-]+$' },
+                    SEARCH: { max_size: 100, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.\\-]+$' }
                 }
             },
             {
@@ -55,9 +55,9 @@ class persona extends AbstractEntidad {
                 label: 'Direccion',
                 type: 'textarea',
                 rules: {
-                    ADD: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9nNaeiouAEIOU\\s\\.-;/]+$' },
-                    EDIT: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9nNaeiouAEIOU\\s\\.-;/]+$' },
-                    SEARCH: { max_size: 200, format: '^[a-zA-Z0-9nNaeiouAEIOU\\s\\.-;/]+$' }
+                    ADD: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.-;/]+$' },
+                    EDIT: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.-;/]+$' },
+                    SEARCH: { max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.-;/]+$' }
                 }
             },
             {

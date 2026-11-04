@@ -5,10 +5,8 @@
 	<!-- meta y configuracion global-->
 	<meta charset="UTF-8">
 	<!-- css -->
-	<link rel="stylesheet" type="text/css" href="./Base/css/IU.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="./Base/css/estilo-1.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="./Base/css/estilo-2.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="./Base/css/estilo-tests.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="./Base/css/styles.css" media="screen" />
+
 	<!-- clases generales -->
 	 <!-- idioma -->
 	<script type="text/javascript" src="./locale/idioma.js"></script> 
@@ -22,6 +20,8 @@
 	<script type="text/javascript" src="./Base/EntidadAbstracta.js"></script>
 	<!-- clases entidades -->
 	<script type="text/javascript" src="./app/persona_Class.js"></script>
+	<script type="module" src="./app/Stuff.js"></script>
+	<script type="module" src="./app/Defaults.js"></script>
 	<!--<script type="text/javascript" src="./app/_Class.js"></script>
 	<script type="text/javascript" src="./app/_Class.js"></script>-->
 	<!-- clases de test -->
@@ -31,7 +31,6 @@
 	<script type="text/javascript" src="./app/ET2_persona_infotest.js"></script>
 	<!-- este es el script que carga las librerias ajax que usamos para acceder al back -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
 
 </head>
 
@@ -50,6 +49,143 @@
 		    <li class="opcionmenu disabled"><span onclick="entidad = new entidad();">Gestionar otra entidad</span></li>
 	  	</ol>
 	</aside>
+	<div id="__nuxt" class="isolate">
+		<div class="font-[400] relative text-stone-200 min-h-screen relative"
+			style="--ui-primary:var(--color-blue-500);--ui-color-primary-50:var(--color-blue-50);--ui-color-primary-100:var(--color-blue-100);--ui-color-primary-200:var(--color-blue-200);--ui-color-primary-300:var(--color-blue-300);--ui-color-primary-400:var(--color-blue-400);--ui-color-primary-500:var(--color-blue-500);--ui-color-primary-600:var(--color-blue-600);--ui-color-primary-700:var(--color-blue-700);--ui-color-primary-800:var(--color-blue-800);--ui-color-primary-900:var(--color-blue-900);--ui-color-primary-950:var(--color-blue-950);">
+			
+			<div class="fixed top-0 left-0 z-[1] h-screen w-full overflow-hidden" style="pointer-events:none;"
+				id="background-portal"></div>
+			<div class="hidden">
+				<div class="bg-red-500 text-red-500"></div>
+				<div class="bg-blue-500 text-blue-500"></div>
+				<div class="bg-amber-500 text-amber-500"></div>
+				<div class="bg-yellow-500 text-yellow-500"></div>
+				<div class="bg-lime-500 text-lime-500"></div>
+				<div class="bg-green-500 text-green-500"></div>
+				<div class="bg-emerald-500 text-emerald-500"></div>
+				<div class="bg-teal-500 text-teal-500"></div>
+				<div class="bg-cyan-500 text-cyan-500"></div>
+				<div class="bg-sky-500 text-sky-500"></div>
+				<div class="bg-blue-500 text-blue-500"></div>
+				<div class="bg-sky-500 text-sky-500"></div>
+				<div class="bg-violet-500 text-violet-500"></div>
+				<div class="bg-purple-500 text-purple-500"></div>
+				<div class="bg-fuchsia-500 text-fuchsia-500"></div>
+				<div class="bg-pink-500 text-pink-500"></div>
+				<div class="bg-rose-500 text-rose-500"></div>
+			</div>
+			<div id="audio-effect"
+				class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary-600/40 via-primary-600/20 to-transparent animate-gradient-x z-[0] pointer-none"
+				style="opacity:0;pointer-events:none;transition:opacity 0.25s ease-out;"></div>
+			<div id="visual" class="fixed z-10 bottom-0 left-0 w-full h-[10rem] w-full pointer-none"
+				style="pointer-events:none;"></div>
+			<div class="grid grid-cols-1 md:grid-cols-3 font-medium max-w-4xl mx-auto z-10 relative"
+				style="isolation:isolate;">
+				<div class="col-span-2 p-3"><!---->
+					<div class="font-medium z-10">
+						<h1 class="text-5xl items-self-center md:text-[5rem] lg:text-[5rem] font-bold bg-clip-text text-transparent bg-cover bg-center tracking-tighter leading-[1]"
+							style="background-color: var(--ui-color-primary-500); background-image: url(https://rimjob.dog/constellations-bg.avif);">
+							Queen of Rimjobs. Suki. </h1>
+						<div class="tori-card mt-6">
+							<p class="text-sm text-stone-300"> Hi! I'm Suki!! I'm a 26 year old software engineer who's
+								super into horny stuff. This is my NSFW website where all of my horny projects will live.
+								<br><br> Please keep in mind that i'm a sub, so all of my kinks n stuff are from a
+								submissive perspective. I very much do enjoy having control taken from me &lt;3 </p>
+						</div><textarea class="tori-card ring:transparent ring-0 outline-none text-sm w-full mt-6"
+							placeholder="Ask me anything!!! I'll answer on my Twitter @seri_knot &lt;3"></textarea>
+						<div class="flex flex-row mt-3"><input
+								class="tori-card ring:transparent ring-0 outline-none text-xs w-full mr-3"
+								placeholder="Your name &lt;3" value=""><a
+								class="px-3 py-1.5 bg-primary-500 text-stone-200 rounded-lg cursor-pointer text-sm block flex-shrink-0 flex items-center justify-center">
+								Submit question </a></div>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6">
+							<div class="tori-card p-3">
+								<h2 class="text-xl font-bold text-primary-500 mb-1"> Stuff i'm into. </h2>
+								<p class="text-xs text-stone-500 mb-3"> The higher the kink, the more i'm into it. </p>
+								<ul class="list-disc list-inside text-sm text-stone-300"><!--[-->
+									<li>Musk</li>
+									<li>Hypnosis</li>
+									<li>Bad Ends</li>
+									<li>Mind Control</li>
+									<li>Rimjobs</li>
+									<li>Ass-focused play</li>
+									<li>Profile play</li>
+									<li>Corruption</li>
+									<li>Humiliation</li>
+									<li>Crotch Sniffing</li>
+									<li>Objectification</li>
+									<li>Coercion / Blackmail</li>
+									<li>Speech Restrictions</li>
+									<li>Chastity</li>
+									<li>Basically any kink that involves me losing control over myself, personality,
+										memories, etc is hot as fuck</li><!--]-->
+								</ul>
+							</div>
+							<div class="tori-card p-3">
+								<h2 class="text-xl font-bold text-red-500 mb-1"> Stuff i'm not. </h2>
+								<p class="text-xs text-stone-500 mb-3"> Anything on this is a hard no for me. </p>
+								<ul class="list-disc list-inside text-sm text-stone-300"><!--[-->
+									<li>Farts</li>
+									<li>Piss</li>
+									<li>Blood</li>
+									<li>Literally any liquid leaving the body other than cum</li><!--]-->
+								</ul>
+							</div>
+						</div><small class="text-xs text-stone-600 mt-3 block"> No LLMs were used in the making of this
+							website. </small>
+					</div>
+				</div>
+				<div class="col-span-1 z-10 relative flex flex-col-reverse md:flex-col">
+					<div class="tori-card m-3 p-3"><a href="https://feralcatalyst.art/" target="_blank" rel="noopener"><img
+								src=""
+								class="mb-2 rounded-sm overflow-hidden size-32 md:size-[unset] object-cover"
+								alt="Tori's avatar."></a>
+						<h1 class="text-4xl font-bold text-primary-500"> Suki. </h1>
+						<p class="text-xs text-stone-500 font-medium mb-1 tracking-wide"><a class=""
+								href="https://twitter.com/seris_knot" target="_blank" rel="noopener"> @seris_knot </a></p>
+						<p class="text-stone-200 font-[600] text-sm mt-1.5"> 26, She / Her, Musk-drunk Puppy slut. Join my
+							<a href="https://rimjob.dog/chat" class="text-primary-500">Discord</a> <i
+								class="fa-solid fa-heart"></i></p>
+						<div class="mt-3">
+							<p class="text-stone-500 text-sm"> Status effects </p><!--[-->
+							<div>
+								<div class="flex flex-row items-center text-sm text-stone-200"><i
+										class="fa-solid fa-claw-marks mr-1"></i> Musk Drunk <div class="flex-grow"></div><a
+										class="text-stone-600 block ml-3" href="https://twitter.com/Ech0esOfSaturn"
+										target="_blank" rel="noopener">@Ech0esOfSaturn</a></div>
+							</div>
+							<div>
+								<div class="flex flex-row items-center text-sm text-stone-200"><i
+										class="fa-solid fa-claw-marks mr-1"></i> Musk Drunk II <div class="flex-grow"></div>
+									<a class="text-stone-600 block ml-3" href="https://twitter.com/Ech0esOfSaturn"
+										target="_blank" rel="noopener">@Ech0esOfSaturn</a></div>
+							</div>
+							<div>
+								<div class="flex flex-row items-center text-sm text-stone-200"><i
+										class="fa-solid fa-circle-heart mr-1"></i> Mana Regen <div class="flex-grow"></div>
+									<a class="text-stone-600 block ml-3" href="https://twitter.com/seri_knot"
+										target="_blank" rel="noopener">@seri_knot</a></div>
+							</div><!--]-->
+						</div>
+					</div>
+					<div><a href="https://id.tori.dog/authorize?redirect=https://rimjob.dog/torii" rel="noopener noreferrer"
+							class="p-3 m-3 border-2 border-stone-900 rounded-lg bg-stone-950 text-sm text-stone-500 font-bold block text-center cursor-pointer hover:bg-stone-900/50">
+							Log in / Sign up </a></div><a class="tori-card m-3" href="https://www.patreon.com/c/rimjobdog"
+						target="_blank" rel="noopener">
+						<div class="flex flex-row items-center">
+							<div>
+								<p class="text-sm text-stone-200 font-medium"> Support me on <span
+										class="text-primary-500">Patreon</span>! </p>
+								<p class="text-xs text-stone-500"> Get early access to new features, and help support the
+									site! </p>
+							</div>
+						</div>
+					</a>
+					<div id="sidebar-portal"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<section id="IU_manage_entity">
 		<section id="IU_manage_head">
 			<div id='title_page' class='bordeado'><span id = "text_title_page"></span>

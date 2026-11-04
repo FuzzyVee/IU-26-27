@@ -10,7 +10,7 @@ class funcionalidad_accion extends AbstractEntidad {
 
         const fields = [
             { name: 'id_funcionalidad', label: 'ID Funcionalidad', type: 'select', isFK: true, referenceEntity: 'funcionalidad', optionLabel: 'nombre_funcionalidad', options: [], rules: idRule },
-            { name: 'id_accion', label: 'ID Acción', type: 'select', isFK: true, referenceEntity: 'accion', optionLabel: 'nombre_accion', options: [], rules: idRule }
+            { name: 'id_accion', label: 'ID Accion', type: 'select', isFK: true, referenceEntity: 'accion', optionLabel: 'nombre_accion', options: [], rules: idRule }
         ];
 
         this.nombreentidad = 'funcionalidad_accion';

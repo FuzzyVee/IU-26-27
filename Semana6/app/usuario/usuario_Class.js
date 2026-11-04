@@ -39,7 +39,7 @@ class usuario extends AbstractEntidad {
             },
             { 
                 name: 'contrasena', 
-                label: 'Contraseña', 
+                label: 'Contrasena', 
                 type: 'password', 
                 rules: { 
                     ADD: { min_size: 8, max_size: 45, format: '^[a-zA-Z0-9]+$' }, 

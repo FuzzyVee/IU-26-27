@@ -4,7 +4,7 @@ class rolaccionfuncionalidad extends AbstractEntidad {
 
         const fields = [
             { name: 'id_funcionalidad', label: 'ID Funcionalidad', type: 'select', isFK: true, referenceEntity: 'funcionalidad', optionLabel: 'nombre_funcionalidad', options: [] },
-            { name: 'id_accion', label: 'ID Acción', type: 'select', isFK: true, referenceEntity: 'accion', optionLabel: 'nombre_accion', options: [] },
+            { name: 'id_accion', label: 'ID Accion', type: 'select', isFK: true, referenceEntity: 'accion', optionLabel: 'nombre_accion', options: [] },
             { name: 'id_rol', label: 'ID Rol', type: 'select', isFK: true, referenceEntity: 'rol', optionLabel: 'rol_name', options: [] }
         ];
 

@@ -27,7 +27,7 @@ class rol extends AbstractEntidad {
             },
             { 
                 name: 'rol_description', 
-                label: 'Descripción Rol', 
+                label: 'Descripcion Rol', 
                 type: 'textarea', 
                 rules: { 
                     ADD: { min_size: 5, max_size: 200, format: '^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s\\.,;:\\?!\\-]+$' }, 
