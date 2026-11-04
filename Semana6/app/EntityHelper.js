@@ -291,7 +291,31 @@ class EntityHelper {
             : fallback;
     }
 
-    async renderRelationMatrix() {
+    getRelationSearchFilters(form) {
+        const filterFields = this.entidad.nombreentidad === 'rolaccionfuncionalidad'
+            ? ['id_funcionalidad', 'id_accion', 'id_rol']
+            : ['id_funcionalidad', 'id_accion'];
+
+        return filterFields.reduce((filters, fieldName) => {
+            const field = form && form.elements.namedItem(fieldName);
+            const value = field && typeof field.value === 'string'
+                ? field.value.trim()
+                : '';
+            if (value) filters[fieldName] = value;
+            return filters;
+        }, {});
+    }
+
+    filterRelationRows(rows, filters, fieldName) {
+        const filterValue = filters[fieldName];
+        if (!filterValue) return rows;
+
+        return rows.filter((row) =>
+            this.normalizeRelationId(this.getRecordValue(row, fieldName)) === filterValue
+        );
+    }
+
+    async renderRelationMatrix(searchFilters = {}) {
 
         const entityName = this.entidad.nombreentidad;
         const tableContainer = document.getElementById('IU_manage_table');
@@ -304,7 +328,7 @@ class EntityHelper {
         status.textContent = this.getRelationLabel('loading', 'Cargando relaciones...');
         tableContainer.appendChild(status);
 
-        const [functionalities, actions, roles] = await Promise.all([
+        const [allFunctionalities, allActions, allRoles] = await Promise.all([
             this.fetchEntityRows('funcionalidad'),
             this.fetchEntityRows('accion'),
             entityName === 'rolaccionfuncionalidad'
@@ -312,6 +336,13 @@ class EntityHelper {
                 : Promise.resolve([])
         ]);
 
+        const functionalities = this.filterRelationRows(
+            allFunctionalities,
+            searchFilters,
+            'id_funcionalidad'
+        );
+        const actions = this.filterRelationRows(allActions, searchFilters, 'id_accion');
+        const roles = this.filterRelationRows(allRoles, searchFilters, 'id_rol');
         const records = this.entidad.datos || [];
         const pairs = [];
         functionalities.forEach((functionality) => {
@@ -1148,6 +1179,11 @@ class EntityHelper {
         }
     
         const idForm = (clearFilter || !formElem || formElem.tagName !== 'FORM') ? '' : 'form_iu';
+        const isRelationEntity = ['funcionalidad_accion', 'rolaccionfuncionalidad']
+            .includes(this.entidad.nombreentidad);
+        const relationSearchFilters = isRelationEntity && idForm === 'form_iu'
+            ? this.getRelationSearchFilters(formElem)
+            : {};
     
         await this.entidad.access_functions.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
             .then(async (respuesta) => {
@@ -1159,13 +1195,16 @@ class EntityHelper {
                         this.entidad.atributos = Object.keys(this.entidad.datos[0]);
                     }
                     this.entidad.dom.show_element('IU_manage_entity');
-                    if (['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(this.entidad.nombreentidad)) 
-                    {
-                        await this.renderRelationMatrix(); 
-                    } else 
-                    {
+                    if (isRelationEntity) {
+                        await this.renderRelationMatrix(relationSearchFilters);
+                    } else {
                         this.entidad.crearTablaDatos(this.entidad.datos, this.entidad.mostrarespecial); 
                     }
+                } else if (isRelationEntity && respuesta['code'] === 'RECORDSET_VACIO' &&
+                    Object.keys(relationSearchFilters).length > 0) {
+                    this.entidad.datos = [];
+                    this.entidad.dom.show_element('IU_manage_entity');
+                    await this.renderRelationMatrix(relationSearchFilters);
                 } else {
                     const tableElem = document.getElementById("IU_manage_table");
                     if (tableElem) {

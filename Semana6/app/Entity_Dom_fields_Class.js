@@ -1077,6 +1077,15 @@ footer {
             if (!Entity) throw new Error(`Entidad no reconocida: ${name}`);
 
             window.entidad = new Entity();
+            const esRelacion = ['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(name);
+            [
+                document.getElementById('botonADD'),
+                document.getElementById('label_seleccioncolumnas'),
+                document.getElementById('seleccioncolumnas')
+            ].forEach((control) => {
+                if (control) control.style.display = esRelacion ? 'none' : '';
+            });
+
             document.getElementById('div-menu').style.display = 'none';
             const title = document.getElementById('text_title_page');
             if (title) {
