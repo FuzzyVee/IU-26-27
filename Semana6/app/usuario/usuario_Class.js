@@ -72,13 +72,10 @@ usuario.prototype.validarLetraDNI = function() {
 
     const valor = input.value.trim().toUpperCase();
 
-<<<<<<< Updated upstream
-=======
     if (valor.length !== 9) {
         return true;
     }
 
->>>>>>> Stashed changes
     // Validar estructura: DNI NIE
     const regexNIF =/^([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z])$/;
     if (!regexNIF.test(valor)) {
