@@ -84,6 +84,14 @@ class persona extends AbstractEntidad {
             {
                 name: 'foto_persona',
                 label: 'Foto',
+                type: 'text',
+                rules: {
+                    SEARCH: { max_size: 15, format: '^[a-zA-Z]{3,15}\\.(jpg|jpeg)$' }
+                }
+            },
+            {
+                name: 'nuevo_foto_persona',
+                label: 'Nueva Foto',
                 type: 'file',
                 rules: {
                     ADD: { exist_file: true, max_size_file: 2097152, type_file: ['image/jpeg', 'image/jpg'], format_name_file: '^[a-zA-Z]{3,15}\\.(jpg|jpeg)$' },

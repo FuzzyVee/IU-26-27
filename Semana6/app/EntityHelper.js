@@ -1144,6 +1144,11 @@ class EntityHelper {
         let html = `<form id="form_iu" action="" method="POST" enctype="multipart/form-data" class="formulario">\n`;
     
         (this.entidad.fields || []).forEach((f) => {
+            const hasReplacementUpload = f.type !== 'file' &&
+                (this.entidad.fields || []).some((field) =>
+                    field.type === 'file' && field.name === `nuevo_${f.name}`);
+            if (hasReplacementUpload && accion === 'ADD') return;
+
             // A file cannot be searched by typing its contents, and is not editable in read-only views.
             if (f.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(accion)) return;
     
@@ -1151,7 +1156,8 @@ class EntityHelper {
     
             const esClaveEspecial = (f.isPK || f.isFK || f.name === this.entidad.fields[0]?.name);
             const esVistaSoloLectura = ['DELETE', 'SHOWCURRENT'].includes(accion);
-            const debeSerReadonly = esVistaSoloLectura || (accion === 'EDIT' && esClaveEspecial);
+            const debeSerReadonly = esVistaSoloLectura ||
+                (accion === 'EDIT' && (esClaveEspecial || hasReplacementUpload));
             const readonlyAttr = debeSerReadonly ? ' readonly style="background-color: #2a313d; cursor: not-allowed; color: #8b949e;"' : '';
     
             // For an auto-numbered primary key, suggest the next value from the rows already loaded.
@@ -1503,16 +1509,28 @@ class EntityHelper {
     actualizarEnlaceFotoFormulario(row) {
         if (!row) return;
 
-        const fileKey = Object.keys(row).find((key) => key.includes('foto') || key.includes('file'));
-        if (!fileKey || !row[fileKey]) return;
+        const fileField = (this.entidad.fields || []).find((field) => {
+            if (field.type !== 'file') return false;
+            const storedFieldName = field.name.startsWith('nuevo_')
+                ? field.name.slice('nuevo_'.length)
+                : field.name;
+            return row[storedFieldName] || row[field.name];
+        });
+        if (!fileField) return;
 
-        const fileName = row[fileKey];
+        const storedFieldName = fileField.name.startsWith('nuevo_')
+            ? fileField.name.slice('nuevo_'.length)
+            : fileField.name;
+        const hasStoredField = (this.entidad.fields || []).some((field) =>
+            field.name === storedFieldName && field.type !== 'file');
+        const fileKey = hasStoredField ? storedFieldName : fileField.name;
+        const fileName = row[fileKey] || row[fileField.name];
         const safeName = this.escapeHtml(fileName);
         const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${fileKey}/${encodeURIComponent(fileName)}`;
         let link = document.getElementById(`link_${fileKey}`);
 
         if (!link) {
-            const input = document.getElementById(fileKey);
+            const input = document.getElementById(fileField.name) || document.getElementById(fileKey);
             if (input && input.parentNode) {
                 link = document.createElement('a');
                 link.id = `link_${fileKey}`;
