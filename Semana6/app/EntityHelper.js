@@ -80,16 +80,48 @@ class EntityHelper {
         this.entidad.dom.abrirModalError = (errorMsg) => this.abrirModalError(errorMsg);
     }
 
-    peticionBackGeneral(formulario, controlador, action, datosextra = null) {
-        const extra = String(action).toUpperCase() === 'SEARCH'
-            ? { ...(datosextra || {}), empieza: 'nulo', filaspagina: 'nulo' }
-            : datosextra;
-        return this.entidad.access_functions.peticionBackGeneral(
+    async peticionBackGeneral(formulario, controlador, action, datosextra = null) {
+        const request = (extra) => this.entidad.access_functions.peticionBackGeneral(
             formulario,
             controlador,
             action,
             extra
         );
+        if (String(action).toUpperCase() !== 'SEARCH') {
+            return request(datosextra);
+        }
+
+        const pageSize = 100;
+        const rows = [];
+        let response;
+
+        for (let offset = 0; ; offset += pageSize) {
+            response = await request({
+                ...(datosextra || {}),
+                empieza: offset,
+                filaspagina: pageSize
+            });
+
+            if (response && response.code === 'RECORDSET_VACIO') {
+                if (rows.length === 0) return response;
+                break;
+            }
+            if (!response || response.code !== 'RECORDSET_DATOS' || !Array.isArray(response.resource)) {
+                throw new Error(
+                    response && response.code
+                        ? `La búsqueda de ${controlador} falló: ${response.code}.`
+                        : `La búsqueda de ${controlador} devolvió una respuesta no válida.`
+                );
+            }
+
+            rows.push(...response.resource);
+            if (response.resource.length < pageSize) break;
+        }
+
+        if (rows.length === 0) {
+            return { ...response, code: 'RECORDSET_VACIO', resource: [] };
+        }
+        return { ...response, code: 'RECORDSET_DATOS', resource: rows };
     }
 
     setupEscKeyListener() {
@@ -1227,6 +1259,12 @@ class EntityHelper {
                         tableElem.className = 'RECORDSET_VACIO';
                     }
                 }
+            })
+            .catch((error) => {
+                console.error(`Error al buscar registros de ${this.entidad.nombreentidad}.`, error);
+                this.entidad.dom.abrirModalError(
+                    error.message || `No se pudieron cargar los registros de ${this.entidad.nombreentidad}.`
+                );
             });
     }
 
