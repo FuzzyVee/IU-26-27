@@ -9,7 +9,8 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "dni_min_size_ko", desc: "cumple tamaño minimo dni", msgError: "DNI demasiado corto (min 9)", valorInvalido: { "dni": "1234" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_max_size_ko", desc: "cumple tamaño maximo dni", msgError: "DNI demasiado largo (max 9)", valorInvalido: { "dni": "1234567890" } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "123456789" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "dni_format_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "123456789" } },
+          { tipo: "personalized", acciones: ["ADD", "EDIT"], codigoKO: "dni_personalized_ko", desc: "cumple formato dni", msgError: "Formato DNI invalido", valorInvalido: { "dni": "12345678S" } },
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto dni", msgExito: "DNI correcto", valorValido: { "dni": "80423097D" } }
       },
@@ -39,7 +40,9 @@ const esquemasET1 = {
         campo: "fechaNacimiento_persona",
         elemento: "input",
         reglas: [
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "fechaNacimiento_persona_format_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-09-23" } }
+          { tipo: "max_size", acciones: ["SEARCH"], codigoKO: "fechaNacimiento_persona_max_size_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-11-055" } },
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "fechaNacimiento_persona_format_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-09-23" } },
+          { tipo: "personalized", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "fechaNacimiento_persona_personalized_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "31/02/1998" } },
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto fechaNacimiento_persona", msgExito: "Fecha correcta", valorValido: { "fechaNacimiento_persona": "20/11/1998" } }
       },
@@ -60,7 +63,8 @@ const esquemasET1 = {
         reglas: [
           { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "telefono_persona_min_size_ko", desc: "cumple tamaño minimo telefono_persona", msgError: "Telefono muy corto (min 9)", valorInvalido: { "telefono_persona": "6001122" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "telefono_persona_max_size_ko", desc: "cumple tamaño maximo telefono_persona", msgError: "Telefono muy largo (max 9)", valorInvalido: { "telefono_persona": "6001122334455" } },
-          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "telefono_persona_format_ko", desc: "cumple formato telefono valido", msgError: "Formato telefono invalido", valorInvalido: { "telefono_persona": "98612345A" } }
+          { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "telefono_persona_format_ko", desc: "cumple formato telefono valido", msgError: "Formato telefono invalido", valorInvalido: { "telefono_persona": "98612345A" } },
+          { tipo: "personalized", acciones: ["ADD", "EDIT"], codigoKO: "telefono_persona_personalized_ko", desc: "cumple formato telefono valido", msgError: "Formato telefono invalido", valorInvalido: { "telefono_persona": "123456789" } },
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto telefono_persona", msgExito: "Telefono correcto", valorValido: { "telefono_persona": "988112233" } }
       },
@@ -68,6 +72,8 @@ const esquemasET1 = {
         campo: "email_persona",
         elemento: "input",
         reglas: [
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "email_persona_min_size_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "a" } },
+          { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_max_size_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "a".repeat(100) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_format_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "correo.invalido.com" } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "email_persona_format_ko", desc: "cumple formato email valido", msgError: "Formato email invalido", valorInvalido: { "email_persona": "correo_invalido.com" } }
         ],

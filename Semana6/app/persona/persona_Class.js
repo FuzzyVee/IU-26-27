@@ -46,9 +46,9 @@ class persona extends AbstractEntidad {
                 label: 'Fecha Nacimiento',
                 type: 'text',
                 rules: {
-                    ADD: { format: fechaNacimientoFormat },
-                    EDIT: { format: fechaNacimientoFormat },
-                    SEARCH: { format: fechaNacimientoFormat }
+                    ADD: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
+                    EDIT: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
+                    SEARCH: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' }
                 }
             },
             {
@@ -76,8 +76,8 @@ class persona extends AbstractEntidad {
                 label: 'Email',
                 type: 'text',
                 rules: {
-                    ADD: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', personalized: 'personalize_email_persona' },
-                    EDIT: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', personalized: 'personalize_email_persona' },
+                    ADD: { min_size: 3, max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', personalized: 'personalize_email_persona' },
+                    EDIT: { min_size: 3, max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', personalized: 'personalize_email_persona' },
                     SEARCH: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' }
                 }
             },
@@ -120,7 +120,34 @@ persona.prototype.personalize_dni = function() {
     const letraCalculada = letras.charAt(numero % 23);
 
     if (valor.charAt(8) !== letraCalculada) {
-        return 'dni_format_ko';
+        return 'dni_personalized_ko';
+    }
+
+    return true;
+};
+
+persona.prototype.personalize_fechaNacimiento_persona = function() {
+    const input = document.getElementById('fechaNacimiento_persona');
+    if (!input || !input.value) return true;
+
+    let month = 1; // TODO
+    let day = 1; // TODO
+
+    if (
+        (month ==  1 && day > 31) ||
+        (month ==  2 && day > 28) ||
+        (month ==  3 && day > 31) ||
+        (month ==  4 && day > 30) ||
+        (month ==  5 && day > 31) ||
+        (month ==  6 && day > 30) ||
+        (month ==  7 && day > 31) ||
+        (month ==  8 && day > 31) ||
+        (month ==  9 && day > 30) ||
+        (month == 10 && day > 31) ||
+        (month == 11 && day > 30) ||
+        (month == 12 && day > 31)
+    ) {
+        return 'fechaNacimiento_persona_personalized_ko';
     }
 
     return true;
