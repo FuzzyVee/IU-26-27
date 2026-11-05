@@ -1079,7 +1079,6 @@ class EntityHelper {
         (this.entidad.fields || []).forEach((f) => {
             // Ocultar campos de archivo en búsquedas y borrados
             if (f.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(accion)) return;
-            if (f.name.startsWith('foto_') && accion === 'ADD') return;
     
             html += `  <label class="label_${f.name}">${f.label}</label>\n`;
     
