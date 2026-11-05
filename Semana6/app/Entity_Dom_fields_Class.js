@@ -361,6 +361,75 @@ class entity_dom_fields extends dom_fields {
                 border-radius: 8px;
                 font-size: 1.1rem;
             }
+
+    #IU_manage_table {
+        overflow-x: auto !important;
+    }
+
+    #IU_manage_table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* 2. Photo column: Keep fixed 90px so photo preview never shrinks */
+    #IU_manage_table td.tabla-td-foto_persona,
+    #IU_manage_table th.tabla-th-foto_persona,
+    #IU_manage_table td[class*="foto"],
+    #IU_manage_table th[class*="foto"] {
+        width: 90px !important;
+        min-width: 90px !important;
+        text-align: center;
+    }
+
+    /* 3. Action columns (EDIT, DELETE, SHOWCURRENT): Guarantee full visibility */
+    #IU_manage_table th:nth-last-child(-n+3),
+    #IU_manage_table td:nth-last-child(-n+3) {
+        width: 55px !important;
+        min-width: 55px !important;
+        padding: 8px 4px !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+    }
+
+    #IU_manage_table td:nth-last-child(-n+3) img {
+        width: 36px !important;
+        height: 36px !important;
+        display: inline-block;
+    }
+
+    
+
+    /* 4. Date columns (fecha_nacimiento): Cap width so dates stay compact */
+    #IU_manage_table th[class*="fecha"],
+    {
+        max-width: 130px !important;
+        width: 130px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 5. General text data cells: Truncate long text with ellipsis (...) */
+    #IU_manage_table td:not(:nth-last-child(-n+3)) {
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+/* 2. DNI Column: Dedicated width & disable truncation so full DNI (8 digits + letter) displays */
+    #IU_manage_table th[class*="dni"],
+    #IU_manage_table td[class*="dni"],
+    #IU_manage_table th.tabla-th-dni,
+    #IU_manage_table td.tabla-td-dni,
+    #IU_manage_table td:first-child:not([class*="foto"]) {
+        width: 125px !important;
+        min-width: 125px !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+            
             .formulario { clear: both; display: grid; gap: 8px; padding-top: 12px; }
             .formulario label { margin-top: 8px; color: var(--muted); font-weight: 600; }
             .formulario input:not([type="file"]), .formulario select, .formulario textarea {
@@ -641,14 +710,66 @@ select#seleccioncolumnas option:hover {
   box-shadow: inset 0 0 0 2px var(--accent-blue) !important;
 }
 
-#IU_manage_table {
-  background: var(--panel-bg);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
-  overflow-x: auto;
-}
+  #IU_manage_table {
+            background-color: #161b22 !important;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Table header cells */
+        #IU_manage_table th {
+            background-color: #21262d !important;
+            color: #58a6Af !important;
+            font-weight: 700;
+            padding: 14px 16px;
+        }
+
+        /* Table body cells */
+        #IU_manage_table td {
+            border-bottom: 1px solid #30363d !important;
+            padding: 12px 16px;
+        }
+
+        #IU_manage_table table {
+        table-layout: fixed !important;
+        width: 100% !important;
+    }
+
+    /* 2. Protect the photo column from shrinking */
+    #IU_manage_table th.tabla-th-foto_persona,
+    #IU_manage_table td.tabla-td-foto_persona,
+    #IU_manage_table td:has(img) {
+        width: 95px !important;
+        min-width: 95px !important;
+        text-align: center;
+    }
+
+    #IU_manage_table td.tabla-td-foto_persona img,
+    #IU_manage_table td a img {
+        width: 70px !important;
+        height: 70px !important;
+        min-width: 70px !important;
+        min-height: 70px !important;
+        object-fit: cover !important;
+        border-radius: 8px;
+        display: inline-block;
+    }
+
+    /* 3. Truncate long text cells (like fecha_nacimiento) neatly with ellipsis (...) */
+    #IU_manage_table td {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* 4. Keep action buttons (EDIT, DELETE, SHOWCURRENT) neatly aligned on the right */
+    #IU_manage_table td:last-child {
+        width: 150px !important;
+        min-width: 150px !important;
+        text-align: right;
+    }
 
 #IU_manage_table table {
   width: 100%;
@@ -735,6 +856,13 @@ select#seleccioncolumnas option:hover {
   right: 12px;
   float: none;
 }
+
+#IU_manage_table td:not(:first-child):not(:nth-last-child(-n+3)):not([class*="foto"]):not([class*="fecha"]) {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
 #contenedor_IU_form {
   flex: 1 1 auto;
@@ -1031,7 +1159,7 @@ footer {
                         <img id="botonSEARCH" src="./iconos/SEARCH.png" alt="SEARCH" onclick="entidad.createForm_SEARCH();"/>
                         <img id="botonTEST_DATA" src="./iconos/TEST.png" alt="Ejecutar tests de validación" title="Ejecutar tests para la entidad seleccionada" role="button" tabindex="0" onclick="runSelectedEntityTests()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();runSelectedEntityTests()}">
 
-                        <label id="label_seleccioncolumnas" class="label_seleccioncolumnas" for="seleccioncolumnas">Seleccionar columnas</label>
+                        <label id="label_seleccioncolumnas"  for="seleccioncolumnas"></label>
                         <select id="seleccioncolumnas" multiple aria-label="Seleccionar columnas"></select>
                     </div>
                 </section>
