@@ -42,35 +42,53 @@
 Your final submission archive must be compressed as a `.rar` file named **ET2\_Codigodegrupo.rar** and contain a single root folder named **ET2\_Codigodegrupo** [3]:
 
 ```
-ET2_Codigodegrupo.rar
- └── ET2_Codigodegrupo/
-      ├── index.html
-      ├── styles.css
-      ├── app/
-      │    ├── ET2_datosgenerales.js
-      │    ├── persona/ (persona_Class.js, persona_test.js)
-      │    ├── usuario/
-      │    ├── rol/
-      │    ├── accion/
-      │    ├── funcionalidad/
-      │    ├── funcionalidad_accion/
-      │    └── rolaccionfuncionalidad/
-      ├── Base/
-      │    ├── AbstractEntidad_Class.js
-      │    └── General_Entity_Class.js
-      ├── Core/
-      │    ├── Dom_Class.js
-      │    ├── Dom_form_Class.js
-      │    ├── Dom_table_Class.js
-      │    ├── Dom_fields_Class.js
-      │    ├── Validations_Class.js
-      │    └── ExternalAccess_class.js
-      ├── locale/
-      │    ├── Textos_ES.js
-      │    └── Textos_EN.js
-      └── iconos/
-
-```
+ET2_Codigodegrupo/                     <-- Directorio principal a comprimir [2]
+├── index.html                         <-- Página principal con menú de navegación [1]
+├── Core/                              <-- Clases comunes y acceso a Back [1]
+│   ├── Dom_Class.js
+│   ├── Dom_form_Class.js
+│   ├── Dom_table_Class.js
+│   ├── Dom_fields_Class.js
+│   ├── Validations_Class.js
+│   └── ExternalAccess.js
+├── Base/                              <-- Clase abstracta base [1]
+│   └── EntidadAbstracta.js
+├── css/                               <-- Estilos CSS y modales [1]
+│   └── styles.css
+├── iconos/                            <-- Iconos de acciones e idiomas (ADD, EDIT, SEARCH, etc.) [1]
+│   ├── ADD.png
+│   ├── EDIT.png
+│   ├── DELETE.png
+│   ├── SEARCH.png
+│   ├── SHOWCURRENT.png
+│   ├── Spain.png
+│   └── United-Kingdom.png
+└── app/                               <-- Código de la aplicación y entidades [1]
+    ├── ET2_Codigodegrupo.js           <-- Fichero de datos del grupo y horas dedicadas [3]
+    ├── Textos_ES.js                   <-- Diccionario de textos en español [4]
+    ├── Textos_EN.js                   <-- Diccionario de textos en inglés [4]
+    ├── EntityHelper.js                <-- Helper auxiliar de la aplicación
+    ├── persona/                       <-- (o directamente dentro de app/)
+    │   ├── persona_Class.js
+    │   └── persona_tests.js
+    ├── usuario/
+    │   ├── usuario_Class.js
+    │   └── usuario_tests.js
+    ├── rol/
+    │   ├── rol_Class.js
+    │   └── rol_tests.js
+    ├── accion/
+    │   ├── accion_Class.js
+    │   └── accion_tests.js
+    ├── funcionalidad/
+    │   ├── funcionalidad_Class.js
+    │   └── funcionalidad_tests.js
+    ├── funcionalidad_accion/
+    │   ├── funcionalidad_accion_Class.js
+    │   └── funcionalidad_accion_tests.js
+    └── rolaccionfuncionalidad/
+        ├── rolaccionfuncionalidad_Class.js
+        └── rolaccionfuncionalidad_tests.js
 
 ---
 

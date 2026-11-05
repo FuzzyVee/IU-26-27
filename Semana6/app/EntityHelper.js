@@ -1,7 +1,11 @@
 class EntityHelper {
+    // This helper connects one entity's field definitions to the shared UI,
+    // validation, backend, and table behavior.
+    // I will be clear right now I don't write very good spanish... Now ENGLISH thath's my strong suite.
     constructor(entidad) {
         this.entidad = entidad;
 
+        // Fill in common entity settings only when the entity did not define them.
         if (!entidad.nombreentidad) {
             entidad.nombreentidad = entidad.constructor.name;
         }
@@ -23,6 +27,7 @@ class EntityHelper {
         entidad.validations = new Validations();
         entidad.access_functions = new ExternalAccess();
 
+        // Set up the reusable behavior once the entity has its default properties.
         this.injectStyles();
         this.generateValidationMethods();
         this.generateSubmitHandlers();
@@ -30,11 +35,13 @@ class EntityHelper {
         this.setupEscKeyListener();
     }
 
+    // Add small shared styles used by the helper-generated UI.
     injectStyles() {
+        // There can be several entities on the page; add this style block only once.
         if (document.getElementById('custom-helper-styles')) return;
 
         const style = document.createElement('style');
-        style.id = 'custom-helper-styles';
+        style.id = 'custom-helper-styles'; //Styles I couldnt manague to get going -v-
         style.textContent = `
             #seleccioncolumnas {
                 background: #1c2330;
@@ -54,6 +61,7 @@ class EntityHelper {
         document.head.appendChild(style);
     }
 
+    // Make helper methods available on the entity object, which is what the UI calls.
     bindEntityMethods() {
         [
             'manual_form_creation',
@@ -80,6 +88,8 @@ class EntityHelper {
         this.entidad.dom.abrirModalError = (errorMsg) => this.abrirModalError(errorMsg);
     }
 
+    // Send a backend request. SEARCH is paged in batches because the backend may
+    // limit each response; other actions are sent once with their original data.
     async peticionBackGeneral(formulario, controlador, action, datosextra = null) {
         const request = (extra) => this.entidad.access_functions.peticionBackGeneral(
             formulario,
@@ -95,6 +105,7 @@ class EntityHelper {
         const rows = [];
         let response;
 
+        // Ask for successive pages until the server returns fewer than 100 rows.
         for (let offset = 0; ; offset += pageSize) {
             response = await request({
                 ...(datosextra || {}),
@@ -115,6 +126,7 @@ class EntityHelper {
             }
 
             rows.push(...response.resource);
+            // A short page means there are no more records to fetch.
             if (response.resource.length < pageSize) break;
         }
 
@@ -124,6 +136,7 @@ class EntityHelper {
         return { ...response, code: 'RECORDSET_DATOS', resource: rows };
     }
 
+    // Register one Escape-key handler for the whole page to close open UI overlays.
     setupEscKeyListener() {
         // Evita registrar múltiples listeners si se instancian varias entidades
         if (EntityHelper.escapeListenerRegistered) return;
@@ -147,11 +160,13 @@ class EntityHelper {
         });
     }
 
+    // Clean backend row data, then ask the DOM helper to put it into the form.
     rellenarvaloresform(row) {
         const cleanRow = this.cleanRowData(row);
         this.dom.rellenarvaloresform(cleanRow);
     }
 
+    // Show one field's validation error and refresh its translated text.
     mostrar_error_campo(id, codigoerror) {
         const aError = document.getElementById('error_' + id);
         if (aError) {
@@ -161,6 +176,7 @@ class EntityHelper {
         if (typeof window.setLang === 'function') window.setLang();
     };
     
+    // Clear the error state for a field after it passes validation.
     mostrar_exito_campo(id) {
         const aError = document.getElementById('error_' + id);
         if (aError) {
@@ -169,7 +185,7 @@ class EntityHelper {
         originalMostrarExito(id);
     };
     
-    // Sobrescribir abrirModalError en la instancia de dom
+    // Show the app's error dialog. The fallback IDs support older App markup.
     abrirModalError(errorMsg) {
         // Buscar los elementos compatibles con el HTML de la aplicación
         const modal = document.getElementById('error_action_modal') || document.getElementById('modalError');
@@ -194,13 +210,7 @@ class EntityHelper {
         }
     };
 
-    
-    
-
-    
-    /**
-     * Limpia caracteres de salto de línea codificados (&#13;&#10;) antes de rellenar el formulario
-     */
+    // Turn line-break entities returned by the backend back into real newlines... Hence my chromebook accident Beckons once more.
     cleanRowData(row) {
         if (!row) return row;
         const clean = { ...row };
@@ -215,10 +225,7 @@ class EntityHelper {
         return clean;
     }
 
-    /**
-     * Cleans newlines, carriage returns, and leading/trailing whitespace 
-     * from all text/textarea inputs in form_iu before submission.
-     */
+    // Remove accidental newlines and extra spaces from text fields before sending.
     sanitizeFormInputs() {
         const form = document.getElementById('form_iu');
         if (!form) return;
@@ -232,9 +239,8 @@ class EntityHelper {
         });
     }
     
-    /**
-     * Sobrescribe la creación de tabla usando índices en lugar de JSON.stringify
-     */
+    // Add row action buttons and render special values (such as photo links)
+    // before handing the finished rows to the DOM table renderer.
     crearTablaDatos(datos, mostrarespecial) {
 
         var misdatos = datos;
@@ -262,6 +268,7 @@ class EntityHelper {
         if (typeof setLang === 'function') setLang();
     }
     
+    // Fetch all records for an entity; used to fill foreign-key options and matrices.
     async fetchEntityRows(entityName) {
         const response = await this.entidad.peticionBackGeneral(
             '',
@@ -271,6 +278,7 @@ class EntityHelper {
         return response.code === 'RECORDSET_DATOS' ? response.resource : [];
     }
 
+    // Load the records referenced by foreign-key fields so selects show readable options.
     async loadForeignKeyOptions() {
         const foreignKeyFields = (this.entidad.fields || []).filter((field) => field.isFK);
         await Promise.all(foreignKeyFields.map(async (field) => {
@@ -293,6 +301,7 @@ class EntityHelper {
             }
 
             const referenceKey = field.referenceKey || field.name;
+            // Prefer an explicitly configured label; otherwise choose a safe, readable field.
             const labelField = field.optionLabel || Object.keys(response.resource[0] || {})
                 .find((key) => key !== referenceKey && !key.startsWith('id_') &&
                     !/password|contrasena/i.test(key));
@@ -309,6 +318,7 @@ class EntityHelper {
         }));
     }
 
+    // Prepare related options before showing a form; report a visible error if loading fails.
     async prepareForeignKeyForm() {
         try {
             await this.loadForeignKeyOptions();
@@ -320,6 +330,8 @@ class EntityHelper {
         }
     }
 
+    // Escape characters that could be interpreted as HTML instead of plain text.
+    // This spelling differs from escapeHtml below only by capitalization.
     escapeHTML(value) {
         return String(value).replace(/[&<>"']/g, (character) => ({
             '&': '&amp;',
@@ -330,6 +342,8 @@ class EntityHelper {
         })[character]);
     }
 
+    // Get translated text for a relation-matrix label, or use its Spanish fallback.
+    // At least the labels are the easy part ^^
     getRelationLabel(entityName, fallback) {
         const key = `matrix_${entityName}`;
         return window.traduccion && window.traduccion[key]
@@ -337,6 +351,7 @@ class EntityHelper {
             : fallback;
     }
 
+    // Read only the filter values relevant to the selected relation entity.
     getRelationSearchFilters(form) {
         const filterFields = this.entidad.nombreentidad === 'rolaccionfuncionalidad'
             ? ['id_funcionalidad', 'id_accion', 'id_rol']
@@ -352,6 +367,7 @@ class EntityHelper {
         }, {});
     }
 
+    // Keep only relation rows whose ID matches a non-empty search filter.
     filterRelationRows(rows, filters, fieldName) {
         const filterValue = filters[fieldName];
         if (!filterValue) return rows;
@@ -361,6 +377,10 @@ class EntityHelper {
         );
     }
 
+    // Load the entities needed to draw a relation matrix and choose its layout.
+    // This is the matrix traffic controller: fetch the lists, apply filters, then
+    // hand everything to the right renderer. There are a lot of moving parts here
+    // Help ;v;
     async renderRelationMatrix(searchFilters = {}) {
 
         const entityName = this.entidad.nombreentidad;
@@ -382,6 +402,7 @@ class EntityHelper {
                 : Promise.resolve([])
         ]);
 
+        // Apply filters locally to the lists used in the matrix.
         const functionalities = this.filterRelationRows(
             allFunctionalities,
             searchFilters,
@@ -391,6 +412,8 @@ class EntityHelper {
         const roles = this.filterRelationRows(allRoles, searchFilters, 'id_rol');
         const records = this.entidad.datos || [];
         const pairs = [];
+        // Create every possible functionality/action combination for role assignment.
+        // Yes, this Cartesian-product bit is as abstract as it sounds and can be bettered
         functionalities.forEach((functionality) => {
             actions.forEach((action) => {
                 pairs.push({ functionality, action });
@@ -412,27 +435,34 @@ class EntityHelper {
         }
     }
 
+    // Build a stable string key for a pair of related IDs.
+    // The invisible separator looks odd, but keeps pairs from accidentally colliding.
     relationKey(firstId, secondId) {
+        // The separator keeps pairs such as ("12", "3") distinct from ("1", "23").
         return `${this.normalizeRelationId(firstId)}\u0000${this.normalizeRelationId(secondId)}`;
     }
 
+    // Convert an ID to a trimmed string so numeric and string IDs compare equally.
     normalizeRelationId(value) {
         if (value === undefined || value === null || typeof value === 'object') return '';
         return String(value).trim();
     }
 
+    // Flatten backend values into form-friendly values (usually strings).
+    // The backend sometimes wraps IDs in objects, so this patiently checks several
+    // possible shapes. This is data-shape detective, it ended up working at last ^^
     normalizeRowData(row) {
         if (!row || typeof row !== 'object') return row;
         const clean = Array.isArray(row) ? [] : {};
 
         for (const [key, value] of Object.entries(row)) {
-            // Leave primitives, nulls, undefined, and File objects untouched
+            // Values that are already usable should not be changed.
             if (value === null || value === undefined || typeof value !== 'object' || value instanceof File) {
                 clean[key] = value;
                 continue;
             }
 
-            // Handle Arrays of objects or values (e.g., tags or multi-select lists)
+            // Turn arrays into comma-separated text instead of "[object Object]".
             if (Array.isArray(value)) {
                 clean[key] = value.map((item) => {
                     if (typeof item === 'object' && item !== null) {
@@ -443,33 +473,30 @@ class EntityHelper {
                 continue;
             }
 
-            // Handle Nested Objects — Multi-Tier Resolution Hierarchy:
-
-            //  Exact key match (e.g., row['id_rol'] = { id_rol: "13999", ... })
+            // First, look for the exact field name inside the nested object.
             if (value[key] !== undefined && value[key] !== null) {
                 clean[key] = String(value[key]);
                 continue;
             }
 
-            //  Common identification keys ('id', 'code', 'uuid', 'pk', 'key', 'value')
-            const idKeyCandidates = ['id', 'code', 'uuid', 'pk', 'key', 'value'];
+            // If not found, try common names used for identifiers by different APIs found on postman.
+            const idKeyCandidates = ['id', 'code', 'pk', 'key', 'value'];
             const foundIdKey = idKeyCandidates.find(k => value[k] !== undefined && value[k] !== null);
             if (foundIdKey) {
                 clean[key] = String(value[foundIdKey]);
                 continue;
             }
 
-            //  Any property starting with 'id_' or ending with '_id', '_key', '_code'
+            // Also support other conventional identifier names such as "id_rol" or "rol_id".
             const regexKey = Object.keys(value).find(k => 
-                /^id_/i.test(k) || /_id$/i.test(k) || /_key$/i.test(k) || /_code$/i.test(k)
+                /^id_/i.test(k) || /_id$/i.test(k) || /_key$/i.test(k) || /_code$/i.test(k) // E.g., "id_rol", "rol_id", "rol_key", "rol_code"
             );
             if (regexKey && value[regexKey] !== undefined && value[regexKey] !== null) {
                 clean[key] = String(value[regexKey]);
                 continue;
             }
 
-            //  First available primitive value (string, number, boolean)
-            // (For objects like { rol_name: "Admin", description: "All permissions" } with no ID field)
+            // If there is no ID, use the first simple value, such as a display name.
             const firstPrimitive = Object.values(value).find(v => 
                 v !== null && v !== undefined && typeof v !== 'object' && String(v).trim() !== ''
             );
@@ -478,15 +505,18 @@ class EntityHelper {
                 continue;
             }
 
-            // Safety net — fallback to empty string (prevents "[object Object]" in DOM inputs)
+            // Nothing usable was found; an empty string is safer than "[object Object]". wich was what I was getting.
             clean[key] = '';
         }
 
         return clean;
     }
 
+    // Find a field in a record even when it is nested or its key formatting differs.
+    // If the backend hid the value inside another object, this digs through it
     getRecordValue(record, fieldName) {
         if (!record || typeof record !== 'object') return undefined;
+        // Ignore underscores and punctuation so "id_rol" can also match "idRol".
         const normalizedFieldName = fieldName.toLowerCase().replace(/[^a-z0-9]/g, '');
         const matchingField = Object.keys(record).find((key) =>
             key.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedFieldName
@@ -511,6 +541,10 @@ class EntityHelper {
         return undefined;
     }
 
+    // Draw the functionality-by-action grid and save checkbox changes to the backend.
+    // The nested loops create one cell per possible pairing; each checkbox also
+    // needs its own IDs and save callback. Easy to lose the thread in here but look at it
+    // A "beautifull" way to do it :o
     renderFunctionalityActionMatrix(container, functionalities, actions, records, status) {
         const selected = new Set(records
             .map((record) => {
@@ -588,6 +622,13 @@ class EntityHelper {
         this.finishMatrix(container, table, functionalities.length, actions.length, status);
     }
 
+    // Draw the role-by-function/action grid and update its local record list after saves.
+    // This is the brain-bender: each cell represents THREE IDs (role, functionality,
+    // action), and the combined key must match both existing rows and future changes.
+    // It's basically the logic of an All-Pairs matrix but with a third dimension,
+    // and the user can only see one slice at a time. wich means on of the axis 
+    // both has to be a combination of two entities, and the other axis is the third entity.
+    // If this took a while to understand, that is completely fair -v-
     renderRoleAssignmentMatrix(container, roles, pairs, records, status) {
         const selected = new Set(records
             .map((record) => {
@@ -657,6 +698,7 @@ class EntityHelper {
                             request.id_funcionalidad,
                             request.id_accion
                         )}`;
+                        // Keep the in-memory data in sync so later redraws show the saved choice.
                         const relationIndex = records.findIndex((record) =>
                             `${this.normalizeRelationId(this.getRecordValue(record, 'id_rol'))}\u0000${this.relationKey(
                                 this.getRecordValue(record, 'id_funcionalidad'),
@@ -679,6 +721,9 @@ class EntityHelper {
         this.finishMatrix(container, table, roles.length, pairs.length, status);
     }
 
+    // Let the user pick one functionality at a time to keep the role matrix readable.
+    // We group actions by functionality first, then rebuild the smaller grid on change.
+    // It is a selector wrapped around a matrix wrapped around more async behavior ^^
     renderRoleAssignmentSelector(container, roles, pairs, records, status) {
         const functionalities = [];
         const actionsByFunctionality = new Map();
@@ -748,18 +793,21 @@ class EntityHelper {
         renderSelectedCombination();
     }
 
+    // Make a readable label from a record's name and ID.
     describeRecord(record, labelField, idField) {
         const label = this.getRecordValue(record, labelField);
         const id = this.getRecordValue(record, idField);
         return label ? `${label} (${id ?? ''})` : String(id ?? '');
     }
 
+    // Create a checkbox whose change is saved asynchronously; revert it if saving fails.
+    // The UI changes immediately, so if the backend says "no", we must undo the check unfortunately -v-
     createAssignmentCheckbox(checked, label, status, onChange) {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = checked;
         checkbox.setAttribute('aria-label', label);
-        checkbox.addEventListener('change', async () => {
+        checkbox.addEventListener('change', async () => { // THESE ASYNC TOOK ME FIVE HOURS TO FIGURE OUT... fair enough I procastinated still ;~;
             const desiredValue = checkbox.checked;
             checkbox.disabled = true;
             status.textContent = this.getRelationLabel('saving', 'Guardando...');
@@ -779,10 +827,13 @@ class EntityHelper {
         return checkbox;
     }
 
+    // Send an ADD or DELETE request for one relation.
     submitRelationChange(entityName, action, fields) {
         return this.entidad.peticionBackGeneral('', entityName, action, fields);
     }
 
+    // Put the matrix in a scrollable wrapper and show whether it has usable rows/columns.
+    // Final assembly: without this wrapper the wide grid takes over the whole page
     finishMatrix(container, table, rowCount, columnCount, status) {
         const wrapper = document.createElement('div');
         wrapper.className = 'relation-matrix-scroll';
@@ -804,6 +855,7 @@ class EntityHelper {
         container.appendChild(status);
     }
 
+    // Create validation functions for each field/action from the entity's rules.
     generateValidationMethods() {
         ['ADD', 'EDIT', 'SEARCH'].forEach((action) => {
             (this.entidad.fields || []).forEach((field) => {
@@ -811,6 +863,7 @@ class EntityHelper {
                 const rules = field.rules ? field.rules[action] : null;
 
                 this.entidad[methodName] = () => {
+                    // A foreign key on ADD must match an option that was actually loaded.
                     if (field.isFK && action === 'ADD') {
                         const select = document.getElementById(field.name);
                         const value = select && select.value;
@@ -833,6 +886,7 @@ class EntityHelper {
                         }
                     }
 
+                    // Check minimum and maximum lengths (and numeric lower bounds).
                     if (rules.min_size !== undefined && rules.min_size !== null) {
                         const input = document.getElementById(field.name);
                         const value = input ? input.value : '';
@@ -864,6 +918,7 @@ class EntityHelper {
                         return this.showValidationError(field.name, 'format');
                     }
 
+                    // Browsers expose a file input differently from a normal text input.
                     if (field.type === 'file') {
                         const hasFile = this.entidad.validations.exist_file(field.name);
                         if (rules.exist_file && !hasFile) {
@@ -879,6 +934,7 @@ class EntityHelper {
                             ['type_file', rules.type_file],
                             ['format_name_file', rules.format_name_file]
                         ];
+                        // Stop at the first failed file rule so the user sees one clear error.
                         for (const [ruleName, ruleValue] of fileRules) {
                             if (ruleValue !== undefined && ruleValue !== null &&
                                 !this.entidad.validations[ruleName](field.name, ruleValue)) {
@@ -913,12 +969,14 @@ class EntityHelper {
         });
     }
 
+    // Convert a failed rule name into its standard error code and show it on the field.
     showValidationError(fieldName, ruleName) {
         const errorId = `${fieldName}_${ruleName}_ko`;
         this.entidad.dom.mostrar_error_campo(fieldName, errorId);
         return errorId;
     }
 
+    // Create one submit-validation function for each supported form action.
     generateSubmitHandlers() {
         ['ADD', 'EDIT', 'SEARCH'].forEach((action) => {
             const submitName = `${action}_submit_${this.entidad.nombreentidad}`;
@@ -935,6 +993,7 @@ class EntityHelper {
         });
     }
 
+    // Run each test against a temporary form and show a result table in a popup.
     runValidationTests(testCases) {
         const resultsContainer = document.getElementById('IU_Test_result_nofile');
         if (!resultsContainer) throw new Error('No se encontró el contenedor de resultados de tests.');
@@ -949,6 +1008,7 @@ class EntityHelper {
             fixture.hidden = true;
             document.body.appendChild(fixture);
         }
+        // The form must be in the document so browser inputs behave like real form controls.
         document.body.prepend(fixture);
 
         const table = document.createElement('table');
@@ -977,6 +1037,7 @@ class EntityHelper {
             let errorMessage = '';
 
             try {
+                // Rebuild the fixture per case so values/errors from the previous test cannot leak.
                 fixture.innerHTML = this.manual_form_creation(action);
                 const form = fixture.querySelector('form');
                 if (!form) throw new Error(`No se pudo crear el formulario para ${action}.`);
@@ -1043,11 +1104,13 @@ class EntityHelper {
             `: ${passed}/${testCases.length}`;
         resultsContainer.replaceChildren(summary, table);
         fixture.replaceChildren();
+        // The App's DOM helper moves this results table into its separate browser window.
         this.entidad.dom.mostrarVentanaResultadosTests(resultsContainer);
 
         return { passed, failed: testCases.length - passed, total: testCases.length };
     }
 
+    // Give a test file input a browser File object with the requested filename.
     setTestFile(input, fileName) {
         if (!fileName) {
             input.files = new DataTransfer().files;
@@ -1058,7 +1121,9 @@ class EntityHelper {
             throw new Error('Este navegador no permite simular archivos para los tests.');
         }
 
+        // A file input cannot be assigned a filename directly, so use DataTransfer (sí, tiene su vuelta ^^).
         const extension = String(fileName).split('.').pop().toLowerCase();
+        // The tests only need a predictable MIME type; the file contents are dummy data.
         const mimeType = ['jpg', 'jpeg'].includes(extension) ? 'image/jpeg' : 'application/octet-stream';
         const file = new File(['test file'], String(fileName), { type: mimeType });
         const transfer = new DataTransfer();
@@ -1066,6 +1131,7 @@ class EntityHelper {
         input.files = transfer.files;
     }
 
+    // Resolve a test-table label through translations and keep a fallback for missing keys.
     getTestLabel(key, fallback) {
         const translationKey = key.startsWith('test_') ? key : `test_${key}`;
         return window.traduccion && window.traduccion[translationKey]
@@ -1073,11 +1139,12 @@ class EntityHelper {
             : fallback;
     }
 
+    // Generate the HTML for an action's form from the entity's field definitions.
     manual_form_creation(accion = 'ADD') {
         let html = `<form id="form_iu" action="" method="POST" enctype="multipart/form-data" class="formulario">\n`;
     
         (this.entidad.fields || []).forEach((f) => {
-            // Ocultar campos de archivo en búsquedas y borrados
+            // A file cannot be searched by typing its contents, and is not editable in read-only views.
             if (f.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(accion)) return;
     
             html += `  <label class="label_${f.name}">${f.label}</label>\n`;
@@ -1087,7 +1154,7 @@ class EntityHelper {
             const debeSerReadonly = esVistaSoloLectura || (accion === 'EDIT' && esClaveEspecial);
             const readonlyAttr = debeSerReadonly ? ' readonly style="background-color: #2a313d; cursor: not-allowed; color: #8b949e;"' : '';
     
-            // --- Siguiente ID automático en la vista ADD ---
+            // For an auto-numbered primary key, suggest the next value from the rows already loaded.
             if (accion === 'ADD' && f.isPK && f.name.startsWith('id_')) {
                 let siguienteId = 1;
                 if (this.entidad.datos && Array.isArray(this.entidad.datos) && this.entidad.datos.length > 0) {
@@ -1124,6 +1191,7 @@ class EntityHelper {
         return html;
     }
     
+    // Put a generated form into the dialog, set its title, and display it.
     baseCreateForm(action) {
         const modal = document.getElementById('Div_IU_form');
         if (modal && modal.closest && modal.closest('form')) {
@@ -1151,6 +1219,7 @@ class EntityHelper {
         this.entidad.dom.show_element('Div_IU_form', 'block');
     }
 
+    // Attach submission behavior and prevent the browser's default page reload.
     setFormAttributes(action, submitHandler) {
         const form = document.getElementById('form_iu');
         if (!form) throw new Error(`No se encontró el formulario para ${action}.`);
@@ -1159,6 +1228,7 @@ class EntityHelper {
         form.removeAttribute('onsubmit');
         form.addEventListener('submit', (event) => {
             event.preventDefault();
+            // Do not call the backend unless every field passes validation.
             if (submitHandler && this.entidad[submitHandler]() !== true) return;
 
             const submitButton = event.submitter;
@@ -1169,6 +1239,7 @@ class EntityHelper {
         });
     }
 
+    // Submit a new record; on success, close the form and refresh the table.
     async ADD() {
     this.sanitizeFormInputs();
 
@@ -1184,6 +1255,7 @@ class EntityHelper {
         });
     }
     
+    // Save edits to a record, then refresh the table if the backend accepts them.
     async EDIT() {
         this.sanitizeFormInputs();
     
@@ -1199,6 +1271,7 @@ class EntityHelper {
             });
     }
     
+    // Delete the selected record, then refresh the table on success.
     async DELETE() {
         await this.entidad.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'DELETE')
             .then((respuesta) => {
@@ -1212,10 +1285,11 @@ class EntityHelper {
             });
     }
     
+    // Search records and redraw either a regular table or one of the relation matrices.
     async SEARCH(clearFilter = false) {
         const formElem = document.getElementById('form_iu');
     
-        // If clearFilter is true, reset the form and send '' so no filters are applied
+        // A successful ADD/EDIT/DELETE can request a clean, unfiltered reload.
         if (clearFilter && formElem) {
             formElem.reset();
             // Also clear inner HTML to avoid leftover input values
@@ -1235,6 +1309,7 @@ class EntityHelper {
                 this.entidad.dom.hide_element('Div_IU_form');
     
                 if (respuesta['code'] === 'RECORDSET_DATOS') {
+                    // Normalize nested API data before a regular table or matrix uses it.
                     this.entidad.datos = (respuesta['resource'] || []).map(row => this.normalizeRowData(row));
                     if (this.entidad.datos && this.entidad.datos.length > 0) {
                         this.entidad.atributos = Object.keys(this.entidad.datos[0]);
@@ -1267,6 +1342,7 @@ class EntityHelper {
             });
     }
 
+    // Run a requested action with shared error handling, then reload the displayed data.
     async submitEntityAction(action) {
         try {
             const response = await this.entidad.peticionBackGeneral(
@@ -1292,6 +1368,7 @@ class EntityHelper {
         }
     }
 
+    // Build and configure the ADD form after loading its foreign-key choices.
     async createForm_ADD() {
         const entity = this.entidad;
         if (!await this.prepareForeignKeyForm()) return;
@@ -1301,6 +1378,7 @@ class EntityHelper {
         this.appendFormActions('ADD');
     }
 
+    // Build and configure the SEARCH form after loading its foreign-key choices.
     async createForm_SEARCH() {
         const entity = this.entidad;
         if (!await this.prepareForeignKeyForm()) return;
@@ -1310,6 +1388,7 @@ class EntityHelper {
         this.appendFormActions('SEARCH');
     }
 
+    // Build an EDIT form, fill it with the chosen row, and keep key fields unchanged.
     createForm_EDIT(row) {
         const entity = this.entidad;
         this.baseCreateForm('EDIT');
@@ -1327,6 +1406,7 @@ class EntityHelper {
         this.appendFormActions('EDIT');
     }
 
+    // Build a read-only DELETE confirmation form with the selected row's values.
     createForm_DELETE(row) {
         const entity = this.entidad;
         this.baseCreateForm('DELETE');
@@ -1337,6 +1417,7 @@ class EntityHelper {
         this.appendFormActions('DELETE');
     }
 
+    // Show the selected row without allowing edits.
     createForm_SHOWCURRENT(row) {
         const entity = this.entidad;
         this.baseCreateForm('SHOWCURRENT');
@@ -1349,7 +1430,7 @@ class EntityHelper {
     }
 
     
-
+    // Add Cancel and, when appropriate, Submit buttons to the bottom of the dialog.
     appendFormActions(action) {
         const form = document.getElementById('form_iu');
         if (!form) throw new Error('No se encontró el formulario para añadir sus botones.');
@@ -1386,6 +1467,7 @@ class EntityHelper {
         dialog.appendChild(footer);
     }
 
+    // Resolve a translated form-button label, or return the supplied fallback.
     getActionLabel(action, fallback) {
         const key = `form_action_${action}`;
         return window.traduccion && window.traduccion[key]
@@ -1393,6 +1475,7 @@ class EntityHelper {
             : fallback;
     }
 
+    // Escape HTML-special characters before inserting a filename into markup.
     escapeHtml(value) {
         return String(value).replace(/[&<>"']/g, (character) => ({
             '&': '&amp;',
@@ -1403,6 +1486,7 @@ class EntityHelper {
         })[character]);
     }
 
+    // Turn a photo/file value into a safe link with a small preview image.
     cambiarmostrarespecial(attribute, value) {
         if (!value) return '';
         if (!attribute.includes('foto') && !attribute.includes('file')) return value;
@@ -1415,6 +1499,7 @@ class EntityHelper {
         </a>`;
     }
 
+    // Add a preview link next to an existing photo/file input in EDIT or view forms.
     actualizarEnlaceFotoFormulario(row) {
         if (!row) return;
 
