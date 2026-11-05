@@ -100,6 +100,7 @@ var textos_ES = {
 	'dni_min_size_ko': 'Dni demasiado corto. Debe tener 8 números y 1 caracter alfabético',
 	'dni_max_size_ko': 'DNI demasiado largo. Debe tener 8 números y 1 caracter alfabético',
 	'dni_format_ko': 'Formato dni/nie no correcto. DNI 8 digitos 1 letra, NIE 1 letra 7 digitos 1 letra',
+	'dni_personalized_ko': 'La letra de control del DNI/NIE no es correcta.',
 	// nombre_persona
 	'nombre_persona_min_size_ko': 'Nombre demasiado corto. Debe tener mas de 4 caracteres alfabéticos',
 	'nombre_persona_max_size_ko': 'Nombre demasiado largo. Debe tener menos de 15 caracteres alfabéticos',
@@ -118,6 +119,8 @@ var textos_ES = {
 	'email_persona_min_size_ko': 'Email demasido corto. Debe tener mas de 3 caracteres.',
 	'email_persona_max_size_ko': 'Email demasido largo. Debe tener menos de 46 caracteres.',
 	'email_persona_format_ko': 'Email no válido. Compruebe el formato.',
+	'email_persona_personalized_ko': 'Email no válido. Compruebe el dominio y su extensión.',
+	'telefono_persona_personalized_ko': 'El teléfono debe tener 9 cifras y comenzar por 6, 7, 8 o 9.',
 
 	// nuevo foto persona
 	'nuevo_foto_persona_exist_file_ko': 'El fichero no existe. Debe subir una foto.',

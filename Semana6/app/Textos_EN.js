@@ -100,6 +100,7 @@ var textos_EN = {
 	'dni_min_size_ko': 'ID number too short. Must have 8 numbers and 1 alphabetical character',
     'dni_max_size_ko': 'ID number too long. Must have 8 numbers and 1 alphabetical character',
     'dni_format_ko': 'Incorrect ID/foreign ID format. ID number 8 digits 1 letter, foreign ID number 1 letter 7 digits 1 letter',
+    'dni_personalized_ko': 'The DNI/NIE checksum letter is incorrect.',
     // nombre_persona
     'nombre_persona_min_size_ko': 'Name too short. Must have more than 4 alphabetical characters',
     'nombre_persona_max_size_ko': 'Name too long. Must have less than 15 alphabetic characters',
@@ -119,6 +120,8 @@ var textos_EN = {
 	'email_persona_min_size_ko': 'Email too short. It has to be at least 4 characters.',
 	'email_persona_max_size_ko': 'Email too long. It has to be at most 45 characters.',
 	'email_persona_format_ko': 'Invalid email. Check the format.',
+	'email_persona_personalized_ko': 'Invalid email. Check the domain and its suffix.',
+	'telefono_persona_personalized_ko': 'The phone number must have 9 digits and start with 6, 7, 8, or 9.',
 
 	// nuevo foto persona
 	'nuevo_foto_persona_exist_file_ko': 'The file does not exist. A photo in \'.jpg\' or \'.jpeg\' format must be uploaded.',

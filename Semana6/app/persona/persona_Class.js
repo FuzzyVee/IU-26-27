@@ -66,8 +66,8 @@ class persona extends AbstractEntidad {
                 label: 'Telefono',
                 type: 'text',
                 rules: {
-                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{9}$' },
-                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{9}$' },
+                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{9}$', personalized: 'personalize_telefono_persona' },
+                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{9}$', personalized: 'personalize_telefono_persona' },
                     SEARCH: { max_size: 9, format: '^[0-9]*$' },
                 }
             },
@@ -76,8 +76,8 @@ class persona extends AbstractEntidad {
                 label: 'Email',
                 type: 'text',
                 rules: {
-                    ADD: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' },
-                    EDIT: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' },
+                    ADD: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', personalized: 'personalize_email_persona' },
+                    EDIT: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', personalized: 'personalize_email_persona' },
                     SEARCH: { max_size: 45, format: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' }
                 }
             },
@@ -124,4 +124,23 @@ persona.prototype.personalize_dni = function() {
     }
 
     return true;
+};
+
+persona.prototype.personalize_telefono_persona = function() {
+    const input = document.getElementById('telefono_persona');
+    if (!input || !input.value) return true;
+
+    return /^[6-9][0-9]{8}$/.test(input.value)
+        ? true
+        : 'telefono_persona_personalized_ko';
+};
+
+persona.prototype.personalize_email_persona = function() {
+    const input = document.getElementById('email_persona');
+    if (!input || !input.value) return true;
+
+    const emailPattern = /^(?!\.)(?!.*\.\.)[a-zA-Z0-9_%+-]+(?:\.[a-zA-Z0-9_%+-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}$/;
+    return emailPattern.test(input.value)
+        ? true
+        : 'email_persona_personalized_ko';
 };

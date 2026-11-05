@@ -84,7 +84,12 @@ let persona_def_tests = Array(
    Array("persona", "foto_persona", "file", 83, "es correcto foto_persona en ADD", "valid", "ADD", true, "Foto correcta"),
    Array("persona", "foto_persona", "file", 84, "es correcto foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta"),
    Array("persona", "foto_persona", "file", 85, "es correcto foto_persona en ADD", "valid", "ADD", true, "Foto correcta"),
-   Array("persona", "foto_persona", "file", 86, "es correcto foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta")
+   Array("persona", "foto_persona", "file", 86, "es correcto foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta"),
+   Array("persona", "telefono_persona", "input", 87, "rechaza prefijo telefónico inválido en ADD", "personalized", "ADD", "telefono_persona_personalized_ko", "Teléfono con prefijo inválido"),
+   Array("persona", "telefono_persona", "input", 88, "rechaza prefijo telefónico inválido en EDIT", "personalized", "EDIT", "telefono_persona_personalized_ko", "Teléfono con prefijo inválido"),
+   Array("persona", "email_persona", "input", 89, "rechaza etiquetas de dominio con guiones inválidos en ADD", "personalized", "ADD", "email_persona_personalized_ko", "Dominio de email inválido"),
+   Array("persona", "email_persona", "input", 90, "rechaza etiquetas de dominio vacías en EDIT", "personalized", "EDIT", "email_persona_personalized_ko", "Dominio de email inválido"),
+   Array("persona", "dni", "input", 91, "rechaza letra de control DNI incorrecta en ADD", "personalized", "ADD", "dni_format_ko", "Letra de control de DNI inválida")
 );
 
 let persona_pruebas = Array(
@@ -173,5 +178,10 @@ let persona_pruebas = Array(
    Array("persona", "foto_persona", 83, 83, "ADD", {"foto_persona":"foto.jpg"}, true),
    Array("persona", "foto_persona", 84, 84, "EDIT", {"foto_persona":"foto.jpg"}, true),
    Array("persona", "foto_persona", 85, 85, "ADD", {"foto_persona":"Archivo.jpeg"}, true),
-   Array("persona", "foto_persona", 86, 86, "EDIT", {"foto_persona":"Archivo.jpeg"}, true)
+   Array("persona", "foto_persona", 86, 86, "EDIT", {"foto_persona":"Archivo.jpeg"}, true),
+   Array("persona", "telefono_persona", 87, 87, "ADD", {"telefono_persona":"500123456"}, "telefono_persona_personalized_ko"),
+   Array("persona", "telefono_persona", 88, 88, "EDIT", {"telefono_persona":"500123456"}, "telefono_persona_personalized_ko"),
+   Array("persona", "email_persona", 89, 89, "ADD", {"email_persona":"user@-domain.com"}, "email_persona_personalized_ko"),
+   Array("persona", "email_persona", 90, 90, "EDIT", {"email_persona":"user@domain..com"}, "email_persona_personalized_ko"),
+   Array("persona", "dni", 91, 91, "ADD", {"dni":"80423097A"}, "dni_format_ko")
 );
