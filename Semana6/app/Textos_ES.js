@@ -40,6 +40,9 @@ var textos_ES = {
 	'test_passed': 'CORRECTO',
 	'test_failed': 'FALLIDO',
 	'test_summary': 'Tests completados',
+	'test_results_title': 'Resultados de tests',
+	'test_close': 'Cerrar',
+	'test_popup_blocked': 'El navegador bloqueó la ventana de resultados. Permite las ventanas emergentes e inténtalo de nuevo.',
 	'test_suite_missing': 'No hay tests de validación cargados para esta entidad.',
 
     // textos de test

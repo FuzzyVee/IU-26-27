@@ -59,6 +59,7 @@ class EntityHelper {
             'manual_form_creation',
             'mostrar_error_campo',
             'mostrar_error_campo',
+            'peticionBackGeneral',
             'SEARCH',
             'ADD',
             'EDIT',
@@ -79,6 +80,18 @@ class EntityHelper {
         this.entidad.dom.abrirModalError = (errorMsg) => this.abrirModalError(errorMsg);
     }
 
+    peticionBackGeneral(formulario, controlador, action, datosextra = null) {
+        const extra = String(action).toUpperCase() === 'SEARCH'
+            ? { ...(datosextra || {}), empieza: 'nulo', filaspagina: 'nulo' }
+            : datosextra;
+        return this.entidad.access_functions.peticionBackGeneral(
+            formulario,
+            controlador,
+            action,
+            extra
+        );
+    }
+
     setupEscKeyListener() {
         // Evita registrar múltiples listeners si se instancian varias entidades
         if (EntityHelper.escapeListenerRegistered) return;
@@ -97,6 +110,7 @@ class EntityHelper {
                 const overlay = document.getElementById('modal_action_overlay');
                 if (errorModal) errorModal.style.display = 'none';
                 if (overlay) overlay.style.display = 'none';
+
             }
         });
     }
@@ -217,7 +231,7 @@ class EntityHelper {
     }
     
     async fetchEntityRows(entityName) {
-        const response = await this.entidad.access_functions.peticionBackGeneral(
+        const response = await this.entidad.peticionBackGeneral(
             '',
             entityName,
             'SEARCH'
@@ -233,7 +247,7 @@ class EntityHelper {
                 throw new Error(`No se pudo determinar la entidad referenciada por ${field.name}.`);
             }
 
-            const response = await this.entidad.access_functions.peticionBackGeneral(
+            const response = await this.entidad.peticionBackGeneral(
                 '',
                 referenceEntity,
                 'SEARCH'
@@ -734,7 +748,7 @@ class EntityHelper {
     }
 
     submitRelationChange(entityName, action, fields) {
-        return this.entidad.access_functions.peticionBackGeneral('', entityName, action, fields);
+        return this.entidad.peticionBackGeneral('', entityName, action, fields);
     }
 
     finishMatrix(container, table, rowCount, columnCount, status) {
@@ -996,8 +1010,8 @@ class EntityHelper {
         summary.textContent = this.getTestLabel('test_summary', 'Tests completados') +
             `: ${passed}/${testCases.length}`;
         resultsContainer.replaceChildren(summary, table);
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         fixture.replaceChildren();
+        this.entidad.dom.mostrarVentanaResultadosTests(resultsContainer);
 
         return { passed, failed: testCases.length - passed, total: testCases.length };
     }
@@ -1127,7 +1141,7 @@ class EntityHelper {
     async ADD() {
     this.sanitizeFormInputs();
 
-    await this.entidad.access_functions.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'ADD')
+    await this.entidad.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'ADD')
         .then((respuesta) => {
             if (respuesta['ok']) {
                 this.entidad.dom.hide_element("Div_IU_form");
@@ -1142,7 +1156,7 @@ class EntityHelper {
     async EDIT() {
         this.sanitizeFormInputs();
     
-        await this.entidad.access_functions.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'EDIT')
+        await this.entidad.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'EDIT')
             .then((respuesta) => {
                 if (respuesta['ok']) {
                     this.entidad.dom.hide_element("Div_IU_form");
@@ -1155,7 +1169,7 @@ class EntityHelper {
     }
     
     async DELETE() {
-        await this.entidad.access_functions.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'DELETE')
+        await this.entidad.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'DELETE')
             .then((respuesta) => {
                 if (respuesta['ok']) {
                     this.entidad.dom.hide_element("Div_IU_form");
@@ -1185,7 +1199,7 @@ class EntityHelper {
             ? this.getRelationSearchFilters(formElem)
             : {};
     
-        await this.entidad.access_functions.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
+        await this.entidad.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
             .then(async (respuesta) => {
                 this.entidad.dom.hide_element('Div_IU_form');
     
@@ -1218,7 +1232,7 @@ class EntityHelper {
 
     async submitEntityAction(action) {
         try {
-            const response = await this.entidad.access_functions.peticionBackGeneral(
+            const response = await this.entidad.peticionBackGeneral(
                 'form_iu',
                 this.entidad.nombreentidad,
                 action

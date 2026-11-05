@@ -40,6 +40,9 @@ var textos_EN = {
 	'test_passed': 'PASSED',
 	'test_failed': 'FAILED',
 	'test_summary': 'Tests completed',
+	'test_results_title': 'Test results',
+	'test_close': 'Close',
+	'test_popup_blocked': 'The browser blocked the results window. Allow pop-ups and try again.',
 	'test_suite_missing': 'No validation tests are loaded for this entity.',
 
     // textos de test
