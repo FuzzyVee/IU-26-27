@@ -1198,6 +1198,65 @@ footer {
   }
 }
 
+#IU_manage_table .relation-matrix-scroll {
+  max-width: 100%;
+  overflow: auto;
+}
+
+#IU_manage_table .relation-matrix {
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+}
+
+#IU_manage_table .relation-matrix th {
+  width: 160px !important;
+  min-width: 145px !important;
+  max-width: 200px;
+  padding: 12px 10px;
+  text-align: center;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
+#IU_manage_table .relation-matrix th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 230px !important;
+  min-width: 210px !important;
+  max-width: 260px;
+  text-align: left;
+}
+
+#IU_manage_table .relation-matrix thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+#IU_manage_table .relation-matrix td:not(:first-child):not([class*="foto"]):not([class*="fecha"]):not(:nth-last-child(-n+3)),
+#IU_manage_table .relation-matrix td:nth-last-child(-n+3) {
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px;
+  padding: 10px 8px;
+  overflow: visible;
+  text-align: center;
+  white-space: normal;
+}
+
+#IU_manage_table .relation-matrix tbody th:first-child {
+  z-index: 1;
+}
+
+#IU_manage_table .relation-matrix input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
+}
+
         `;
         document.head.appendChild(style);
     }
