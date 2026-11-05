@@ -3,7 +3,8 @@ class persona extends AbstractEntidad {
     constructor(esTest = 'no') {
         super(); // Llama al constructor de AbstractEntidad
 
-        const fechaNacimientoFormat = '^(?:(?:0?[1-9]|[12][0-9]|3[01])[/\\-](?:0?[1-9]|1[0-2])[/\\-](?:19|20)\\d{2}|(?:19|20)\\d{2}-(?:0?|1)-(?:0?||3))$';
+        const fechaNacimientoFormat = '^(?:0[1-9]|[12]\\d|3[01])/(?:0[1-9]|1[0-2])/(?:19|20)\\d{2}$';
+        const nombreFotoFormat = '^[a-zA-Z0-9_-]{3,15}\\.(jpg|jpeg)$';
 
         this.nombreentidad = 'persona';
         this.fields = [
@@ -45,10 +46,17 @@ class persona extends AbstractEntidad {
                 name: 'fechaNacimiento_persona',
                 label: 'Fecha Nacimiento',
                 type: 'text',
+                datePicker: true,
                 rules: {
+<<<<<<< HEAD
                     ADD: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
                     EDIT: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
                     SEARCH: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' }
+=======
+                    ADD: { format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
+                    EDIT: { format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
+                    SEARCH: { format: fechaNacimientoFormat }
+>>>>>>> b75b590 (ADDED DATE PICKER :))
                 }
             },
             {
@@ -56,9 +64,9 @@ class persona extends AbstractEntidad {
                 label: 'Direccion',
                 type: 'textarea',
                 rules: {
-                    ADD: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.-;/]+$' },
-                    EDIT: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.-;/]+$' },
-                    SEARCH: { max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s\\.-;/]+$' }
+                    ADD: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s./;-]+$' },
+                    EDIT: { min_size: 10, max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s./;-]+$' },
+                    SEARCH: { max_size: 200, format: '^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s./;-]+$' }
                 }
             },
             {
@@ -86,7 +94,7 @@ class persona extends AbstractEntidad {
                 label: 'Foto',
                 type: 'text',
                 rules: {
-                    SEARCH: { max_size: 15, format: '^[a-zA-Z]{3,15}\\.(jpg|jpeg)$' }
+                    SEARCH: { max_size: 20, format: nombreFotoFormat }
                 }
             },
             {
@@ -94,8 +102,8 @@ class persona extends AbstractEntidad {
                 label: 'Nueva Foto',
                 type: 'file',
                 rules: {
-                    ADD: { exist_file: true, max_size_file: 2097152, type_file: ['image/jpeg', 'image/jpg'], format_name_file: '^[a-zA-Z]{3,15}\\.(jpg|jpeg)$' },
-                    EDIT: { max_size_file: 2097152, type_file: ['image/jpeg', 'image/jpg'], format_name_file: '^[a-zA-Z]{3,15}\\.(jpg|jpeg)$' }
+                    ADD: { exist_file: true, max_size_file: 2097152, type_file: ['image/jpeg', 'image/jpg'], format_name_file: nombreFotoFormat },
+                    EDIT: { max_size_file: 2097152, type_file: ['image/jpeg', 'image/jpg'], format_name_file: nombreFotoFormat }
                 }
             }
         ];
@@ -112,6 +120,24 @@ class persona extends AbstractEntidad {
     }
 }
 
+persona.prototype.personalize_fechaNacimiento_persona = function() {
+    const input = document.getElementById('fechaNacimiento_persona');
+    if (!input || !input.value) return true;
+
+    const fecha = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(input.value);
+    if (!fecha) return 'fechaNacimiento_persona_valid_ko';
+
+    const dia = Number(fecha[1]);
+    const mes = Number(fecha[2]);
+    const anio = Number(fecha[3]);
+    const fechaNacimiento = new Date(anio, mes - 1, dia);
+
+    return fechaNacimiento.getFullYear() === anio &&
+        fechaNacimiento.getMonth() === mes - 1 &&
+        fechaNacimiento.getDate() === dia
+        ? true
+        : 'fechaNacimiento_persona_valid_ko';
+};
 
 persona.prototype.personalize_dni = function() {
     const input = document.getElementById('dni');

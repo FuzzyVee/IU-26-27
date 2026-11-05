@@ -243,7 +243,7 @@ class EntityHelper {
     // before handing the finished rows to the DOM table renderer.
     crearTablaDatos(datos, mostrarespecial) {
 
-        var misdatos = datos;
+        const misdatos = datos.map((row) => ({ ...row }));
     
         for (var i = 0; i < misdatos.length; i++) {
             misdatos[i]['EDIT'] = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(entidad.datos[${i}]);'>`;
@@ -1147,7 +1147,15 @@ class EntityHelper {
             const hasReplacementUpload = f.type !== 'file' &&
                 (this.entidad.fields || []).some((field) =>
                     field.type === 'file' && field.name === `nuevo_${f.name}`);
-            if (hasReplacementUpload && accion === 'ADD') return;
+            if (hasReplacementUpload) {
+                if (accion === 'EDIT') {
+                    html += `  <input type="hidden" id="${f.name}" name="${f.name}">\n`;
+                }
+                if (['EDIT', 'DELETE', 'SHOWCURRENT'].includes(accion)) {
+                    html += `  <div id="preview_${f.name}" class="form-photo-preview" aria-label="${this.escapeHtml(f.label)}"></div>\n`;
+                }
+                return;
+            }
 
             // A file cannot be searched by typing its contents, and is not editable in read-only views.
             if (f.type === 'file' && ['SEARCH', 'DELETE', 'SHOWCURRENT'].includes(accion)) return;
@@ -1186,6 +1194,11 @@ class EntityHelper {
                 html += `  <input type="file" id="${f.name}" name="${f.name}">\n`;
             } else if (f.type === 'textarea') {
                 html += `  <textarea id="${f.name}" name="${f.name}"${readonlyAttr}></textarea>\n`;
+            } else if (f.datePicker) {
+                html += `  <span class="date-picker-control">
+                    <input type="text" id="${f.name}" name="${f.name}" data-date-picker="true"${readonlyAttr}>
+                    ${debeSerReadonly ? '' : `<span class="date-picker-toggle" role="button" tabindex="0" aria-label="Abrir calendario" aria-expanded="false" aria-controls="calendar_${f.name}">&#128197;</span>`}
+                </span>\n`;
             } else {
                 html += `  <input type="${f.type || 'text'}" id="${f.name}" name="${f.name}"${readonlyAttr}>\n`;
             }
@@ -1212,6 +1225,7 @@ class EntityHelper {
         const form = template.content.querySelector('form');
         if (!form) throw new Error(`No se pudo crear el formulario para ${action}.`);
         container.replaceChildren(form);
+        this.initializeDatePickers(form);
 
         const title = document.getElementById('class_contenido_titulo_form');
         if (title) {
@@ -1223,6 +1237,180 @@ class EntityHelper {
             if (typeof window.setLang === 'function') window.setLang();
         }
         this.entidad.dom.show_element('Div_IU_form', 'block');
+    }
+
+    initializeDatePickers(form) {
+        form.querySelectorAll('[data-date-picker="true"]').forEach((input) => {
+            const wrapper = input.closest('.date-picker-control');
+            const toggle = wrapper && wrapper.querySelector('.date-picker-toggle');
+            if (!wrapper || !toggle) return;
+
+            const calendar = document.createElement('div');
+            calendar.id = `calendar_${input.id}`;
+            calendar.className = 'date-picker-popup';
+            calendar.hidden = true;
+            calendar.setAttribute('role', 'group');
+            calendar.setAttribute('aria-label', 'Selector de fecha');
+
+            const parsedDate = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(input.value);
+            const selectedDate = parsedDate
+                ? new Date(Number(parsedDate[3]), Number(parsedDate[2]) - 1, Number(parsedDate[1]))
+                : new Date();
+            let visibleYear = selectedDate.getFullYear();
+            let visibleMonth = selectedDate.getMonth();
+
+            const renderCalendar = () => {
+                calendar.replaceChildren();
+
+                const header = document.createElement('div');
+                header.className = 'date-picker-header';
+                const previous = document.createElement('button');
+                previous.type = 'button';
+                previous.className = 'date-picker-nav';
+                previous.textContent = '‹';
+                previous.setAttribute('aria-label', 'Mes anterior');
+                previous.addEventListener('click', () => {
+                    visibleMonth -= 1;
+                    if (visibleMonth < 0) {
+                        visibleMonth = 11;
+                        visibleYear -= 1;
+                    }
+                    renderCalendar();
+                });
+
+                const title = document.createElement('strong');
+                title.textContent = new Intl.DateTimeFormat('es-ES', {
+                    month: 'long',
+                    year: 'numeric'
+                }).format(new Date(visibleYear, visibleMonth, 1));
+
+                const next = document.createElement('button');
+                next.type = 'button';
+                next.className = 'date-picker-nav';
+                next.textContent = '›';
+                next.setAttribute('aria-label', 'Mes siguiente');
+                next.addEventListener('click', () => {
+                    visibleMonth += 1;
+                    if (visibleMonth > 11) {
+                        visibleMonth = 0;
+                        visibleYear += 1;
+                    }
+                    renderCalendar();
+                });
+                header.append(previous, title, next);
+                calendar.appendChild(header);
+
+                const week = document.createElement('div');
+                week.className = 'date-picker-week';
+                ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach((day) => {
+                    const label = document.createElement('span');
+                    label.textContent = day;
+                    week.appendChild(label);
+                });
+                calendar.appendChild(week);
+
+                const days = document.createElement('div');
+                days.className = 'date-picker-days';
+                const firstDayOffset = (new Date(visibleYear, visibleMonth, 1).getDay() + 6) % 7;
+                const daysInMonth = new Date(visibleYear, visibleMonth + 1, 0).getDate();
+                for (let index = 0; index < firstDayOffset; index += 1) {
+                    days.appendChild(document.createElement('span'));
+                }
+
+                for (let day = 1; day <= daysInMonth; day += 1) {
+                    const chooseDay = document.createElement('button');
+                    chooseDay.type = 'button';
+                    chooseDay.className = 'date-picker-day';
+                    chooseDay.textContent = String(day);
+                    chooseDay.setAttribute('aria-label', `${day} ${title.textContent}`);
+                    chooseDay.addEventListener('click', () => {
+                        input.value = `${String(day).padStart(2, '0')}/${String(visibleMonth + 1).padStart(2, '0')}/${visibleYear}`;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                        closeCalendar();
+                        input.focus();
+                    });
+                    days.appendChild(chooseDay);
+                }
+                calendar.appendChild(days);
+            };
+
+            const positionCalendar = () => {
+                const toggleRect = toggle.getBoundingClientRect();
+                const calendarRect = calendar.getBoundingClientRect();
+                let left = Math.min(
+                    Math.max(8, toggleRect.left),
+                    Math.max(8, window.innerWidth - calendarRect.width - 8)
+                );
+                const below = toggleRect.bottom + 4;
+                const above = toggleRect.top - calendarRect.height - 4;
+                let top;
+                if (below + calendarRect.height <= window.innerHeight - 8) {
+                    top = below;
+                } else if (above >= 8) {
+                    top = above;
+                } else if (toggleRect.right + calendarRect.width <= window.innerWidth - 8) {
+                    left = toggleRect.right + 8;
+                    top = Math.min(
+                        Math.max(8, toggleRect.top),
+                        Math.max(8, window.innerHeight - calendarRect.height - 8)
+                    );
+                } else {
+                    top = Math.max(8, window.innerHeight - calendarRect.height - 8);
+                }
+                calendar.style.left = `${left}px`;
+                calendar.style.top = `${top}px`;
+            };
+
+            const closeCalendar = () => {
+                calendar.hidden = true;
+                toggle.setAttribute('aria-expanded', 'false');
+                document.removeEventListener('pointerdown', handleOutsidePointer);
+                document.removeEventListener('keydown', handleCalendarKeydown);
+                window.removeEventListener('resize', positionCalendar);
+                window.removeEventListener('scroll', positionCalendar, true);
+                calendar.remove();
+            };
+
+            const handleOutsidePointer = (event) => {
+                if (!calendar.contains(event.target) && !toggle.contains(event.target)) {
+                    closeCalendar();
+                }
+            };
+
+            const handleCalendarKeydown = (event) => {
+                if (event.key === 'Escape') {
+                    closeCalendar();
+                    toggle.focus();
+                }
+            };
+
+            const openCalendar = () => {
+                if (!calendar.isConnected) document.body.appendChild(calendar);
+                calendar.hidden = false;
+                toggle.setAttribute('aria-expanded', 'true');
+                positionCalendar();
+                document.addEventListener('pointerdown', handleOutsidePointer);
+                document.addEventListener('keydown', handleCalendarKeydown);
+                window.addEventListener('resize', positionCalendar);
+                window.addEventListener('scroll', positionCalendar, true);
+            };
+
+            renderCalendar();
+            toggle.addEventListener('click', () => {
+                if (calendar.hidden) {
+                    openCalendar();
+                } else {
+                    closeCalendar();
+                }
+            });
+            toggle.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openCalendar();
+                }
+            });
+        });
     }
 
     // Attach submission behavior and prevent the browser's default page reload.
@@ -1497,12 +1685,42 @@ class EntityHelper {
         if (!value) return '';
         if (!attribute.includes('foto') && !attribute.includes('file')) return value;
 
-        const safeValue = this.escapeHtml(value);
-        const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${attribute}/${encodeURIComponent(value)}`;
+        const fileName = this.getStoredFileName(value);
+        if (!fileName) return '';
+        const safeValue = this.escapeHtml(fileName);
+        const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${attribute}/${encodeURIComponent(fileName)}`;
         return `<a href="${fileUrl}" target="_blank" title="${safeValue}">
             <img src="${fileUrl}" alt="${safeValue}" class="tabla-foto-preview"
                  onerror="this.onerror=null; this.src='./iconos/FILE.png';" />
         </a>`;
+    }
+
+    getStoredFileName(value) {
+        if (typeof value !== 'string') return '';
+
+        let fileValue = value.trim();
+        if (!fileValue) return '';
+
+        if (fileValue.includes('<')) {
+            const parsedMarkup = new DOMParser().parseFromString(fileValue, 'text/html');
+            fileValue = parsedMarkup.querySelector('img')?.getAttribute('src') ||
+                parsedMarkup.querySelector('a')?.getAttribute('href') ||
+                '';
+        }
+
+        if (!fileValue) return '';
+        try {
+            const url = new URL(fileValue, window.location.href);
+            const fileName = url.pathname.split('/').filter(Boolean).pop() || '';
+            return decodeURIComponent(fileName);
+        } catch {
+            const fileName = fileValue.split(/[\\/]/).filter(Boolean).pop() || '';
+            try {
+                return decodeURIComponent(fileName);
+            } catch {
+                return fileName;
+            }
+        }
     }
 
     // Add a preview link next to an existing photo/file input in EDIT or view forms.
@@ -1524,10 +1742,12 @@ class EntityHelper {
         const hasStoredField = (this.entidad.fields || []).some((field) =>
             field.name === storedFieldName && field.type !== 'file');
         const fileKey = hasStoredField ? storedFieldName : fileField.name;
-        const fileName = row[fileKey] || row[fileField.name];
+        const fileName = this.getStoredFileName(row[fileKey] || row[fileField.name]);
+        if (!fileName) return;
         const safeName = this.escapeHtml(fileName);
         const fileUrl = `http://193.147.87.202/ET2/filesuploaded/files_${fileKey}/${encodeURIComponent(fileName)}`;
-        let link = document.getElementById(`link_${fileKey}`);
+        const preview = document.getElementById(`preview_${fileKey}`);
+        let link = preview || document.getElementById(`link_${fileKey}`);
 
         if (!link) {
             const input = document.getElementById(fileField.name) || document.getElementById(fileKey);
@@ -1538,7 +1758,12 @@ class EntityHelper {
             }
         }
 
-        if (link) {
+        if (preview) {
+            preview.innerHTML = `<a href="${fileUrl}" target="_blank" title="${safeName}">
+                <img src="${fileUrl}" alt="${safeName}" class="tabla-foto-preview"
+                    onerror="this.onerror=null; this.src='./iconos/FILE.png';" />
+            </a>`;
+        } else if (link) {
             link.href = fileUrl;
             link.target = '_blank';
             link.innerHTML = `<img src="${fileUrl}" alt="${safeName}" class="tabla-foto-preview"
