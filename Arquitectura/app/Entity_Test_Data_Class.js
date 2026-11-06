@@ -7,4 +7,10 @@ class entity_Test_Data extends Data_Test{
         super(entidad);
     }
 
+    data_test_class() {
+        const result = super.data_test_class();
+        this.entidad.dom.mostrarVentanaResultadosTests();
+        return result;
+    }
+
 }

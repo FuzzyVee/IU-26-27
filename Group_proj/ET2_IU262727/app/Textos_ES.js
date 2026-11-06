@@ -101,6 +101,7 @@ var textos_ES = {
 	'dni_max_size_ko': 'DNI demasiado largo. Debe tener 8 números y 1 caracter alfabético',
 	'dni_format_ko': 'Formato dni/nie no correcto. DNI 8 digitos 1 letra, NIE 1 letra 7 digitos 1 letra',
 	'dni_personalized_ko': 'La letra de control del DNI/NIE no es correcta.',
+
 	// nombre_persona
 	'nombre_persona_min_size_ko': 'Nombre demasiado corto. Debe tener mas de 4 caracteres alfabéticos',
 	'nombre_persona_max_size_ko': 'Nombre demasiado largo. Debe tener menos de 15 caracteres alfabéticos',
@@ -112,14 +113,25 @@ var textos_ES = {
 	'apellidos_persona_format_ko': 'Apellidos no correcto. Solo se permiten alfabéticos y espacios',
 
 	//fecha nacimiento persona
+    'fechaNacimiento_persona_max_size_ko': 'Fecha demasiado larga. Tiene que ser como máximo 10 caracteres.',
 	'fechaNacimiento_persona_format_ko': 'Fecha no correcta. Debe tener el formato dd/mm/aaaa',
-	'fechaNacimiento_persona_valid_ko': 'Fecha no válida. La fecha debe existir',
+	'fechaNacimiento_persona_personalized_ko': 'Fecha no válida. La fecha debe existir',
+
+	//direccion_persona
+	'direccion_persona_min_size_ko': 'Dirección demasiado corta. Tiene que ser como mínimo 10 caracteres.',
+	'direccion_persona_max_size_ko': 'Dirección demasiado larga. Tiene que ser como maximo 200 caracteres.',
+	'direccion_persona_format_ko': 'Dirección invalida. Solo puede contener letras, números, puntos, guiones, barras, espacios o puntos y comas.',
 
 	// email persona
 	'email_persona_min_size_ko': 'Email demasido corto. Debe tener mas de 3 caracteres.',
 	'email_persona_max_size_ko': 'Email demasido largo. Debe tener menos de 46 caracteres.',
 	'email_persona_format_ko': 'Email no válido. Compruebe el formato.',
 	'email_persona_personalized_ko': 'Email no válido. Compruebe el dominio y su extensión.',
+
+	// telefono persona
+	'telefono_persona_min_size_ko': 'El teléfono es demasiado corto. Debe de ser 9 caracters.',
+	'telefono_persona_max_size_ko': 'El teléfono es demasiado largo. Debe de ser 9 caracters.',
+	'telefono_persona_format_ko': 'El teléfono debe se solo ser números.',
 	'telefono_persona_personalized_ko': 'El teléfono debe tener 9 cifras y comenzar por 6, 7, 8 o 9.',
 
 	// nuevo foto persona

@@ -101,6 +101,7 @@ var textos_EN = {
     'dni_max_size_ko': 'ID number too long. Must have 8 numbers and 1 alphabetical character',
     'dni_format_ko': 'Incorrect ID/foreign ID format. ID number 8 digits 1 letter, foreign ID number 1 letter 7 digits 1 letter',
     'dni_personalized_ko': 'The DNI/NIE checksum letter is incorrect.',
+
     // nombre_persona
     'nombre_persona_min_size_ko': 'Name too short. Must have more than 4 alphabetical characters',
     'nombre_persona_max_size_ko': 'Name too long. Must have less than 15 alphabetic characters',
@@ -112,15 +113,25 @@ var textos_EN = {
     'apellidos_persona_format_ko': 'Last name incorrect. Only alphabetic characters and spaces are allowed',
 
     //fechaNacimiento_persona
+    'fechaNacimiento_persona_max_size_ko': 'Date is too long. Must be 10 characters at most.',
     'fechaNacimiento_persona_format_ko': 'Date is incorrect. Must be in dd/mm/yyyy format',
-    'fechaNacimiento_persona_valid_ko': 'Date is invalid. The date must exist',
+    'fechaNacimiento_persona_personalized_ko': 'Date is invalid. The date must exist',
 
+	//direccion_persona
+	'direccion_persona_min_size_ko': 'Address too short. Must be 10 characters at the least.',
+	'direccion_persona_max_size_ko': 'Address too long. Must be 200 characters at most.',
+	'direccion_persona_format_ko': 'Invalid address. It can only contain letters, numbers, dots, dashes, slashes, spaces or semicolons.',
 
 	// email persona
 	'email_persona_min_size_ko': 'Email too short. It has to be at least 4 characters.',
 	'email_persona_max_size_ko': 'Email too long. It has to be at most 45 characters.',
 	'email_persona_format_ko': 'Invalid email. Check the format.',
 	'email_persona_personalized_ko': 'Invalid email. Check the domain and its suffix.',
+
+	// telefono persona
+	'telefono_persona_min_size_ko': 'The phone number is too short. It must be 9 characters.',
+	'telefono_persona_max_size_ko': 'The phone number is too long. It must be 9 characters.',
+	'telefono_persona_format_ko': 'The phone number must only be numbers.',
 	'telefono_persona_personalized_ko': 'The phone number must have 9 digits and start with 6, 7, 8, or 9.',
 
 	// nuevo foto persona

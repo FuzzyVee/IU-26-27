@@ -1,7 +1,9 @@
 class EntityHelper {
-    // This helper connects one entity's field definitions to the shared UI,
-    // validation, backend, and table behavior.
-    // I will be clear right now I don't write very good spanish... Now ENGLISH thath's my strong suite.
+    /**
+     * Connects an entity's field definitions to shared UI, validation, backend,
+     * and table behavior.
+     * @param {Object} entidad Entity instance managed by this helper.
+     */
     constructor(entidad) {
         this.entidad = entidad;
 
@@ -33,9 +35,13 @@ class EntityHelper {
         this.generateSubmitHandlers();
         this.bindEntityMethods();
         this.setupEscKeyListener();
+        this.setupEnterKeyListener();
     }
 
-    // Add small shared styles used by the helper-generated UI.
+    /**
+     * Adds the shared styles used by helper-generated UI.
+     * @returns {void}
+     */
     injectStyles() {
         // There can be several entities on the page; add this style block only once.
         if (document.getElementById('custom-helper-styles')) return;
@@ -61,12 +67,15 @@ class EntityHelper {
         document.head.appendChild(style);
     }
 
-    // Make helper methods available on the entity object, which is what the UI calls.
+    /**
+     * Exposes helper methods on the entity object for use by the UI.
+     * @returns {void}
+     */
     bindEntityMethods() {
         [
             'manual_form_creation',
             'mostrar_error_campo',
-            'mostrar_error_campo',
+            'mostrar_exito_campo',
             'peticionBackGeneral',
             'SEARCH',
             'ADD',
@@ -88,8 +97,15 @@ class EntityHelper {
         this.entidad.dom.abrirModalError = (errorMsg) => this.abrirModalError(errorMsg);
     }
 
-    // Send a backend request. SEARCH is paged in batches because the backend may
-    // limit each response; other actions are sent once with their original data.
+    /**
+     * Sends a backend request, paging SEARCH requests to retrieve all rows.
+     * Other actions are sent once with the supplied form data.
+     * @param {string} formulario Form element ID, or an empty string for no form.
+     * @param {string} controlador Entity/controller name.
+     * @param {string} action Backend action to perform.
+     * @param {Object|null} [datosextra=null] Additional request fields.
+     * @returns {Promise<Object>} Backend response, including all SEARCH rows.
+     */
     async peticionBackGeneral(formulario, controlador, action, datosextra = null) {
         const request = (extra) => this.entidad.access_functions.peticionBackGeneral(
             formulario,
@@ -136,7 +152,54 @@ class EntityHelper {
         return { ...response, code: 'RECORDSET_DATOS', resource: rows };
     }
 
-    // Register one Escape-key handler for the whole page to close open UI overlays.
+    /**
+     * Registers one page-level Enter handler to submit the visible form.
+     * @returns {void}
+     */
+    setupEnterKeyListener() {
+        if (EntityHelper.enterListenerRegistered) return;
+        EntityHelper.enterListenerRegistered = true;
+    
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                const target = event.target;
+                const tagName = target ? target.tagName.toLowerCase() : '';
+    
+                // Allow standard newline behavior only inside <textarea> or contenteditable elements
+                if (tagName === 'textarea' || (target && target.isContentEditable)) {
+                    return;
+                }
+    
+                // Check if the form modal (Div_IU_form) is currently open and visible
+                const formContainer = document.getElementById('Div_IU_form');
+                if (formContainer && formContainer.style.display !== 'none') {
+                    // Prevent browser default actions (such as toggling <select> dropdowns)
+                    event.preventDefault();
+    
+                    const submitButton = document.getElementById('submit_button') || 
+                                         formContainer.querySelector('button[type="submit"]');
+    
+                    if (submitButton && !submitButton.disabled) {
+                        submitButton.click();
+                    } else {
+                        const form = document.getElementById('form_iu');
+                        if (form) {
+                            if (typeof form.requestSubmit === 'function') {
+                                form.requestSubmit();
+                            } else {
+                                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    /**
+     * Registers one Escape-key handler to close open forms and error overlays.
+     * @returns {void}
+     */
     setupEscKeyListener() {
         // Evita registrar múltiples listeners si se instancian varias entidades
         if (EntityHelper.escapeListenerRegistered) return;
@@ -160,30 +223,70 @@ class EntityHelper {
         });
     }
 
-    // Clean backend row data, then ask the DOM helper to put it into the form.
+    /**
+     * Normalizes backend row values and fills the active form with them.
+     * @param {Object} row Backend record to display in the form.
+     * @returns {void}
+     */
     rellenarvaloresform(row) {
         const cleanRow = this.cleanRowData(row);
         this.dom.rellenarvaloresform(cleanRow);
     }
 
-    // Show one field's validation error and refresh its translated text.
+    /**
+     * Displays a field validation error and refreshes translated text.
+     * @param {string} id Field identifier.
+     * @param {string} codigoerror Validation error code.
+     * @returns {void}
+     */
     mostrar_error_campo(id, codigoerror) {
+        const spanError = document.getElementById('span_error_' + id);
+        if (spanError) {
+            spanError.style.display = 'inline';
+        }
+    
         const aError = document.getElementById('error_' + id);
         if (aError) {
-            aError.className = codigoerror; // Updates class name so setLang() knows the active error
+            aError.className = codigoerror;
+            const textoTraducido = (window.traduccion && window.traduccion[codigoerror])
+                ? window.traduccion[codigoerror]
+                : codigoerror;
+            aError.textContent = textoTraducido;
         }
-        originalMostrarError(id, codigoerror);
-        if (typeof window.setLang === 'function') window.setLang();
-    };
     
-    // Clear the error state for a field after it passes validation.
+        const input = document.getElementById(id);
+        if (input) {
+            input.style.borderBlockColor = 'red';
+        }
+    
+        const acInput = document.getElementById('ac_input_' + id);
+        if (acInput) {
+            acInput.style.borderBlockColor = 'red';
+        }
+    }
+
     mostrar_exito_campo(id) {
+        const spanError = document.getElementById('span_error_' + id);
+        if (spanError) {
+            spanError.style.display = 'none';
+        }
+    
         const aError = document.getElementById('error_' + id);
         if (aError) {
             aError.className = '';
+            aError.innerHTML = '';
         }
-        originalMostrarExito(id);
-    };
+    
+        const input = document.getElementById(id);
+        if (input) {
+            input.style.borderBlockColor = 'green';
+        }
+    
+        const acInput = document.getElementById('ac_input_' + id);
+        if (acInput) {
+            acInput.style.borderBlockColor = 'green';
+        }
+    ss}
     
     // Show the app's error dialog. The fallback IDs support older App markup.
     abrirModalError(errorMsg) {
@@ -210,7 +313,11 @@ class EntityHelper {
         }
     };
 
-    // Turn line-break entities returned by the backend back into real newlines... Hence my chromebook accident Beckons once more.
+    /**
+     * Restores encoded line breaks in string fields from a backend record.
+     * @param {Object|null} row Backend record to normalize.
+     * @returns {Object|null} A shallow copy with decoded line breaks, or the input.
+     */
     cleanRowData(row) {
         if (!row) return row;
         const clean = { ...row };
@@ -225,7 +332,10 @@ class EntityHelper {
         return clean;
     }
 
-    // Remove accidental newlines and extra spaces from text fields before sending.
+    /**
+     * Removes newlines and trims text fields before the form is submitted.
+     * @returns {void}
+     */
     sanitizeFormInputs() {
         const form = document.getElementById('form_iu');
         if (!form) return;
@@ -239,10 +349,15 @@ class EntityHelper {
         });
     }
     
-    // Add row action buttons and render special values (such as photo links)
-    // before handing the finished rows to the DOM table renderer.
+    /**
+     * Adds row actions, renders special values, and displays the data table.
+     * @param {Array<Object>} datos Records to render.
+     * @param {Array<string>} mostrarespecial Field names requiring special rendering.
+     * @returns {void}
+     */
     crearTablaDatos(datos, mostrarespecial) {
-
+        if (!datos || datos.length === 0) return;
+    
         const misdatos = datos.map((row) => ({ ...row }));
     
         for (var i = 0; i < misdatos.length; i++) {
@@ -261,14 +376,34 @@ class EntityHelper {
             }
         }
     
+        // Extract keys that were actually rendered in the DOM table
+        const actualTableKeys = Object.keys(misdatos[0] || {});
+    
+        // Filter out form-only upload fields (type 'file' or starting with 'nuevo_')
+        const fileFields = (this.entidad.fields || [])
+            .filter((field) => field.type === 'file' || field.name.startsWith('nuevo_'))
+            .map((field) => field.name);
+    
+        // Keep ONLY attributes and columnasamostrar that exist in the DOM table
+        const validAtributos = (this.entidad.atributos || [])
+            .filter((attr) => actualTableKeys.includes(attr) && !fileFields.includes(attr));
+    
+        const validColumnas = (this.entidad.columnasamostrar || [])
+            .filter((col) => actualTableKeys.includes(col) && !fileFields.includes(col));
+    
+        // Render data and safely set column visibility
         this.entidad.dom.showData('IU_manage_table', misdatos);
-        this.entidad.dom.crearSeleccionablecolumnas(this.entidad.columnasamostrar, this.entidad.atributos);
-        this.entidad.dom.mostrarocultarcolumnas(this.entidad.columnasamostrar, this.entidad.atributos);
+        this.entidad.dom.crearSeleccionablecolumnas(validColumnas, validAtributos);
+        this.entidad.dom.mostrarocultarcolumnas(validColumnas, validAtributos);
     
         if (typeof setLang === 'function') setLang();
     }
     
-    // Fetch all records for an entity; used to fill foreign-key options and matrices.
+    /**
+     * Fetches all records for an entity, for foreign-key options and relation matrices.
+     * @param {string} entityName Entity/controller name to query.
+     * @returns {Promise<Array<Object>>} Retrieved entity records.
+     */
     async fetchEntityRows(entityName) {
         const response = await this.entidad.peticionBackGeneral(
             '',
@@ -278,7 +413,10 @@ class EntityHelper {
         return response.code === 'RECORDSET_DATOS' ? response.resource : [];
     }
 
-    // Load the records referenced by foreign-key fields so selects show readable options.
+    /**
+     * Loads and assigns options for all foreign-key select fields.
+     * @returns {Promise<void>}
+     */
     async loadForeignKeyOptions() {
         const foreignKeyFields = (this.entidad.fields || []).filter((field) => field.isFK);
         await Promise.all(foreignKeyFields.map(async (field) => {
@@ -318,7 +456,10 @@ class EntityHelper {
         }));
     }
 
-    // Prepare related options before showing a form; report a visible error if loading fails.
+    /**
+     * Loads foreign-key options before a form is displayed.
+     * @returns {Promise<boolean>} Whether form preparation succeeded.
+     */
     async prepareForeignKeyForm() {
         try {
             await this.loadForeignKeyOptions();
@@ -330,8 +471,11 @@ class EntityHelper {
         }
     }
 
-    // Escape characters that could be interpreted as HTML instead of plain text.
-    // This spelling differs from escapeHtml below only by capitalization.
+    /**
+     * Escapes characters that could be interpreted as HTML.
+     * @param {*} value Value to escape.
+     * @returns {string} HTML-escaped value.
+     */
     escapeHTML(value) {
         return String(value).replace(/[&<>"']/g, (character) => ({
             '&': '&amp;',
@@ -342,8 +486,12 @@ class EntityHelper {
         })[character]);
     }
 
-    // Get translated text for a relation-matrix label, or use its Spanish fallback.
-    // At least the labels are the easy part ^^
+    /**
+     * Resolves a relation-matrix label from translations or a fallback.
+     * @param {string} entityName Translation key suffix.
+     * @param {string} fallback Default label when no translation exists.
+     * @returns {string} Translated or fallback label.
+     */
     getRelationLabel(entityName, fallback) {
         const key = `matrix_${entityName}`;
         return window.traduccion && window.traduccion[key]
@@ -351,7 +499,11 @@ class EntityHelper {
             : fallback;
     }
 
-    // Read only the filter values relevant to the selected relation entity.
+    /**
+     * Reads active values from a relation-search form.
+     * @param {HTMLFormElement} form Relation-search form.
+     * @returns {Object<string, string>} Non-empty field filters.
+     */
     getRelationSearchFilters(form) {
         const filterFields = this.entidad.nombreentidad === 'rolaccionfuncionalidad'
             ? ['id_funcionalidad', 'id_accion', 'id_rol']
@@ -367,7 +519,13 @@ class EntityHelper {
         }, {});
     }
 
-    // Keep only relation rows whose ID matches a non-empty search filter.
+    /**
+     * Filters relation records by the supplied field values.
+     * @param {Array<Object>} rows Records to filter.
+     * @param {Object<string, string>} filters Search filters.
+     * @param {string} fieldName Entity field used to resolve each record's value.
+     * @returns {Array<Object>} Records matching every filter.
+     */
     filterRelationRows(rows, filters, fieldName) {
         const filterValue = filters[fieldName];
         if (!filterValue) return rows;
@@ -377,10 +535,11 @@ class EntityHelper {
         );
     }
 
-    // Load the entities needed to draw a relation matrix and choose its layout.
-    // This is the matrix traffic controller: fetch the lists, apply filters, then
-    // hand everything to the right renderer. There are a lot of moving parts here
-    // Help ;v;
+    /**
+     * Loads relation data and renders the appropriate assignment matrix.
+     * @param {Object<string, string>} [searchFilters={}] Optional record filters.
+     * @returns {Promise<void>}
+     */
     async renderRelationMatrix(searchFilters = {}) {
 
         const entityName = this.entidad.nombreentidad;
@@ -435,22 +594,32 @@ class EntityHelper {
         }
     }
 
-    // Build a stable string key for a pair of related IDs.
-    // The invisible separator looks odd, but keeps pairs from accidentally colliding.
+    /**
+     * Builds a stable key for a pair of related IDs.
+     * @param {*} firstId First related ID.
+     * @param {*} secondId Second related ID.
+     * @returns {string} Collision-resistant pair key.
+     */
     relationKey(firstId, secondId) {
         // The separator keeps pairs such as ("12", "3") distinct from ("1", "23").
         return `${this.normalizeRelationId(firstId)}\u0000${this.normalizeRelationId(secondId)}`;
     }
 
-    // Convert an ID to a trimmed string so numeric and string IDs compare equally.
+    /**
+     * Normalizes an ID so numeric and string IDs compare consistently.
+     * @param {*} value ID value to normalize.
+     * @returns {string} Trimmed ID, or an empty string for unusable values.
+     */
     normalizeRelationId(value) {
         if (value === undefined || value === null || typeof value === 'object') return '';
         return String(value).trim();
     }
 
-    // Flatten backend values into form-friendly values (usually strings).
-    // The backend sometimes wraps IDs in objects, so this patiently checks several
-    // possible shapes. This is data-shape detective, it ended up working at last ^^
+    /**
+     * Flattens nested backend values into form-friendly scalar values.
+     * @param {Object|Array<*>} row Backend record to normalize.
+     * @returns {Object|Array<*>} Record with nested values converted to strings.
+     */
     normalizeRowData(row) {
         if (!row || typeof row !== 'object') return row;
         const clean = Array.isArray(row) ? [] : {};
@@ -512,8 +681,12 @@ class EntityHelper {
         return clean;
     }
 
-    // Find a field in a record even when it is nested or its key formatting differs.
-    // If the backend hid the value inside another object, this digs through it
+    /**
+     * Finds a field in a record, including nested values and differently formatted keys.
+     * @param {Object} record Record to search.
+     * @param {string} fieldName Requested field name.
+     * @returns {*} Matching field value, or undefined when it is absent.
+     */
     getRecordValue(record, fieldName) {
         if (!record || typeof record !== 'object') return undefined;
         // Ignore underscores and punctuation so "id_rol" can also match "idRol".
@@ -541,10 +714,15 @@ class EntityHelper {
         return undefined;
     }
 
-    // Draw the functionality-by-action grid and save checkbox changes to the backend.
-    // The nested loops create one cell per possible pairing; each checkbox also
-    // needs its own IDs and save callback. Easy to lose the thread in here but look at it
-    // A "beautifull" way to do it :o
+    /**
+     * Renders the functionality-by-action matrix and persists checkbox changes.
+     * @param {HTMLElement} container Matrix host element.
+     * @param {Array<Object>} functionalities Functionality records.
+     * @param {Array<Object>} actions Action records.
+     * @param {Array<Object>} records Existing functionality-action assignments.
+     * @param {HTMLElement} status Element displaying operation status.
+     * @returns {void}
+     */
     renderFunctionalityActionMatrix(container, functionalities, actions, records, status) {
         const selected = new Set(records
             .map((record) => {
@@ -622,13 +800,15 @@ class EntityHelper {
         this.finishMatrix(container, table, functionalities.length, actions.length, status);
     }
 
-    // Draw the role-by-function/action grid and update its local record list after saves.
-    // This is the brain-bender: each cell represents THREE IDs (role, functionality,
-    // action), and the combined key must match both existing rows and future changes.
-    // It's basically the logic of an All-Pairs matrix but with a third dimension,
-    // and the user can only see one slice at a time. wich means on of the axis 
-    // both has to be a combination of two entities, and the other axis is the third entity.
-    // If this took a while to understand, that is completely fair -v-
+    /**
+     * Renders the role-by-function/action matrix and persists assignment changes.
+     * @param {HTMLElement} container Matrix host element.
+     * @param {Array<Object>} roles Role records.
+     * @param {Array<Object>} pairs Functionality-action pairs.
+     * @param {Array<Object>} records Existing role assignments.
+     * @param {HTMLElement} status Element displaying operation status.
+     * @returns {void}
+     */
     renderRoleAssignmentMatrix(container, roles, pairs, records, status) {
         const selected = new Set(records
             .map((record) => {
@@ -721,9 +901,15 @@ class EntityHelper {
         this.finishMatrix(container, table, roles.length, pairs.length, status);
     }
 
-    // Let the user pick one functionality at a time to keep the role matrix readable.
-    // We group actions by functionality first, then rebuild the smaller grid on change.
-    // It is a selector wrapped around a matrix wrapped around more async behavior ^^
+    /**
+     * Builds the role selector and its function/action assignment matrix.
+     * @param {HTMLElement} container Selector and matrix host element.
+     * @param {Array<Object>} roles Role records.
+     * @param {Array<Object>} pairs Functionality-action pairs.
+     * @param {Array<Object>} records Existing role assignments.
+     * @param {HTMLElement} status Element displaying operation status.
+     * @returns {void}
+     */
     renderRoleAssignmentSelector(container, roles, pairs, records, status) {
         const functionalities = [];
         const actionsByFunctionality = new Map();
@@ -793,15 +979,27 @@ class EntityHelper {
         renderSelectedCombination();
     }
 
-    // Make a readable label from a record's name and ID.
+    /**
+     * Produces a display label for a record, falling back to its ID.
+     * @param {Object} record Record to describe.
+     * @param {string} labelField Preferred display field.
+     * @param {string} idField Fallback identifier field.
+     * @returns {string} Human-readable record description.
+     */
     describeRecord(record, labelField, idField) {
         const label = this.getRecordValue(record, labelField);
         const id = this.getRecordValue(record, idField);
         return label ? `${label} (${id ?? ''})` : String(id ?? '');
     }
 
-    // Create a checkbox whose change is saved asynchronously; revert it if saving fails.
-    // The UI changes immediately, so if the backend says "no", we must undo the check unfortunately -v-
+    /**
+     * Creates an assignment checkbox and reports changes through a callback.
+     * @param {boolean} checked Whether the assignment is currently selected.
+     * @param {string} label Accessible checkbox label.
+     * @param {HTMLElement} status Element for displaying operation status.
+     * @param {Function} onChange Sync or async assignment-change handler.
+     * @returns {HTMLInputElement} Configured assignment checkbox.
+     */
     createAssignmentCheckbox(checked, label, status, onChange) {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -827,13 +1025,26 @@ class EntityHelper {
         return checkbox;
     }
 
-    // Send an ADD or DELETE request for one relation.
+    /**
+     * Sends an ADD or DELETE request for one relation.
+     * @param {string} entityName Entity/controller name.
+     * @param {string} action Backend action to perform.
+     * @param {Object} fields Relation fields to submit.
+     * @returns {Promise<Object>} Backend response.
+     */
     submitRelationChange(entityName, action, fields) {
         return this.entidad.peticionBackGeneral('', entityName, action, fields);
     }
 
-    // Put the matrix in a scrollable wrapper and show whether it has usable rows/columns.
-    // Final assembly: without this wrapper the wide grid takes over the whole page
+    /**
+     * Wraps the matrix in a scrollable container and displays its status.
+     * @param {HTMLElement} container Matrix host element.
+     * @param {HTMLTableElement} table Matrix table.
+     * @param {number} rowCount Number of data rows.
+     * @param {number} columnCount Number of data columns.
+     * @param {HTMLElement} status Element displaying matrix status.
+     * @returns {void}
+     */
     finishMatrix(container, table, rowCount, columnCount, status) {
         const wrapper = document.createElement('div');
         wrapper.className = 'relation-matrix-scroll';
@@ -855,7 +1066,10 @@ class EntityHelper {
         container.appendChild(status);
     }
 
-    // Create validation functions for each field/action from the entity's rules.
+    /**
+     * Creates per-field validation methods from the entity's configured rules.
+     * @returns {void}
+     */
     generateValidationMethods() {
         ['ADD', 'EDIT', 'SEARCH'].forEach((action) => {
             (this.entidad.fields || []).forEach((field) => {
@@ -863,6 +1077,12 @@ class EntityHelper {
                 const rules = field.rules ? field.rules[action] : null;
 
                 this.entidad[methodName] = () => {
+                    const input = document.getElementById(field.name);
+                    
+                    if (!input) {
+                        return true;
+                    }
+                    
                     // A foreign key on ADD must match an option that was actually loaded.
                     if (field.isFK && action === 'ADD') {
                         const select = document.getElementById(field.name);
@@ -875,7 +1095,14 @@ class EntityHelper {
                             return this.showValidationError(field.name, 'required');
                         }
                     }
-
+                    
+                    if (action === 'SEARCH') {
+                        if (!input.value) {
+                            this.entidad.dom.mostrar_exito_campo(field.name);
+                            return true;
+                        }
+                    }    
+                    
                     if (!rules) return true;
 
                     if (action === 'SEARCH') {
@@ -928,21 +1155,32 @@ class EntityHelper {
                             this.entidad.dom.mostrar_exito_campo(field.name);
                             return true;
                         }
-
-                        const fileRules = [
-                            ['max_size_file', rules.max_size_file],
-                            ['type_file', rules.type_file],
-                            ['format_name_file', rules.format_name_file]
-                        ];
-                        // Stop at the first failed file rule so the user sees one clear error.
-                        for (const [ruleName, ruleValue] of fileRules) {
-                            if (ruleValue !== undefined && ruleValue !== null &&
-                                !this.entidad.validations[ruleName](field.name, ruleValue)) {
-                                return this.showValidationError(field.name, ruleName);
+                    
+                        const inputElem = document.getElementById(field.name);
+                        const uploadedFile = inputElem && inputElem.files && inputElem.files[0];
+                    
+                        if (uploadedFile) {
+                            // Fallback check for filename extension & MIME type (handles Linux / empty MIME)
+                            const fileName = uploadedFile.name || '';
+                            const isJpgExt = /\.(jpg|jpeg)$/i.test(fileName);
+                            const isMimeValid = !uploadedFile.type || rules.type_file.includes(uploadedFile.type);
+                    
+                            if (!isJpgExt || !isMimeValid) {
+                                return this.showValidationError(field.name, 'type_file');
+                            }
+                    
+                            if (rules.max_size_file && uploadedFile.size > rules.max_size_file) {
+                                return this.showValidationError(field.name, 'max_size_file');
+                            }
+                    
+                            if (rules.format_name_file && !this.entidad.validations.format_name_file(field.name, rules.format_name_file)) {
+                                return this.showValidationError(field.name, 'format_name_file');
                             }
                         }
+                    
+                        this.entidad.dom.mostrar_exito_campo(field.name);
+                        return true;
                     }
-
                     const customFnName = (rules && rules.personalized) 
                         ? rules.personalized 
                         : `personalize_${field.name}`;
@@ -969,14 +1207,22 @@ class EntityHelper {
         });
     }
 
-    // Convert a failed rule name into its standard error code and show it on the field.
+    /**
+     * Converts a failed rule into its standard error code and displays it.
+     * @param {string} fieldName Field that failed validation.
+     * @param {string} ruleName Validation rule that failed.
+     * @returns {string} Generated validation error code.
+     */
     showValidationError(fieldName, ruleName) {
         const errorId = `${fieldName}_${ruleName}_ko`;
         this.entidad.dom.mostrar_error_campo(fieldName, errorId);
         return errorId;
     }
 
-    // Create one submit-validation function for each supported form action.
+    /**
+     * Creates a submit-validation handler for each supported form action.
+     * @returns {void}
+     */
     generateSubmitHandlers() {
         ['ADD', 'EDIT', 'SEARCH'].forEach((action) => {
             const submitName = `${action}_submit_${this.entidad.nombreentidad}`;
@@ -993,7 +1239,11 @@ class EntityHelper {
         });
     }
 
-    // Run each test against a temporary form and show a result table in a popup.
+    /**
+     * Runs validation cases against a temporary form and displays the results.
+     * @param {Array<Object>} testCases Validation cases to execute.
+     * @returns {{passed: number, failed: number, total: number}} Test totals.
+     */
     runValidationTests(testCases) {
         const resultsContainer = document.getElementById('IU_Test_result_nofile');
         if (!resultsContainer) throw new Error('No se encontró el contenedor de resultados de tests.');
@@ -1110,7 +1360,13 @@ class EntityHelper {
         return { passed, failed: testCases.length - passed, total: testCases.length };
     }
 
-    // Give a test file input a browser File object with the requested filename.
+    /**
+     * Assigns a synthetic file to an input for validation tests.
+     * @param {HTMLInputElement} input File input to populate.
+     * @param {string|null} fileName File name to use, or null to clear the input.
+     * @returns {void}
+     * @throws {Error} If the browser does not support file simulation.
+     */
     setTestFile(input, fileName) {
         if (!fileName) {
             input.files = new DataTransfer().files;
@@ -1131,7 +1387,12 @@ class EntityHelper {
         input.files = transfer.files;
     }
 
-    // Resolve a test-table label through translations and keep a fallback for missing keys.
+    /**
+     * Resolves a test label from translations, with a fallback.
+     * @param {string} key Translation key or test key suffix.
+     * @param {string} fallback Default label.
+     * @returns {string} Translated or fallback label.
+     */
     getTestLabel(key, fallback) {
         const translationKey = key.startsWith('test_') ? key : `test_${key}`;
         return window.traduccion && window.traduccion[translationKey]
@@ -1139,7 +1400,11 @@ class EntityHelper {
             : fallback;
     }
 
-    // Generate the HTML for an action's form from the entity's field definitions.
+    /**
+     * Generates form markup from the entity's fields for the requested action.
+     * @param {string} [accion='ADD'] Form action that determines field controls.
+     * @returns {string} Generated form HTML.
+     */
     manual_form_creation(accion = 'ADD') {
         let html = `<form id="form_iu" action="" method="POST" enctype="multipart/form-data" class="formulario">\n`;
     
@@ -1210,7 +1475,12 @@ class EntityHelper {
         return html;
     }
     
-    // Put a generated form into the dialog, set its title, and display it.
+    /**
+     * Creates and displays the requested entity form inside the modal.
+     * @param {string} action Form action used to generate the form.
+     * @returns {void}
+     * @throws {Error} If the form container or generated form is missing.
+     */
     baseCreateForm(action) {
         const modal = document.getElementById('Div_IU_form');
         if (modal && modal.closest && modal.closest('form')) {
@@ -1237,6 +1507,14 @@ class EntityHelper {
             if (typeof window.setLang === 'function') window.setLang();
         }
         this.entidad.dom.show_element('Div_IU_form', 'block');
+
+        (this.entidad.fields || []).forEach((field) => {
+            if (field.type === 'select' || field.isFK || field.name === 'dni') {
+                if (typeof attachSelectAutocomplete === 'function') {
+                    attachSelectAutocomplete(field.name, `Buscar o escribir ${field.label || field.name}...`);
+                }
+            }
+        });
     }
 
     initializeDatePickers(form) {
@@ -1413,7 +1691,12 @@ class EntityHelper {
         });
     }
 
-    // Attach submission behavior and prevent the browser's default page reload.
+    /**
+     * Configures the form method and optional submit handler for an action.
+     * @param {string} action Form action to perform.
+     * @param {string} [submitHandler] Name of the entity validation handler.
+     * @returns {void}
+     */
     setFormAttributes(action, submitHandler) {
         const form = document.getElementById('form_iu');
         if (!form) throw new Error(`No se encontró el formulario para ${action}.`);
@@ -1433,7 +1716,10 @@ class EntityHelper {
         });
     }
 
-    // Submit a new record; on success, close the form and refresh the table.
+    /**
+     * Submits the active form as a new entity record.
+     * @returns {Promise<void>}
+     */
     async ADD() {
     this.sanitizeFormInputs();
 
@@ -1449,7 +1735,10 @@ class EntityHelper {
         });
     }
     
-    // Save edits to a record, then refresh the table if the backend accepts them.
+    /**
+     * Submits the active form as an entity-record update.
+     * @returns {Promise<void>}
+     */
     async EDIT() {
         this.sanitizeFormInputs();
     
@@ -1465,7 +1754,10 @@ class EntityHelper {
             });
     }
     
-    // Delete the selected record, then refresh the table on success.
+    /**
+     * Submits the active form to delete the selected entity record.
+     * @returns {Promise<void>}
+     */
     async DELETE() {
         await this.entidad.peticionBackGeneral('form_iu', this.entidad.nombreentidad, 'DELETE')
             .then((respuesta) => {
@@ -1479,7 +1771,11 @@ class EntityHelper {
             });
     }
     
-    // Search records and redraw either a regular table or one of the relation matrices.
+    /**
+     * Searches entity records and optionally clears the active search filter.
+     * @param {boolean} [clearFilter=false] Whether to clear current filters.
+     * @returns {Promise<void>}
+     */
     async SEARCH(clearFilter = false) {
         const formElem = document.getElementById('form_iu');
     
@@ -1536,7 +1832,11 @@ class EntityHelper {
             });
     }
 
-    // Run a requested action with shared error handling, then reload the displayed data.
+    /**
+     * Validates and submits the current form action.
+     * @param {string} action Entity action to execute.
+     * @returns {Promise<void>}
+     */
     async submitEntityAction(action) {
         try {
             const response = await this.entidad.peticionBackGeneral(
@@ -1562,7 +1862,10 @@ class EntityHelper {
         }
     }
 
-    // Build and configure the ADD form after loading its foreign-key choices.
+    /**
+     * Loads related options and displays a form for creating a record.
+     * @returns {Promise<void>}
+     */
     async createForm_ADD() {
         const entity = this.entidad;
         if (!await this.prepareForeignKeyForm()) return;
@@ -1572,7 +1875,10 @@ class EntityHelper {
         this.appendFormActions('ADD');
     }
 
-    // Build and configure the SEARCH form after loading its foreign-key choices.
+    /**
+     * Loads related options and displays a form for searching records.
+     * @returns {Promise<void>}
+     */
     async createForm_SEARCH() {
         const entity = this.entidad;
         if (!await this.prepareForeignKeyForm()) return;
@@ -1582,7 +1888,11 @@ class EntityHelper {
         this.appendFormActions('SEARCH');
     }
 
-    // Build an EDIT form, fill it with the chosen row, and keep key fields unchanged.
+    /**
+     * Displays a populated form for editing the selected record.
+     * @param {Object} row Record to edit.
+     * @returns {void}
+     */
     createForm_EDIT(row) {
         const entity = this.entidad;
         this.baseCreateForm('EDIT');
@@ -1600,7 +1910,11 @@ class EntityHelper {
         this.appendFormActions('EDIT');
     }
 
-    // Build a read-only DELETE confirmation form with the selected row's values.
+    /**
+     * Displays a read-only confirmation form for deleting a record.
+     * @param {Object} row Record to delete.
+     * @returns {void}
+     */
     createForm_DELETE(row) {
         const entity = this.entidad;
         this.baseCreateForm('DELETE');
@@ -1611,7 +1925,11 @@ class EntityHelper {
         this.appendFormActions('DELETE');
     }
 
-    // Show the selected row without allowing edits.
+    /**
+     * Displays the selected record in a read-only form.
+     * @param {Object} row Record to display.
+     * @returns {void}
+     */
     createForm_SHOWCURRENT(row) {
         const entity = this.entidad;
         this.baseCreateForm('SHOWCURRENT');
@@ -1624,7 +1942,12 @@ class EntityHelper {
     }
 
     
-    // Add Cancel and, when appropriate, Submit buttons to the bottom of the dialog.
+    /**
+     * Adds Cancel and, when appropriate, Submit actions to the form dialog.
+     * @param {string} action Form action determining which buttons to show.
+     * @returns {void}
+     * @throws {Error} If the form or its dialog cannot be found.
+     */
     appendFormActions(action) {
         const form = document.getElementById('form_iu');
         if (!form) throw new Error('No se encontró el formulario para añadir sus botones.');
@@ -1661,7 +1984,12 @@ class EntityHelper {
         dialog.appendChild(footer);
     }
 
-    // Resolve a translated form-button label, or return the supplied fallback.
+    /**
+     * Resolves a form-action label from translations, with a fallback.
+     * @param {string} action Action name used to build the translation key.
+     * @param {string} fallback Default label.
+     * @returns {string} Translated or fallback label.
+     */
     getActionLabel(action, fallback) {
         const key = `form_action_${action}`;
         return window.traduccion && window.traduccion[key]
@@ -1669,7 +1997,11 @@ class EntityHelper {
             : fallback;
     }
 
-    // Escape HTML-special characters before inserting a filename into markup.
+    /**
+     * Escapes HTML-special characters before inserting a value into markup.
+     * @param {*} value Value to escape.
+     * @returns {string} HTML-escaped value.
+     */
     escapeHtml(value) {
         return String(value).replace(/[&<>"']/g, (character) => ({
             '&': '&amp;',
@@ -1680,7 +2012,12 @@ class EntityHelper {
         })[character]);
     }
 
-    // Turn a photo/file value into a safe link with a small preview image.
+    /**
+     * Turns a stored photo/file value into a safe link with a small preview.
+     * @param {string} attribute Field name used to construct the file URL.
+     * @param {string} value Stored filename or URL.
+     * @returns {string} Safe preview markup, or the unchanged value for non-file fields.
+     */
     cambiarmostrarespecial(attribute, value) {
         if (!value) return '';
         if (!attribute.includes('foto') && !attribute.includes('file')) return value;
@@ -1695,6 +2032,11 @@ class EntityHelper {
         </a>`;
     }
 
+    /**
+     * Extracts and decodes the stored filename from a filename, URL, or preview markup.
+     * @param {*} value Value that may contain a stored filename or URL.
+     * @returns {string} Decoded filename, or an empty string when unavailable.
+     */
     getStoredFileName(value) {
         if (typeof value !== 'string') return '';
 
@@ -1723,7 +2065,11 @@ class EntityHelper {
         }
     }
 
-    // Add a preview link next to an existing photo/file input in EDIT or view forms.
+    /**
+     * Adds the existing photo preview to an edit or read-only form.
+     * @param {Object} row Record containing the stored filename.
+     * @returns {void}
+     */
     actualizarEnlaceFotoFormulario(row) {
         if (!row) return;
 

@@ -75,7 +75,7 @@ class EntityHelper {
         [
             'manual_form_creation',
             'mostrar_error_campo',
-            'mostrar_error_campo',
+            'mostrar_exito_campo',
             'peticionBackGeneral',
             'SEARCH',
             'ADD',
@@ -240,32 +240,55 @@ class EntityHelper {
      * @returns {void}
      */
     mostrar_error_campo(id, codigoerror) {
+        const spanError = document.getElementById('span_error_' + id);
+        if (spanError) {
+            spanError.style.display = 'inline';
+        }
+    
         const aError = document.getElementById('error_' + id);
         if (aError) {
-            aError.className = codigoerror; // Updates class name so setLang() knows the active error
+            aError.className = codigoerror;
+            const textoTraducido = (window.traduccion && window.traduccion[codigoerror])
+                ? window.traduccion[codigoerror]
+                : codigoerror;
+            aError.textContent = textoTraducido;
         }
-        originalMostrarError(id, codigoerror);
-        if (typeof window.setLang === 'function') window.setLang();
-    };
     
-    /**
-     * Clears a field's validation error after it passes validation.
-     * @param {string} id Field identifier.
-     * @returns {void}
-     */
+        const input = document.getElementById(id);
+        if (input) {
+            input.style.borderBlockColor = 'red';
+        }
+    
+        const acInput = document.getElementById('ac_input_' + id);
+        if (acInput) {
+            acInput.style.borderBlockColor = 'red';
+        }
+    }
+
     mostrar_exito_campo(id) {
+        const spanError = document.getElementById('span_error_' + id);
+        if (spanError) {
+            spanError.style.display = 'none';
+        }
+    
         const aError = document.getElementById('error_' + id);
         if (aError) {
             aError.className = '';
+            aError.innerHTML = '';
         }
-        originalMostrarExito(id);
-    };
     
-    /**
-     * Displays the application error dialog using the active page translations.
-     * @param {string} errorMsg Error code or message to display.
-     * @returns {void}
-     */
+        const input = document.getElementById(id);
+        if (input) {
+            input.style.borderBlockColor = 'green';
+        }
+    
+        const acInput = document.getElementById('ac_input_' + id);
+        if (acInput) {
+            acInput.style.borderBlockColor = 'green';
+        }
+    ss}
+    
+    // Show the app's error dialog. The fallback IDs support older App markup.
     abrirModalError(errorMsg) {
         // Buscar los elementos compatibles con el HTML de la aplicación
         const modal = document.getElementById('error_action_modal') || document.getElementById('modalError');
@@ -1132,21 +1155,32 @@ class EntityHelper {
                             this.entidad.dom.mostrar_exito_campo(field.name);
                             return true;
                         }
-
-                        const fileRules = [
-                            ['max_size_file', rules.max_size_file],
-                            ['type_file', rules.type_file],
-                            ['format_name_file', rules.format_name_file]
-                        ];
-                        // Stop at the first failed file rule so the user sees one clear error.
-                        for (const [ruleName, ruleValue] of fileRules) {
-                            if (ruleValue !== undefined && ruleValue !== null &&
-                                !this.entidad.validations[ruleName](field.name, ruleValue)) {
-                                return this.showValidationError(field.name, ruleName);
+                    
+                        const inputElem = document.getElementById(field.name);
+                        const uploadedFile = inputElem && inputElem.files && inputElem.files[0];
+                    
+                        if (uploadedFile) {
+                            // Fallback check for filename extension & MIME type (handles Linux / empty MIME)
+                            const fileName = uploadedFile.name || '';
+                            const isJpgExt = /\.(jpg|jpeg)$/i.test(fileName);
+                            const isMimeValid = !uploadedFile.type || rules.type_file.includes(uploadedFile.type);
+                    
+                            if (!isJpgExt || !isMimeValid) {
+                                return this.showValidationError(field.name, 'type_file');
+                            }
+                    
+                            if (rules.max_size_file && uploadedFile.size > rules.max_size_file) {
+                                return this.showValidationError(field.name, 'max_size_file');
+                            }
+                    
+                            if (rules.format_name_file && !this.entidad.validations.format_name_file(field.name, rules.format_name_file)) {
+                                return this.showValidationError(field.name, 'format_name_file');
                             }
                         }
+                    
+                        this.entidad.dom.mostrar_exito_campo(field.name);
+                        return true;
                     }
-
                     const customFnName = (rules && rules.personalized) 
                         ? rules.personalized 
                         : `personalize_${field.name}`;
@@ -1473,13 +1507,16 @@ class EntityHelper {
             if (typeof window.setLang === 'function') window.setLang();
         }
         this.entidad.dom.show_element('Div_IU_form', 'block');
+
+        (this.entidad.fields || []).forEach((field) => {
+            if (field.type === 'select' || field.isFK || field.name === 'dni') {
+                if (typeof attachSelectAutocomplete === 'function') {
+                    attachSelectAutocomplete(field.name, `Buscar o escribir ${field.label || field.name}...`);
+                }
+            }
+        });
     }
 
-    /**
-     * Attaches auxiliary calendar controls to date-picker text inputs.
-     * @param {HTMLFormElement} form Form containing date-picker inputs.
-     * @returns {void}
-     */
     initializeDatePickers(form) {
         form.querySelectorAll('[data-date-picker="true"]').forEach((input) => {
             const wrapper = input.closest('.date-picker-control');
