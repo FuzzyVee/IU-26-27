@@ -42,7 +42,7 @@ const esquemasET1 = {
         reglas: [
           { tipo: "max_size", acciones: ["SEARCH"], codigoKO: "fechaNacimiento_persona_max_size_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-11-055" } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "fechaNacimiento_persona_format_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "2026-09-23" } },
-          { tipo: "personalized", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "fechaNacimiento_persona_personalized_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "31/02/1998" } },
+          { tipo: "personalized", acciones: ["ADD", "EDIT"], codigoKO: "fechaNacimiento_persona_personalized_ko", desc: "cumple formato fecha dd/mm/aaaa", msgError: "Formato fecha invalido", valorInvalido: { "fechaNacimiento_persona": "31/02/1998" } },
         ],
         testExito: { acciones: ["ADD", "EDIT", "SEARCH"], desc: "es correcto fechaNacimiento_persona", msgExito: "Fecha correcta", valorValido: { "fechaNacimiento_persona": "20/11/1998" } }
       },

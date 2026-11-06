@@ -170,8 +170,8 @@ persona.prototype.personalize_fechaNacimiento_persona = function() {
     const input = document.getElementById('fechaNacimiento_persona');
     if (!input || !input.value) return true;
 
-    let month = 1; // TODO
-    let day = 1; // TODO
+    let month = parseInt(input.value.substring(3, 5));
+    let day = parseInt(input.value.substring(0, 2));
 
     if (
         (month ==  1 && day > 31) ||
@@ -185,7 +185,8 @@ persona.prototype.personalize_fechaNacimiento_persona = function() {
         (month ==  9 && day > 30) ||
         (month == 10 && day > 31) ||
         (month == 11 && day > 30) ||
-        (month == 12 && day > 31)
+        (month == 12 && day > 31) ||
+        (month > 12)
     ) {
         return 'fechaNacimiento_persona_personalized_ko';
     }
