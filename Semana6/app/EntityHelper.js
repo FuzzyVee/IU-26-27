@@ -138,31 +138,33 @@ class EntityHelper {
     }
 
     setupEnterKeyListener() {
-    if (EntityHelper.enterListenerRegistered) return;
+        if (EntityHelper.enterListenerRegistered) return;
         EntityHelper.enterListenerRegistered = true;
-
+    
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.keyCode === 13) {
                 const target = event.target;
                 const tagName = target ? target.tagName.toLowerCase() : '';
-
-                // Do not trigger submit if the user is typing in an input, textarea, select, or editable element
-                if (tagName === 'input' || tagName === 'textarea' || tagName === 'select' || (target && target.isContentEditable)) {
+    
+                // Allow standard newline behavior only inside <textarea> or contenteditable elements
+                if (tagName === 'textarea' || (target && target.isContentEditable)) {
                     return;
                 }
-
-                // Check if the form modal is open and active
+    
+                // Check if the form modal (Div_IU_form) is currently open and visible
                 const formContainer = document.getElementById('Div_IU_form');
                 if (formContainer && formContainer.style.display !== 'none') {
-                    const submitButton = document.getElementById('submit_button')||formContainer.querySelector('button[type="submit"]');
-                    
+                    // Prevent browser default actions (such as toggling <select> dropdowns)
+                    event.preventDefault();
+    
+                    const submitButton = document.getElementById('submit_button') || 
+                                         formContainer.querySelector('button[type="submit"]');
+    
                     if (submitButton && !submitButton.disabled) {
-                        event.preventDefault();
                         submitButton.click();
                     } else {
                         const form = document.getElementById('form_iu');
                         if (form) {
-                            event.preventDefault();
                             if (typeof form.requestSubmit === 'function') {
                                 form.requestSubmit();
                             } else {
@@ -281,15 +283,16 @@ class EntityHelper {
     // Add row action buttons and render special values (such as photo links)
     // before handing the finished rows to the DOM table renderer.
     crearTablaDatos(datos, mostrarespecial) {
-
+        if (!datos || datos.length === 0) return;
+    
         const misdatos = datos.map((row) => ({ ...row }));
-
+    
         for (var i = 0; i < misdatos.length; i++) {
             misdatos[i]['EDIT'] = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(entidad.datos[${i}]);'>`;
             misdatos[i]['DELETE'] = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(entidad.datos[${i}]);'>`;
             misdatos[i]['SHOWCURRENT'] = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(entidad.datos[${i}]);'>`;
         }
-
+    
         if (mostrarespecial && mostrarespecial.length > 0) {
             for (var i = 0; i < misdatos.length; i++) {
                 for (var clave in misdatos[i]) {
@@ -299,23 +302,27 @@ class EntityHelper {
                 }
             }
         }
-
+    
+        // Extract keys that were actually rendered in the DOM table
+        const actualTableKeys = Object.keys(misdatos[0] || {});
+    
         // Filter out form-only upload fields (type 'file' or starting with 'nuevo_')
-        // so Dom_Class.js does not search for non-existent table headers/cells
         const fileFields = (this.entidad.fields || [])
             .filter((field) => field.type === 'file' || field.name.startsWith('nuevo_'))
             .map((field) => field.name);
-
+    
+        // Keep ONLY attributes and columnasamostrar that exist in the DOM table
         const validAtributos = (this.entidad.atributos || [])
-            .filter((attr) => !fileFields.includes(attr));
-
+            .filter((attr) => actualTableKeys.includes(attr) && !fileFields.includes(attr));
+    
         const validColumnas = (this.entidad.columnasamostrar || [])
-            .filter((col) => !fileFields.includes(col));
-
+            .filter((col) => actualTableKeys.includes(col) && !fileFields.includes(col));
+    
+        // Render data and safely set column visibility
         this.entidad.dom.showData('IU_manage_table', misdatos);
         this.entidad.dom.crearSeleccionablecolumnas(validColumnas, validAtributos);
         this.entidad.dom.mostrarocultarcolumnas(validColumnas, validAtributos);
-
+    
         if (typeof setLang === 'function') setLang();
     }
     
