@@ -122,10 +122,18 @@ class entity_dom_fields extends dom_fields {
 
     function repairTranslationText(value) {
         if (typeof value !== 'string') return value;
+        if (!/[ÃÂâ]/.test(value)) return value;
+
+        const utf8Bytes = [];
+        for (const character of value) {
+            const codePoint = character.codePointAt(0);
+            if (codePoint > 0xff) return value;
+            utf8Bytes.push(`%${codePoint.toString(16).padStart(2, '0')}`);
+        }
+
         try {
-            return decodeURIComponent(escape(value));
-        } catch (error) {
-            console.warn('No se pudo corregir una traducción mal codificada.', error);
+            return decodeURIComponent(utf8Bytes.join(''));
+        } catch {
             return value;
         }
     }

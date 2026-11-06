@@ -79,6 +79,7 @@ function attachSelectAutocomplete(selectId, placeholderText = "Escribe DNI o Nom
     wrapper.appendChild(listContainer);
     wrapper.appendChild(select); // Mantener el select oculto dentro del wrapper
 
+    const form = select.closest('form');
     let currentFocus = -1;
 
     // Función para renderizar las sugerencias dinámicas
@@ -86,6 +87,7 @@ function attachSelectAutocomplete(selectId, placeholderText = "Escribe DNI o Nom
     const renderSuggestions = () => {
         const query = input.value.trim();
         listContainer.innerHTML = '';
+        currentFocus = -1;
     
         // Si el usuario borró todo el texto, el select vuelve al valor por defecto ("-- Seleccionar --")
         if (!query) {
@@ -159,10 +161,22 @@ function attachSelectAutocomplete(selectId, placeholderText = "Escribe DNI o Nom
             currentFocus--;
             addActive(items);
         } else if (e.key === 'Enter') {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (currentFocus > -1 && items[currentFocus]) {
-                e.preventDefault();
                 items[currentFocus].click();
             }
+            const fields = form
+                ? Array.from(form.elements).filter((element) =>
+                    /^(INPUT|SELECT|TEXTAREA)$/.test(element.tagName) &&
+                    element.type !== 'hidden' &&
+                    !element.disabled &&
+                    element.getClientRects().length > 0
+                )
+                : [];
+            const currentIndex = fields.indexOf(input);
+            if (currentIndex !== -1) fields[currentIndex + 1]?.focus();
         } else if (e.key === 'Escape') {
             listContainer.hidden = true;
         }
@@ -185,7 +199,6 @@ function attachSelectAutocomplete(selectId, placeholderText = "Escribe DNI o Nom
     });
 
     // Sincronización al enviar el formulario (Submit)
-    const form = select.closest('form');
     if (form) {
         form.addEventListener('submit', () => {
             const query = input.value.trim();
