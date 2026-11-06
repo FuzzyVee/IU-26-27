@@ -1413,10 +1413,14 @@ class EntityHelper {
                 (this.entidad.fields || []).some((field) =>
                     field.type === 'file' && field.name === `nuevo_${f.name}`);
             if (hasReplacementUpload) {
-                if (accion === 'EDIT') {
+                if (accion === 'SEARCH') {
+                    html += `  <label class="label_${f.name}">${f.label}</label>\n`;
+                    html += `  <input type="text" id="${f.name}" name="${f.name}">\n`;
+                    html += `  <span id="span_error_${f.name}"><a id="error_${f.name}"></a></span>\n  <br>\n`;
+                } else if (accion === 'EDIT') {
                     html += `  <input type="hidden" id="${f.name}" name="${f.name}">\n`;
-                }
-                if (['EDIT', 'DELETE', 'SHOWCURRENT'].includes(accion)) {
+                    html += `  <div id="preview_${f.name}" class="form-photo-preview" aria-label="${this.escapeHtml(f.label)}"></div>\n`;
+                } else if (['DELETE', 'SHOWCURRENT'].includes(accion)) {
                     html += `  <div id="preview_${f.name}" class="form-photo-preview" aria-label="${this.escapeHtml(f.label)}"></div>\n`;
                 }
                 return;
@@ -1793,6 +1797,13 @@ class EntityHelper {
         const relationSearchFilters = isRelationEntity && idForm === 'form_iu'
             ? this.getRelationSearchFilters(formElem)
             : {};
+        const photoSearchInput = this.entidad.nombreentidad === 'persona' && idForm === 'form_iu'
+            ? formElem.elements.namedItem('foto_persona')
+            : null;
+        const photoSearchQuery = photoSearchInput && typeof photoSearchInput.value === 'string'
+            ? photoSearchInput.value.trim()
+            : '';
+        if (photoSearchQuery) photoSearchInput.disabled = true;
     
         await this.entidad.peticionBackGeneral(idForm, this.entidad.nombreentidad, 'SEARCH')
             .then(async (respuesta) => {
@@ -1800,7 +1811,20 @@ class EntityHelper {
     
                 if (respuesta['code'] === 'RECORDSET_DATOS') {
                     // Normalize nested API data before a regular table or matrix uses it.
-                    this.entidad.datos = (respuesta['resource'] || []).map(row => this.normalizeRowData(row));
+                    this.entidad.datos = (respuesta['resource'] || [])
+                        .map(row => this.normalizeRowData(row))
+                        .filter((row) => !photoSearchQuery ||
+                            this.matchesPhotoSearch(row.foto_persona, photoSearchQuery));
+                    if (photoSearchQuery && this.entidad.datos.length === 0) {
+                        this.entidad.dom.show_element('IU_manage_entity');
+                        const tableElem = document.getElementById('IU_manage_table');
+                        if (tableElem) {
+                            tableElem.style.display = 'block';
+                            tableElem.textContent = 'No se han encontrado elementos que coincidan con la búsqueda';
+                            tableElem.className = 'RECORDSET_VACIO';
+                        }
+                        return;
+                    }
                     if (this.entidad.datos && this.entidad.datos.length > 0) {
                         this.entidad.atributos = Object.keys(this.entidad.datos[0]);
                     }
@@ -1829,7 +1853,36 @@ class EntityHelper {
                 this.entidad.dom.abrirModalError(
                     error.message || `No se pudieron cargar los registros de ${this.entidad.nombreentidad}.`
                 );
+            })
+            .finally(() => {
+                if (photoSearchInput) photoSearchInput.disabled = false;
             });
+    }
+
+    /**
+     * Matches a stored photo filename with the query using the shared fuzzy matcher
+     * when available, or accent-insensitive substring/token matching otherwise.
+     * @param {*} fileValue Stored photo filename.
+     * @param {string} query Search query.
+     * @returns {boolean} Whether the filename matches the query.
+     */
+    matchesPhotoSearch(fileValue, query) {
+        if (!query) return true;
+        const filename = this.getStoredFileName(fileValue);
+        if (!filename) return false;
+        if (typeof flexibleMatch === 'function') return flexibleMatch(filename, query);
+
+        const normalize = (value) => String(value)
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+        const normalizedFilename = normalize(filename);
+        const normalizedQuery = normalize(query);
+        if (normalizedFilename.includes(normalizedQuery)) return true;
+
+        const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
+        return tokens.length > 1 && tokens.every((token) => normalizedFilename.includes(token));
     }
 
     /**

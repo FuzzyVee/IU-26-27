@@ -90,13 +90,13 @@ let persona_def_tests = Array(
    Array("persona", "email_persona", "input", 89, "es correcto email_persona en ADD", "valid", "ADD", true, "Email correcto"),
    Array("persona", "email_persona", "input", 90, "es correcto email_persona en EDIT", "valid", "EDIT", true, "Email correcto"),
    Array("persona", "email_persona", "input", 91, "es correcto email_persona en SEARCH", "valid", "SEARCH", true, "Email correcto"),
-   Array("persona", "foto_persona", "file", 92, "existe fichero foto_persona en ADD", "exist_file", "ADD", "foto_persona_exist_file_ko", "Debe seleccionar un fichero jpg o jpeg"),
-   Array("persona", "foto_persona", "file", 93, "cumple formato nombre foto_persona en ADD", "format_name_file", "ADD", "foto_persona_format_name_file_ko", "Nombre de archivo de foto invalido"),
-   Array("persona", "foto_persona", "file", 94, "cumple formato nombre foto_persona en EDIT", "format_name_file", "EDIT", "foto_persona_format_name_file_ko", "Nombre de archivo de foto invalido"),
-   Array("persona", "foto_persona", "file", 95, "es correcto foto_persona en ADD", "valid", "ADD", true, "Foto correcta"),
-   Array("persona", "foto_persona", "file", 96, "es correcto foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta"),
-   Array("persona", "foto_persona", "file", 97, "es correcto foto_persona en ADD", "valid", "ADD", true, "Foto correcta"),
-   Array("persona", "foto_persona", "file", 98, "es correcto foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta")
+   Array("persona", "nuevo_foto_persona", "file", 92, "existe fichero nuevo_foto_persona en ADD", "exist_file", "ADD", "nuevo_foto_persona_exist_file_ko", "Debe seleccionar un fichero jpg o jpeg"),
+   Array("persona", "nuevo_foto_persona", "file", 93, "cumple formato nombre nuevo_foto_persona en ADD", "format_name_file", "ADD", "nuevo_foto_persona_format_name_file_ko", "Nombre de archivo de foto invalido"),
+   Array("persona", "nuevo_foto_persona", "file", 94, "cumple formato nombre nuevo_foto_persona en EDIT", "format_name_file", "EDIT", "nuevo_foto_persona_format_name_file_ko", "Nombre de archivo de foto invalido"),
+   Array("persona", "nuevo_foto_persona", "file", 95, "es correcto nuevo_foto_persona en ADD", "valid", "ADD", true, "Foto correcta"),
+   Array("persona", "nuevo_foto_persona", "file", 96, "es correcto nuevo_foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta"),
+   Array("persona", "nuevo_foto_persona", "file", 97, "es correcto nuevo_foto_persona en ADD", "valid", "ADD", true, "Foto correcta"),
+   Array("persona", "nuevo_foto_persona", "file", 98, "es correcto nuevo_foto_persona en EDIT", "valid", "EDIT", true, "Foto correcta")
 );
 
 let persona_pruebas = Array(
@@ -191,11 +191,11 @@ let persona_pruebas = Array(
    Array("persona", "email_persona", 89, 89, "ADD", {"email_persona":"actu@domain.com"}, true),
    Array("persona", "email_persona", 90, 90, "EDIT", {"email_persona":"actu@domain.com"}, true),
    Array("persona", "email_persona", 91, 91, "SEARCH", {"email_persona":"actu@domain.com"}, true),
-   Array("persona", "foto_persona", 92, 92, "ADD", {}, "foto_persona_exist_file_ko"),
-   Array("persona", "foto_persona", 93, 93, "ADD", {"foto_persona":"foto*.jpg"}, "foto_persona_format_name_file_ko"),
-   Array("persona", "foto_persona", 94, 94, "EDIT", {"foto_persona":"foto*.jpg"}, "foto_persona_format_name_file_ko"),
-   Array("persona", "foto_persona", 95, 95, "ADD", {"foto_persona":"foto.jpg"}, true),
-   Array("persona", "foto_persona", 96, 96, "EDIT", {"foto_persona":"foto.jpg"}, true),
-   Array("persona", "foto_persona", 97, 97, "ADD", {"foto_persona":"Archivo.jpeg"}, true),
-   Array("persona", "foto_persona", 98, 98, "EDIT", {"foto_persona":"Archivo.jpeg"}, true)
+   Array("persona", "nuevo_foto_persona", 92, 92, "ADD", {}, "nuevo_foto_persona_exist_file_ko"),
+   Array("persona", "nuevo_foto_persona", 93, 93, "ADD", {"nuevo_foto_persona":"foto*.jpg"}, "nuevo_foto_persona_format_name_file_ko"),
+   Array("persona", "nuevo_foto_persona", 94, 94, "EDIT", {"nuevo_foto_persona":"foto*.jpg"}, "nuevo_foto_persona_format_name_file_ko"),
+   Array("persona", "nuevo_foto_persona", 95, 95, "ADD", {"nuevo_foto_persona":"foto.jpg"}, true),
+   Array("persona", "nuevo_foto_persona", 96, 96, "EDIT", {"nuevo_foto_persona":"foto.jpg"}, true),
+   Array("persona", "nuevo_foto_persona", 97, 97, "ADD", {"nuevo_foto_persona":"Archivo.jpeg"}, true),
+   Array("persona", "nuevo_foto_persona", 98, 98, "EDIT", {"nuevo_foto_persona":"Archivo.jpeg"}, true)
 );
