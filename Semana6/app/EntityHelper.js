@@ -33,6 +33,7 @@ class EntityHelper {
         this.generateSubmitHandlers();
         this.bindEntityMethods();
         this.setupEscKeyListener();
+        this.setupEnterKeyListener();
     }
 
     // Add small shared styles used by the helper-generated UI.
@@ -136,6 +137,44 @@ class EntityHelper {
         return { ...response, code: 'RECORDSET_DATOS', resource: rows };
     }
 
+    setupEnterKeyListener() {
+    if (EntityHelper.enterListenerRegistered) return;
+        EntityHelper.enterListenerRegistered = true;
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                const target = event.target;
+                const tagName = target ? target.tagName.toLowerCase() : '';
+
+                // Do not trigger submit if the user is typing in an input, textarea, select, or editable element
+                if (tagName === 'input' || tagName === 'textarea' || tagName === 'select' || (target && target.isContentEditable)) {
+                    return;
+                }
+
+                // Check if the form modal is open and active
+                const formContainer = document.getElementById('Div_IU_form');
+                if (formContainer && formContainer.style.display !== 'none') {
+                    const submitButton = document.getElementById('submit_button')||formContainer.querySelector('button[type="submit"]');
+                    
+                    if (submitButton && !submitButton.disabled) {
+                        event.preventDefault();
+                        submitButton.click();
+                    } else {
+                        const form = document.getElementById('form_iu');
+                        if (form) {
+                            event.preventDefault();
+                            if (typeof form.requestSubmit === 'function') {
+                                form.requestSubmit();
+                            } else {
+                                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
     // Register one Escape-key handler for the whole page to close open UI overlays.
     setupEscKeyListener() {
         // Evita registrar múltiples listeners si se instancian varias entidades
@@ -244,13 +283,13 @@ class EntityHelper {
     crearTablaDatos(datos, mostrarespecial) {
 
         const misdatos = datos.map((row) => ({ ...row }));
-    
+
         for (var i = 0; i < misdatos.length; i++) {
             misdatos[i]['EDIT'] = `<img id='botonEDIT' src='./iconos/EDIT.png' onclick='entidad.createForm_EDIT(entidad.datos[${i}]);'>`;
             misdatos[i]['DELETE'] = `<img id='botonDELETE' src='./iconos/DELETE.png' onclick='entidad.createForm_DELETE(entidad.datos[${i}]);'>`;
             misdatos[i]['SHOWCURRENT'] = `<img id='botonSHOWCURRENT' src='./iconos/SHOWCURRENT.png' onclick='entidad.createForm_SHOWCURRENT(entidad.datos[${i}]);'>`;
         }
-    
+
         if (mostrarespecial && mostrarespecial.length > 0) {
             for (var i = 0; i < misdatos.length; i++) {
                 for (var clave in misdatos[i]) {
@@ -260,11 +299,23 @@ class EntityHelper {
                 }
             }
         }
-    
+
+        // Filter out form-only upload fields (type 'file' or starting with 'nuevo_')
+        // so Dom_Class.js does not search for non-existent table headers/cells
+        const fileFields = (this.entidad.fields || [])
+            .filter((field) => field.type === 'file' || field.name.startsWith('nuevo_'))
+            .map((field) => field.name);
+
+        const validAtributos = (this.entidad.atributos || [])
+            .filter((attr) => !fileFields.includes(attr));
+
+        const validColumnas = (this.entidad.columnasamostrar || [])
+            .filter((col) => !fileFields.includes(col));
+
         this.entidad.dom.showData('IU_manage_table', misdatos);
-        this.entidad.dom.crearSeleccionablecolumnas(this.entidad.columnasamostrar, this.entidad.atributos);
-        this.entidad.dom.mostrarocultarcolumnas(this.entidad.columnasamostrar, this.entidad.atributos);
-    
+        this.entidad.dom.crearSeleccionablecolumnas(validColumnas, validAtributos);
+        this.entidad.dom.mostrarocultarcolumnas(validColumnas, validAtributos);
+
         if (typeof setLang === 'function') setLang();
     }
     
@@ -863,6 +914,12 @@ class EntityHelper {
                 const rules = field.rules ? field.rules[action] : null;
 
                 this.entidad[methodName] = () => {
+                    const input = document.getElementById(field.name);
+                    
+                    if (!input) {
+                        return true;
+                    }
+                    
                     // A foreign key on ADD must match an option that was actually loaded.
                     if (field.isFK && action === 'ADD') {
                         const select = document.getElementById(field.name);
@@ -875,7 +932,14 @@ class EntityHelper {
                             return this.showValidationError(field.name, 'required');
                         }
                     }
-
+                    
+                    if (action === 'SEARCH') {
+                        if (!input.value) {
+                            this.entidad.dom.mostrar_exito_campo(field.name);
+                            return true;
+                        }
+                    }    
+                    
                     if (!rules) return true;
 
                     if (action === 'SEARCH') {
