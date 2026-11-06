@@ -1497,6 +1497,13 @@ footer {
             const Entity = entities[name];
             if (!Entity) throw new Error(`Entidad no reconocida: ${name}`);
 
+            const formModal = document.getElementById('Div_IU_form');
+            const formContainer = document.getElementById('contenedor_IU_form');
+            if (formModal) formModal.style.display = 'none';
+            if (formContainer) formContainer.replaceChildren();
+            document.querySelectorAll('#Div_IU_form .form-actions')
+                .forEach((actions) => actions.remove());
+
             window.entidad = new Entity();
             const esRelacion = ['funcionalidad_accion', 'rolaccionfuncionalidad'].includes(name);
             [

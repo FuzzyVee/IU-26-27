@@ -8,7 +8,7 @@ class persona extends AbstractEntidad {
         super(); // Llama al constructor de AbstractEntidad
 
         const fechaNacimientoFormat = '^(?:0[1-9]|[12]\\d|3[01])/(?:0[1-9]|1[0-2])/(?:19|20)\\d{2}$';
-        const nombreFotoFormat = '^[a-zA-Z0-9_-]{3,15}\\.(jpg|jpeg)$';
+        const nombreFotoFormat = '^[a-zA-Z0-9_-]{0,150}\\.(jpg|jpeg)$';
 
         this.nombreentidad = 'persona';
         this.fields = [
@@ -92,7 +92,7 @@ class persona extends AbstractEntidad {
                 label: 'Foto',
                 type: 'text',
                 rules: {
-                    SEARCH: { max_size: 20, format: nombreFotoFormat }
+                    SEARCH: { max_size: 45, format: nombreFotoFormat }
                 }
             },
             {
@@ -170,8 +170,8 @@ persona.prototype.personalize_fechaNacimiento_persona = function() {
     const input = document.getElementById('fechaNacimiento_persona');
     if (!input || !input.value) return true;
 
-    let month = 1; // TODO
-    let day = 1; // TODO
+    let month = parseInt(input.value.substring(3, 5));
+    let day = parseInt(input.value.substring(0, 2));
 
     if (
         (month ==  1 && day > 31) ||
@@ -185,7 +185,8 @@ persona.prototype.personalize_fechaNacimiento_persona = function() {
         (month ==  9 && day > 30) ||
         (month == 10 && day > 31) ||
         (month == 11 && day > 30) ||
-        (month == 12 && day > 31)
+        (month == 12 && day > 31) ||
+        (month > 12)
     ) {
         return 'fechaNacimiento_persona_personalized_ko';
     }

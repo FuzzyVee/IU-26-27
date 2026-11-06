@@ -8,7 +8,7 @@ class persona extends AbstractEntidad {
         super(); // Llama al constructor de AbstractEntidad
 
         const fechaNacimientoFormat = '^(?:0[1-9]|[12]\\d|3[01])/(?:0[1-9]|1[0-2])/(?:19|20)\\d{2}$';
-        const nombreFotoFormat = '^[a-zA-Z0-9_-]{3,15}\\.(jpg|jpeg)$';
+        const nombreFotoFormat = '^[a-zA-Z0-9_-]{0,150}\\.(jpg|jpeg)$';
 
         this.nombreentidad = 'persona';
         this.fields = [
@@ -90,7 +90,10 @@ class persona extends AbstractEntidad {
             {
                 name: 'foto_persona',
                 label: 'Foto',
-                type: 'text'
+                type: 'text',
+                rules: {
+                    SEARCH: { max_size: 45, format: nombreFotoFormat }
+                }
             },
             {
                 name: 'nuevo_foto_persona',
