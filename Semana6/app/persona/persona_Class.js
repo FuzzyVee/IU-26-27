@@ -1,3 +1,4 @@
+
 class persona extends AbstractEntidad {
     /**
      * Initializes the person entity, its fields, and shared UI helper.
@@ -51,15 +52,9 @@ class persona extends AbstractEntidad {
                 type: 'text',
                 datePicker: true,
                 rules: {
-<<<<<<< HEAD
                     ADD: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
                     EDIT: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
                     SEARCH: { max_size: 10, format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' }
-=======
-                    ADD: { format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
-                    EDIT: { format: fechaNacimientoFormat, personalized: 'personalize_fechaNacimiento_persona' },
-                    SEARCH: { format: fechaNacimientoFormat }
->>>>>>> b75b590 (ADDED DATE PICKER :))
                 }
             },
             {
