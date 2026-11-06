@@ -16,9 +16,9 @@ class persona extends AbstractEntidad {
                 referenceEntity: 'usuario',
                 referenceKey: 'dni',
                 rules: {
-                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
-                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$' },
-                    SEARCH: { max_size: 9, format: '^[0-9]{0,8}[A-Za-z]?$' },
+                    ADD: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$', personalized: 'personalize_dni' },
+                    EDIT: { min_size: 9, max_size: 9, format: '^[0-9]{8}[A-Za-z]$', personalized: 'personalize_dni' },
+                    SEARCH: { max_size: 9, format: '^[0-9]{0,8}[A-Za-z]?$', personalized: 'personalize_dni' },
                 }
             },
             {
