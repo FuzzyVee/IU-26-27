@@ -92,6 +92,8 @@ class persona extends AbstractEntidad {
                 label: 'Foto',
                 type: 'text',
                 rules: {
+                    ADD: { min_size: 4, max_size: 20, format: nombreFotoFormat },
+                    EDIT: { min_size: 4, max_size: 20, format: nombreFotoFormat },
                     SEARCH: { max_size: 20, format: nombreFotoFormat }
                 }
             },

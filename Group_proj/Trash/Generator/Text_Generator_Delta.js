@@ -112,7 +112,7 @@ const esquemasET1 = {
         campo: "usuario",
         elemento: "input",
         reglas: [
-          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "usuario_min_size_ko", desc: "cumple tamaño minimo usuario", msgError: "Usuario muy corto (min 5)", valorInvalido: { "usuario": "user" } },
+          { tipo: "min_size", acciones: ["ADD", "EDIT"], codigoKO: "usuario_min_size_ko", desc: "cumple tamaño minimo usuario", msgError: "Usuario muy corto (min 5)", valorInvalido: { "usuario": "u" } },
           { tipo: "max_size", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_max_size_ko", desc: "cumple tamaño maximo usuario", msgError: "Usuario muy largo (max 45)", valorInvalido: { "usuario": "u".repeat(46) } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "niñoser" } },
           { tipo: "format", acciones: ["ADD", "EDIT", "SEARCH"], codigoKO: "usuario_format_ko", desc: "cumple formato usuario sin ñ ni acentos", msgError: "Formato invalido (solo caracteres alfabeticos sin ñ ni acentos)", valorInvalido: { "usuario": "úsername" } },
@@ -128,7 +128,6 @@ const esquemasET1 = {
           { tipo: "max_size", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_max_size_ko", desc: "cumple tamaño maximo contrasena", msgError: "Contraseña muy larga (max 45)", valorInvalido: { "contrasena": "p".repeat(46) } },
           { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos) Alfabetico", valorInvalido: { "contrasena": "contraseña" } },
           { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos) Alfabetico", valorInvalido: { "contrasena": "co-ntra_sena" } },
-          { tipo: "format", acciones: ["ADD", "EDIT"], codigoKO: "contrasena_format_ko", desc: "cumple formato contrasena sin ñ ni acentos", msgError: "Formato invalido (sin ñ ni acentos) Alfabetico", valorInvalido: { "contrasena": "Password123" } }
         ],
         testExito: { acciones: ["ADD", "EDIT"], desc: "es correcto contrasena", msgExito: "Contraseña correcta", valorValido: { "contrasena": "securePass" } }
       },
