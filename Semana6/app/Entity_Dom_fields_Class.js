@@ -117,6 +117,8 @@ class entity_dom_fields extends dom_fields {
     }
 
     const helperReady = loadScript('./app/EntityHelper.js');
+    loadScript('./app/SearchHelper.js');
+
 
     function repairTranslationText(value) {
         if (typeof value !== 'string') return value;
@@ -464,7 +466,7 @@ class entity_dom_fields extends dom_fields {
         border-collapse: collapse;
     }
 
-    /* 2. Photo column: Keep fixed 90px so photo preview never shrinks */
+    
     #IU_manage_table td.tabla-td-foto_persona,
     #IU_manage_table th.tabla-th-foto_persona,
     #IU_manage_table td[class*="foto"],
@@ -474,7 +476,7 @@ class entity_dom_fields extends dom_fields {
         text-align: center;
     }
 
-    /* 3. Action columns (EDIT, DELETE, SHOWCURRENT): Guarantee full visibility */
+    
     #IU_manage_table th:nth-last-child(-n+3),
     #IU_manage_table td:nth-last-child(-n+3) {
         width: 55px !important;
@@ -492,7 +494,7 @@ class entity_dom_fields extends dom_fields {
 
     
 
-    /* 4. Date columns (fecha_nacimiento): Cap width so dates stay compact */
+   
     #IU_manage_table th[class*="fecha"],
     {
         max-width: 130px !important;
@@ -502,7 +504,7 @@ class entity_dom_fields extends dom_fields {
         text-overflow: ellipsis;
     }
 
-    /* 5. General text data cells: Truncate long text with ellipsis (...) */
+
     #IU_manage_table td:not(:nth-last-child(-n+3)) {
         max-width: 180px;
         overflow: hidden;
@@ -510,7 +512,7 @@ class entity_dom_fields extends dom_fields {
         white-space: nowrap;
     }
     
-/* 2. DNI Column: Dedicated width & disable truncation so full DNI (8 digits + letter) displays */
+
     #IU_manage_table th[class*="dni"],
     #IU_manage_table td[class*="dni"],
     #IU_manage_table th.tabla-th-dni,
@@ -829,7 +831,7 @@ select#seleccioncolumnas option:hover {
         width: 100% !important;
     }
 
-    /* 2. Protect the photo column from shrinking */
+    
     #IU_manage_table th.tabla-th-foto_persona,
     #IU_manage_table td.tabla-td-foto_persona,
     #IU_manage_table td:has(img) {
@@ -848,8 +850,7 @@ select#seleccioncolumnas option:hover {
         border-radius: 8px;
         display: inline-block;
     }
-
-    /* 3. Truncate long text cells (like fecha_nacimiento) neatly with ellipsis (...) */
+   
     #IU_manage_table td {
         max-width: 150px;
         overflow: hidden;
@@ -857,7 +858,6 @@ select#seleccioncolumnas option:hover {
         white-space: nowrap;
     }
 
-    /* 4. Keep action buttons (EDIT, DELETE, SHOWCURRENT) neatly aligned on the right */
     #IU_manage_table td:last-child {
         width: 150px !important;
         min-width: 150px !important;
@@ -1342,6 +1342,53 @@ footer {
     outline: 2px solid rgba(88, 166, 255, .65);
 }
 
+.autocomplete-wrapper {
+        position: relative;
+        width: min(100%, 32rem);
+    }
+    .autocomplete-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color, #30363d);
+        border-radius: 8px;
+        color: var(--text-primary, #ffffff);
+        background: var(--input-bg, #21262d);
+        font: inherit;
+        outline: none;
+    }
+    .autocomplete-input:focus {
+        border-color: #58a6ff;
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+    }
+    .autocomplete-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        max-height: 200px;
+        overflow-y: auto;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        margin-top: 4px;
+    }
+    .autocomplete-item {
+        padding: 9px 12px;
+        color: #f0f6fc;
+        cursor: pointer;
+        font-size: 0.88rem;
+        border-bottom: 1px solid #21262d;
+    }
+    .autocomplete-item:last-child {
+        border-bottom: none;
+    }
+    .autocomplete-item:hover, .autocomplete-active {
+        background-color: #1f6feb;
+        color: #ffffff;
+    }
+
         `;
         document.head.appendChild(style);
     }
@@ -1509,11 +1556,11 @@ footer {
 
     helperReady.then(() => {
         if (document.readyState === 'complete') {
-          addCharset();  
-          replaceBody();
+            addCharset();  
+            replaceBody();
         } else {
             window.addEventListener('load', addCharset);
-          window.addEventListener('load', replaceBody);
+            window.addEventListener('load', replaceBody);
         }
     }).catch((error) => console.error(error));
 })();

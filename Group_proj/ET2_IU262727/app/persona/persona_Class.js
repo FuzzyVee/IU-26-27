@@ -1,5 +1,8 @@
-
 class persona extends AbstractEntidad {
+    /**
+     * Initializes the person entity, its fields, and shared UI helper.
+     * @param {string} [esTest='no'] Pass 'test' to skip the initial backend search.
+     */
     constructor(esTest = 'no') {
         super(); // Llama al constructor de AbstractEntidad
 
@@ -114,6 +117,10 @@ class persona extends AbstractEntidad {
     }
 }
 
+/**
+ * Validates that the entered birth date is a real date in dd/mm/yyyy format.
+ * @returns {boolean|string} True when valid or empty; otherwise the date error code.
+ */
 persona.prototype.personalize_fechaNacimiento_persona = function() {
     const input = document.getElementById('fechaNacimiento_persona');
     if (!input || !input.value) return true;
@@ -133,6 +140,10 @@ persona.prototype.personalize_fechaNacimiento_persona = function() {
         : 'fechaNacimiento_persona_valid_ko';
 };
 
+/**
+ * Validates the checksum letter of a Spanish DNI.
+ * @returns {boolean|string} True when valid or empty; otherwise the DNI error code.
+ */
 persona.prototype.personalize_dni = function() {
     const input = document.getElementById('dni');
     if (!input || !input.value) return true;
@@ -140,7 +151,7 @@ persona.prototype.personalize_dni = function() {
     const valor = input.value.trim().toUpperCase();
 
     if (!/^[0-9]{8}[A-Z]$/.test(valor)) {
-        return 'dni_format_ko';
+        return 'dni_format_ko'; // Very important return, otherwise It always returns same error code.
     }
 
     const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -154,6 +165,10 @@ persona.prototype.personalize_dni = function() {
     return true;
 };
 
+/**
+ * Validates that a Spanish phone number starts with 6–9.
+ * @returns {boolean|string} True when valid or empty; otherwise the phone error code.
+ */
 persona.prototype.personalize_telefono_persona = function() {
     const input = document.getElementById('telefono_persona');
     if (!input || !input.value) return true;
@@ -163,6 +178,10 @@ persona.prototype.personalize_telefono_persona = function() {
         : 'telefono_persona_personalized_ko';
 };
 
+/**
+ * Validates the email address with stricter local-part and domain rules.
+ * @returns {boolean|string} True when valid or empty; otherwise the email error code.
+ */
 persona.prototype.personalize_email_persona = function() {
     const input = document.getElementById('email_persona');
     if (!input || !input.value) return true;

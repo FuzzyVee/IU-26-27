@@ -1,4 +1,8 @@
 class usuario extends AbstractEntidad {
+    /**
+     * Initializes the user entity, its fields, and shared UI helper.
+     * @param {string} [esTest='no'] Pass 'test' to skip the initial backend search.
+     */
     constructor(esTest = 'no') {
         super();
         const fields = [
@@ -61,6 +65,10 @@ class usuario extends AbstractEntidad {
     }
 }
 
+/**
+ * Validates the checksum letter and structure of a Spanish DNI or NIE.
+ * @returns {boolean|string} True when valid or empty; otherwise the DNI error code.
+ */
 usuario.prototype.validarLetraDNI = function() {
     const input = document.getElementById('dni');
     if (!input || !input.value) return true;
