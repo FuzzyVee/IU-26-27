@@ -46,16 +46,16 @@ async function sendData(){
 
 
     if(name === "" || email === ""){
-        modalAlert("Todos los campos son obligatorios.");
+        alert("Todos los campos son obligatorios.");
 
     }else if(!emailPattern.test(email)){
-        modalAlert('No es un correo electrónico adecuado');
+        alert('No es un correo electrónico adecuado');
 
         document.getElementById("emailUser").focus();
         document.getElementById("emailUser").value = "";
 
     }else if(!isValidName(name)){
-        modalAlert('No se permiten caracteres prohibidos al nombre.');
+        alert('No se permiten caracteres prohibidos al nombre.');
         console.error("No se permiten caracteres prohibidos al nombre.");
 
         document.getElementById("nameUser").focus();
@@ -63,13 +63,13 @@ async function sendData(){
 
 
     }else if (name.length>50){
-        modalAlert("El nombre debe tener menos de 51 caracteres.");
+        alert("El nombre debe tener menos de 51 caracteres.");
 
 		document.getElementById("nameUser").focus();
         document.getElementById("nameUser").value = "";
 
     }else if (name.length<2){ 
-        modalAlert("El nombre debe tener al menos 2 caracteres.");
+        alert("El nombre debe tener al menos 2 caracteres.");
 
 		document.getElementById("nameUser").focus();
         document.getElementById("nameUser").value = "";
