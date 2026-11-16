@@ -9,24 +9,24 @@ Simplemente sirve como ejemplo para ilustrar el ejercicio y la presentación del
 
 3 Carpetas:
 
-- frontend-simple (Client): Un cliente simple, que muestra los ejemplos mostrados en la clase practica. Esta implementado con HTML, un script CSS simple, y scripts Javascript nativo. Contiene codigo para hacer pruebas con el Inspector y ejecutar funcionalidades CRUD de Users. Se puede configurar para poder comunicarse con los siguientes Servers. 
+1. frontend-simple (Client): Un cliente simple, que muestra los ejemplos mostrados en la clase practica. Esta implementado con HTML, un script CSS simple, y scripts Javascript nativo. Contiene codigo para hacer pruebas con el Inspector y ejecutar funcionalidades CRUD de Users. Se puede configurar para poder comunicarse con los siguientes Servers. 
 
-- backend-nodejs (Server NodeJS): Un Server RESTful simple, implementado en NodeJS. Contiene los Endpoints básicos para Users y Clases: 
-    GET 
-    GET (by Id User)
-    POST
-    PUT (by Id User)
-    DELETE (by Id User)
+2. backend-nodejs (Server NodeJS): Un Server RESTful simple, implementado en NodeJS. Contiene los Endpoints básicos para Users y Clases: 
+    - GET 
+    - GET (by Id User)
+    - POST
+    - PUT (by Id User)
+    - DELETE (by Id User)
 
 Para simplificar el desarrollo e implementación, en vez de utilizar una base de datos verdadero, se ha utilizado una lista json "interno" como sustituto a una base de datos. 
 
 
-- backend-fastapi (Server FastAPI): Un Server RESTful simple, implementado en NodeJS. Contiene los Endpoints básicos para Users: 
-    GET 
-    GET (by Id User)
-    POST
-    PUT (by Id User)
-    DELETE (by Id User)
+3. backend-fastapi (Server FastAPI): Un Server RESTful simple, implementado en NodeJS. Contiene los Endpoints básicos para Users: 
+    - GET 
+    - GET (by Id User)
+    - POST
+    - PUT (by Id User)
+    - DELETE (by Id User)
 
 Para simplificar el desarrollo e implementación, en vez de utilizar una base de datos verdadero, se ha utilizado una lista json "interno" como sustituto a una base de datos. 
 
